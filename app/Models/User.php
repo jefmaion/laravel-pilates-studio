@@ -52,4 +52,18 @@ class User extends Authenticatable
         $name = explode(" ", $this->name);
         return array_shift($name);
     }
+
+    public function getImageAttribute() {
+        $avatarPath = 'images/avatar';
+
+        $image = $avatarPath . '/no-photo.png';
+
+
+        
+        if(!empty($this->avatar) && file_exists(public_path($avatarPath .'/' . $this->avatar))) {
+            $image = $avatarPath .'/' . $this->avatar;
+        }
+
+        return $image;
+    }
 }

@@ -24,7 +24,10 @@ class UpdateStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'       => 'required',
+            'gender'     => 'required',
+            'phone_wpp'  => 'required',
+            'birth_date' => 'required|date'
         ];
     }
 }

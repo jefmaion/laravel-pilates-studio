@@ -27,11 +27,20 @@ class Select extends Component
 
     private function prepareData($data, $value) {
 
+        $return = [];
+
         foreach($data as $val => $label) {
+
+            if(is_array($label)) {
+                $item = array_values($label);
+                $val = $item[0];
+                $label = $item[1];
+
+            }
 
             $selected = ((string) $value === (string) $val) ? 'selected' : null;
 
-            $data[$val] = [
+            $return[$val] = [
                 'value' => $val,
                 'label' => $label,
                 'selected' =>$selected
@@ -39,7 +48,7 @@ class Select extends Component
 
         }
 
-        return $data;
+        return $return;
     }
 
     /**

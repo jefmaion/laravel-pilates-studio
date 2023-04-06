@@ -7,9 +7,11 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\User;
 use App\Services\StudentService;
+use App\View\Components\Avatar;
 use App\View\Components\Badge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
 use stdClass;
 
 class StudentController extends Controller
@@ -63,6 +65,8 @@ class StudentController extends Controller
 
         $data = $request->except(['_token', '_method']);
 
+       
+
         if($this->studentService->createStudent($data)) {
             return redirect()->route('student.index')->with('success','Aluno cadastrado com sucesso!');
         }
@@ -102,6 +106,7 @@ class StudentController extends Controller
     {
         $data = $request->except(['_token', '_method']);
 
+
         if($this->studentService->updateStudent($student, $data)) {
             return redirect()->route('student.index')->with('success','Aluno atualizado com sucesso!');
         }
@@ -128,7 +133,7 @@ class StudentController extends Controller
         foreach($data as $item) {
             $response[] = [
                 'id' => $item->id,
-                'name' => sprintf('<a href="%s">%s</a>', route('student.show', $item), $item->user->name),
+                'name' => image(asset($item->user->image)) . anchor(route('student.show', $item), $item->user->name, 'ml-2'),
                 'phone_wpp' => $item->user->phone_wpp,
                 'created_at' => $item->created_at->format('d/m/Y')
             ];

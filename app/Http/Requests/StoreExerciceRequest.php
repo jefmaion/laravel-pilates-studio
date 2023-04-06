@@ -24,7 +24,8 @@ class StoreExerciceRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'unique:exercices,name']
+            'name' => ['required', 'unique:exercices,name'],
+            'type' => ['required']
         ];
     }
 }

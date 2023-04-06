@@ -14,7 +14,7 @@ class Controller extends BaseController
 
     protected $request;
 
-    public function __construct(?Request $request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
     }

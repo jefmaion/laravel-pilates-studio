@@ -24,7 +24,8 @@ class UpdateExerciceRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'unique:exercices,name,'.$this->exercice->id]
+            'name' => ['required', 'unique:exercices,name,'.$this->exercice->id],
+            'type' => ['required']
         ];
     }
 }

@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\AvatarUploadController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\InstructorModalityController;
 use App\Http\Controllers\ModalityController;
+use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,10 +31,16 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('helper/zipcode/{zipcode}', [HelperController::class, 'zipcodeApi'])->name('helper.zipcode');
+Route::get('user/avatar/{user}', [AvatarUploadController::class, 'index'])->name('avatar.index');
+Route::post('user/avatar/{user}', [AvatarUploadController::class, 'store'])->name('avatar.store');
+
 
 Route::resource('home', HomeController::class);
 Route::resource('student', StudentController::class);
+Route::resource('instructor', InstructorController::class);
+Route::resource('instructor/{instructor}/modality', InstructorModalityController::class)->names('instructor.modality');
 Route::resource('modality', ModalityController::class);
 Route::resource('exercice', ExerciceController::class);
+Route::resource('registration', RegistrationController::class);
 
 require __DIR__.'/auth.php';

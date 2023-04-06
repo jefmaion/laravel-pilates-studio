@@ -11,6 +11,10 @@
             <a href="{{ route('student.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Alunos</span></a>
         </li>
 
+        <li class="dropdown {{ (\Request::is('instructor*')) ? 'active' : '' }}">
+            <a href="{{ route('instructor.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Professores</span></a>
+        </li>
+
         <li class="dropdown {{ (\Request::is('modality*')) ? 'active' : '' }}">
             <a href="{{ route('modality.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Modalidades</span></a>
         </li>

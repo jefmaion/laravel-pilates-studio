@@ -27,7 +27,7 @@ class AddFieldsToUserTable extends Migration
             $table->string('state', 500)->nullable();
             $table->string('phone_wpp', 500)->nullable();
             $table->string('phone2', 500)->nullable();
-            $table->string('image', 500)->nullable();
+            $table->string('avatar', 500)->nullable();
         });
     }
 
@@ -52,7 +52,7 @@ class AddFieldsToUserTable extends Migration
             $table->dropColumn('state');
             $table->dropColumn('phone_wpp');
             $table->dropColumn('phone2');
-            $table->dropColumn('image');
+            $table->dropColumn('avatar');
         });
     }
 }
