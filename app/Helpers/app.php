@@ -11,3 +11,19 @@ if(!function_exists('anchor')) {
         return sprintf('<a href="%s" class="%s">%s</a>', $href, $class, $label);
     }
 }
+
+if(!function_exists('currency')) {
+    function currency($value=null, $toDatabase=false) {
+
+        if (empty($value)) {
+            return;
+        }
+
+        if($toDatabase) {
+            return str_replace(",", ".", str_replace('.', '', $value));
+        }
+
+        return number_format($value, 2, ",", ".");
+
+    }
+}

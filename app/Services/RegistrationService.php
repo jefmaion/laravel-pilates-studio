@@ -15,16 +15,15 @@ class RegistrationService
     {
 
         $data = $this->prepareData($data);
-       
+
         if ($registration = Registration::create($data)) {
             $this->generateClasses($registration, $data['class']);
-            return true;
+            return $registration;
         }
     }
 
     public function updateRegistration(Registration $registration, $data)
     {
-
 
         $data = $this->prepareData($data);
 
@@ -34,6 +33,15 @@ class RegistrationService
         $this->generateClasses($registration, $data['class']);
 
         return true;
+    }
+
+    public function cancelRegistration(Registration $registration, $comments=null) {
+
+        $registration->cancel_comments = $comments;
+        $registration->cancel_date = date('Y-m-d');
+        $registration->status = 0;
+        $registration->save();
+
     }
 
     private function prepareData($data) {
@@ -52,15 +60,18 @@ class RegistrationService
     {
 
         $registration->classes()->where('finished', 0)->delete();
+        $registration->weekClass()->delete();
 
         foreach($data as $item) {
+
+            $registration->weekClass()->create($item);
 
             $startDate = (date('w', strtotime($registration->start)) == $item['weekday']) ? Carbon::parse($registration->start) :  Carbon::parse($registration->start)->next((int) $item['weekday']); // Get the first friday.
             $endDate   = Carbon::parse($registration->end);
 
             for ($date = $startDate; $date->lte($endDate); $date->addWeek()) {
 
-                $classes[] = [
+                Classes::create([
                     'registration_id' => $registration->id,
                     'student_id' => $registration->student_id,
                     'instructor_id' => $item['instructor_id'],
@@ -69,12 +80,12 @@ class RegistrationService
                     'date' => $date->format('Y-m-d'),
                     'time' => $item['time'],
                     'weekday' => $item['weekday'],
-                ];
+                ]);
             }
 
         }
 
-        Classes::insert($classes);
+        
 
     }
 

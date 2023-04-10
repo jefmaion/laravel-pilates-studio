@@ -30,7 +30,7 @@ class RegistrationController extends Controller
     public function index()
     {
 
-        $registrations = Registration::all();
+        $registrations = Registration::latest()->get();
 
 
         
@@ -48,25 +48,7 @@ class RegistrationController extends Controller
      */
     public function create()
     {
-        // $modalities = Modality::select(['id', 'name'])->get()->toArray();
-
-        // $data = Instructor::all();
-        
-        // $instructors = [];
-        // foreach($data as $inst) {
-        //     $instructors[] = [$inst->id, $inst->user->name];
-        // }
-
-        // $data = Student::all();
-        
-        // $students = [];
-        // foreach($data as $inst) {
-        //     $students[] = [$inst->id, $inst->user->name];
-        // }
-
-        // return view('registration.create', compact('modalities', 'instructors', 'students'));
-
-        return $this->edit(new Registration());
+        return $this->edit(new Registration(), false);
     }
 
     /**
@@ -79,10 +61,8 @@ class RegistrationController extends Controller
     {
         $data = $request->all();
 
-        // dd($data);
-
-        if($this->registrationService->makeRegistration($data)) {
-            return redirect()->route('registration.index')->with('success', 'Matrícula Realizada com successo!');
+        if($registration = $this->registrationService->makeRegistration($data)) {
+            return redirect()->route('registration.show', $registration)->with('success', 'Matrícula Realizada com successo!');
         }
 
     }
@@ -104,11 +84,12 @@ class RegistrationController extends Controller
      * @param  \App\Models\Registration  $registration
      * @return \Illuminate\Http\Response
      */
-    public function edit(Registration $registration)
+    public function edit(Registration $registration, $renew=false)
     {
         
-        $modalities = Modality::select(['id', 'name'])->get()->toArray();
+        $view = 'registration.edit';
 
+        $modalities = Modality::select(['id', 'name'])->get()->toArray();
         $data = Instructor::all();
         
         $instructors = [];
@@ -123,11 +104,22 @@ class RegistrationController extends Controller
             $students[] = [$inst->id, $inst->user->name];
         }
 
-        if(empty($registration->id)) {
-            return view('registration.create', compact('registration', 'modalities', 'instructors', 'students'));
+        $weekclass = [];
+        foreach($registration->weekclass as $wk) {
+            $weekclass['time'][$wk->weekday] = $wk->time;
+            $weekclass['instructor'][$wk->weekday] = $wk->instructor_id;
         }
 
-        return view('registration.edit', compact('registration', 'modalities', 'instructors', 'students'));
+        
+        if(empty($registration->id)) {
+            $view = 'registration.create';
+        }
+
+        if($renew) {
+            $view = 'registration.renew';
+        }
+
+        return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass'));
 
     }
 
@@ -146,7 +138,7 @@ class RegistrationController extends Controller
  
 
         if($this->registrationService->updateRegistration($registration, $data)) {
-            return redirect()->route('registration.index')->with('success', 'Matrícula Atualizada com successo!');
+            return redirect()->route('registration.show', $registration)->with('success', 'Matrícula Atualizada com successo!');
         }
     }
 
@@ -159,11 +151,27 @@ class RegistrationController extends Controller
     public function destroy(Registration $registration)
     {   
 
+        $registration->weekclass()->delete();
         $registration->classes()->delete();
         $registration->delete();
 
 
         return redirect()->route('registration.index')->with('success', 'Matrícula Excluida com successo!');
+    }
+
+    public function cancel(Registration $registration) {
+        return view('registration.cancel', compact('registration'));
+    }
+
+    public function abort(Registration $registration, Request $request) {
+
+        $this->registrationService->cancelRegistration($registration, $request->input('comments'));
+        return redirect()->route('registration.index')->with('success', 'Matrícula Cancelada com successo!');
+       
+    }
+
+    public function renew(Registration $registration) {
+        return $this->edit($registration, true);
     }
 
     private function listToDataTable($data) {
@@ -172,9 +180,10 @@ class RegistrationController extends Controller
 
         foreach($data as $item) {
             $response[] = [
-                'name' => image(asset($item->student->user->image)) . sprintf('<a href="%s">%s</a>', route('registration.show', $item), $item->student->user->name),
+                'name' => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
                 'start' => $item->start,
                 'end' => $item->end->format('d/m/Y'),
+                'status' => $item->statusName,
                 'modality' => $item->modality->name,
                 'created_at' => $item->created_at->format('d/m/Y')
             ];

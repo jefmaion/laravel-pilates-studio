@@ -13,6 +13,24 @@ class Registration extends Model
 
     protected $dates = ['start', 'end'];
 
+    protected $durationName = [
+        1 => 'Mensal',
+        2 => 'Bimestral',
+        3 => 'Trimestral'
+    ];
+
+    protected $statusName = [
+        'Cancelado', 'Em Andamento'
+    ];
+
+
+    public function getDurationNameAttribute() {
+        return $this->durationName[$this->duration];
+    }
+
+    public function getStatusNameAttribute() {
+        return $this->statusName[$this->status];
+    }
 
 
     public function student() {
@@ -24,6 +42,10 @@ class Registration extends Model
     }
 
     public function classes() {
-        return $this->hasMany(Classes::class);
+        return $this->hasMany(Classes::class)->orderBy('date', 'asc');
+    }
+
+    public function weekClass() {
+        return $this->hasMany(RegistrationClass::class);
     }
 }

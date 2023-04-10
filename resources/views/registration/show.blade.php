@@ -5,44 +5,48 @@
 <x-page-title>
     <x-slot name="title"><small>Matrícula do Aluno</small> </x-slot>
     <x-slot name="breadcrumb">
-        <x-breadcrumb-item href="{{ route('registration.index') }}">Professores</x-breadcrumb-item>
-        <x-breadcrumb-item active>Dados do Professor</x-breadcrumb-item>
+        <x-breadcrumb-item href="{{ route('registration.index') }}">Matrículas</x-breadcrumb-item>
+        <x-breadcrumb-item active>Matrícula Atual</x-breadcrumb-item>
     </x-slot>
 </x-page-title>
 
 <div class="row">
     <div class="col-12">
-        <div class="card profile-widget">
+        <x-card class="author-box">
 
-            <div class="profile-widget-header">
+            <div class="author-box-left">
                 <img alt="image" src="{{ asset($registration->student->user->image) }}"
-                    class="rounded-circle profile-widget-picture">
-                <div class="profile-widget-items">
-                    <div class="profile-widget-item">
-                        <div class="profile-widget-item-label">Total de Aulas</div>
-                        <div class="profile-widget-item-value">{{ $registration->classes->count() }}</div>
-                    </div>
-                    <div class="profile-widget-item">
-                        <div class="profile-widget-item-label">Presenças</div>
-                        <div class="profile-widget-item-value">9,3K</div>
-                    </div>
-                    <div class="profile-widget-item">
-                        <div class="profile-widget-item-label">Faltas</div>
-                        <div class="profile-widget-item-value">3,7K</div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="profile-widget-description pb-0">
-                <div class="profile-widget-name">
-                    <h4>{{ $registration->student->user->name }}</h4>
-                </div>
-               
-
-
+                    class="rounded-circle author-box-picture">
+                <div class="clearfix"></div>
             </div>
 
-            <div class="card-body">
+            <div class="author-box-details">
+
+                <div class="author-box-name">
+                    <h3><a href="{{ route('student.show', $registration->student) }}">{{ $registration->student->user->name }}</a></h3>
+                </div>
+
+                <div class="author-box-job text-muted">
+                    {{ $registration->modality->name }} | 
+                    {{ $registration->durationName }} | 
+                    {{ $registration->class_per_week }}x | 
+                    {{ $registration->value }}
+                </div>
+
+                <div class="mt-3 author-box-job text-muted">
+                    Cadastrado em {{ $registration->created_at->diffForHumans() }} |
+                    Editado em {{ $registration->updated_at->diffForHumans() }}
+                </div>
+
+                <div class="author-box-description">
+                    <x-badge>{{ $registration->statusName }}</x-badge>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div>
 
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
@@ -63,7 +67,6 @@
                                 <tr>
                                     <th>Data</th>
                                     <th>Hora</th>
-                                    <th>Dia</th>
                                     <th>Professor</th>
                                     <th>Tipo</th>
                                     <th>Status</th>
@@ -72,12 +75,11 @@
                             <tbody>
                                 @foreach($registration->classes as $class) 
                                 <tr>
-                                    <td scope="row">{{ $class->date }}</td>
+                                    <td scope="row">{{ date('d/m/Y', strtotime($class->date)) }} {{ $class->weekname }}</td>
                                     <td>{{ $class->time }}</td>
-                                    <td>{{ $class->weekday }}</td>
                                     <td>{{ $class->instructor->user->name }}</td>
-                                    <td>{{ $class->type }}</td>
-                                    <td>{{ $class->status }}</td>
+                                    <td>{{ $class->classType }}</td>
+                                    <td>{{ $class->statusClass }}</td>
                                 </tr>
                                 @endforeach
 
@@ -90,65 +92,6 @@
                     </div>
                 </div>
 
-            </div>
-
-            <div class="card-footer">
-                <a name="" id="" class="btn btn-light text-dark" href="{{ route('registration.index') }}" role="button">
-                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-                    Voltar
-                </a>
-
-                <div class="dropdown d-inline">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-cogs    "></i>
-                        Gerenciar
-                    </button>
-                    <div class="dropdown-menu" x-placement="bottom-start">
-                        <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}"><i
-                                class="fas fa-pencil-alt    "></i> Editar</a>
-                        <x-delete-button class="dropdown-item has-icon"
-                            route="{{ route('registration.destroy', $registration) }}"><i class="fas fa-trash-alt"></i>
-                            Excluir</x-delete-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
-{{-- <div class="row">
-    <div class="col-5">
-        <x-card class="author-box">
-
-            <div class="author-box-left">
-                <img alt="image" src="{{ asset($registration->student->user->image) }}"
-                    class="rounded-circle author-box-picture">
-                <div class="clearfix"></div>
-            </div>
-
-            <div class="author-box-details">
-
-                <div class="author-box-name">
-                    <h3>{{ $registration->student->user->name }}</h3>
-                </div>
-
-                <div class="author-box-job text-muted">
-                    {{ $registration->profession }}
-
-
-                </div>
-
-                <div class="mt-3 author-box-job text-muted">
-                    Cadastrado em {{ $registration->created_at->diffForHumans() }} |
-                    Editado em {{ $registration->updated_at->diffForHumans() }}
-                </div>
-
-                <div class="author-box-description">
-                    <x-badge-status status="{{ $registration->enabled }}" />
-                </div>
 
             </div>
 
@@ -166,11 +109,10 @@
                         Gerenciar
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
-                        <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}"><i
-                                class="fas fa-pencil-alt    "></i> Editar</a>
-                        <x-delete-button class="dropdown-item has-icon"
-                            route="{{ route('registration.destroy', $registration) }}"><i class="fas fa-trash-alt"></i>
-                            Excluir</x-delete-button>
+                        <a class="dropdown-item has-icon" href="{{ route('registration.renew', $registration) }}"><i class="fas fa-pencil-alt    "></i> Renovar Matrícula</a>
+                        <a class="dropdown-item has-icon" href="{{ route('registration.cancel', $registration) }}"><i class="fas fa-pencil-alt    "></i> Cancelar Matrícula</a>
+                        <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}"><i class="fas fa-pencil-alt    "></i> Editar</a>
+                        <x-delete-button class="dropdown-item has-icon" route="{{ route('registration.destroy', $registration) }}"><i class="fas fa-trash-alt"></i>Excluir</x-delete-button>
                     </div>
                 </div>
             </x-slot>
@@ -178,65 +120,10 @@
         </x-card>
     </div>
 
-    <div class="col">
-        <div class="row">
-            <div class="col-4">
-                <x-card>
-                    <div class="text-center">
-                        <h3>3</h3>
-                        <small>Faltas</small>
-                    </div>
-                </x-card>
-            </div>
-
-            <div class="col-4">
-                <x-card>
-                    <div class="text-center">
-                        <h3>3</h3>
-                        <small>Faltas</small>
-                    </div>
-                </x-card>
-            </div>
-
-            <div class="col-4">
-                <x-card>
-                    <div class="text-center">
-                        <h3>3</h3>
-                        <small>Faltas</small>
-                    </div>
-                </x-card>
-            </div>
-
-            <div class="col-4">
-                <x-card>
-                    <div class="text-center">
-                        <h3>3</h3>
-                        <small>Faltas</small>
-                    </div>
-                </x-card>
-            </div>
-
-            <div class="col-4">
-                <x-card>
-                    <div class="text-center">
-                        <h3>3</h3>
-                        <small>Faltas</small>
-                    </div>
-                </x-card>
-            </div>
-
-            <div class="col-4">
-                <x-card>
-                    <div class="text-center">
-                        <h3>3</h3>
-                        <small>Faltas</small>
-                    </div>
-                </x-card>
-            </div>
-
-        </div>
+    <div class="col-12">
+        
     </div>
-</div> --}}
+</div>
 
 @endsection
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AvatarUploadController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\HomeController;
@@ -42,5 +43,11 @@ Route::resource('instructor/{instructor}/modality', InstructorModalityController
 Route::resource('modality', ModalityController::class);
 Route::resource('exercice', ExerciceController::class);
 Route::resource('registration', RegistrationController::class);
+Route::get('registration/{registration}/cancel', [RegistrationController::class, 'cancel'])->name('registration.cancel');
+Route::post('registration/{registration}/abort', [RegistrationController::class, 'abort'])->name('registration.abort');
+Route::get('registration/{registration}/renew', [RegistrationController::class, 'renew'])->name('registration.renew');
+
+
+Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
 require __DIR__.'/auth.php';

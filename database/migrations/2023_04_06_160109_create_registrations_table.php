@@ -27,6 +27,9 @@ class CreateRegistrationsTable extends Migration
             $table->decimal('value')->nullable();
             $table->string('description')->nullable();
             $table->text('comments')->nullable();
+            $table->integer('status')->default(1);
+            $table->date('cancel_date')->nullable();
+            $table->text('cancel_comments')->nullable();
 
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreign('modality_id')->references('id')->on('modalities');

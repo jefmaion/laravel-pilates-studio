@@ -13,7 +13,7 @@
 
     <a class="btn btn-lg btn-success " href="{{ route('registration.create') }}" role="button">
         <i class="fas fa-plus-circle    "></i>
-        Novo Professor
+        Nova Matrícula
     </a>
 
     <hr>
@@ -26,6 +26,7 @@
                     <th>Modalidade</th>
                     <th>Fim</th>
                     <th>Data</th>
+                    <th>Status</th>
                 </tr>
             </thead>
         </table>
