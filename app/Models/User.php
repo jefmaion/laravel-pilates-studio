@@ -53,6 +53,11 @@ class User extends Authenticatable
         return array_shift($name);
     }
 
+    public function getFirstAndLastAttribute() {
+        $name = explode(" ", $this->name);
+        return array_shift($name) .' ' . end($name);
+    }
+
     public function getImageAttribute() {
         $avatarPath = 'images/avatar';
 

@@ -79,7 +79,7 @@
                                     <td>{{ $class->time }}</td>
                                     <td>{{ $class->instructor->user->name }}</td>
                                     <td>{{ $class->classType }}</td>
-                                    <td>{{ $class->statusClass }}</td>
+                                    <td>{{ $class->classStatus }}</td>
                                 </tr>
                                 @endforeach
 

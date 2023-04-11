@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AvatarUploadController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\HomeController;
@@ -48,6 +49,14 @@ Route::post('registration/{registration}/abort', [RegistrationController::class,
 Route::get('registration/{registration}/renew', [RegistrationController::class, 'renew'])->name('registration.renew');
 
 
-Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
+Route::resource('class', ClassesController::class);
+Route::put('class/{class}/absense', [ClassesController::class, 'absense'])->name('class.absense');
+Route::put('class/{class}/presence', [ClassesController::class, 'presence'])->name('class.presence');
+
+Route::resource('calendar', CalendarController::class);
+Route::get('calendar/{id}/absense', [CalendarController::class, 'absense'])->name('calendar.absense');
+Route::get('calendar/{id}/presence', [CalendarController::class, 'presence'])->name('calendar.presence');
+
+// Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
 require __DIR__.'/auth.php';

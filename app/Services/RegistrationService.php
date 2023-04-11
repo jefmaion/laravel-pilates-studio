@@ -42,6 +42,9 @@ class RegistrationService
         $registration->status = 0;
         $registration->save();
 
+
+        $registration->classes()->where('finished', 0)->delete();
+
     }
 
     private function prepareData($data) {

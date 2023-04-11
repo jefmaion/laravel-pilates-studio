@@ -7,6 +7,10 @@
     <ul class="sidebar-menu">
         <li class="menu-header">Main</li>
 
+        <li class="dropdown {{ (\Request::is('calendar*')) ? 'active' : '' }}">
+            <a href="{{ route('calendar.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Agenda</span></a>
+        </li>
+
         <li class="dropdown {{ (\Request::is('registration*')) ? 'active' : '' }}">
             <a href="{{ route('registration.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Matrículas</span></a>
         </li>

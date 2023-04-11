@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classes;
+use App\Models\Exercice;
+use App\Models\Instructor;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -27,6 +29,32 @@ class CalendarController extends Controller
         return view('calendar.index');
     }
 
+    public function show($id) {
+
+        $class = Classes::find($id);
+
+        return view('calendar.show', compact('class'));
+    }
+
+    public function absense($id) {
+        $class = Classes::find($id);
+        $data = Instructor::all();
+        
+        $instructors = [];
+        foreach($data as $inst) {
+            $instructors[] = [$inst->id, $inst->user->name];
+        }
+        return view('calendar.absense', compact('class', 'instructors'));
+    }
+
+    public function presence($id) {
+        $class = Classes::find($id);
+
+        $exercices = Exercice::select(['id', 'name'])->get()->toArray();
+
+        return view('calendar.presence', compact('class', 'exercices'));
+    }
+
 
     private function listToCalendar($data) {
 
@@ -42,10 +70,18 @@ class CalendarController extends Controller
 
         foreach($data as $item) {
 
-            $title = '<div><b>' . date('H:i', strtotime($item->time)) . ' ' . $item->student->user->name . '</b></div>';
+
+            $badge = '<span class="bg-dark mt-1 rounded px-1"><small>'.$item->type.'</small></span>';
+
+            if($item->type !== 'RP') {
+                $badge = '';
+            }
+
+            $title = '<div>'.$badge.'<b>' .  $item->student->user->firstAndLast . '</b></div>';
             // $title .= '<div>'.$item->instructor->user->name.'</div>';
             $title .= '<div>'.$item->registration->modality->name;
-            $title .= ' / ' . $item->classType.'</div>';
+            $title .= ' | ' . $item->classType;
+            $title .= ' | ' . $item->instructor->user->firstName.'</div>';
 
             $calendar[] = [
                 'id' => $item->id,

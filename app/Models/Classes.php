@@ -18,7 +18,7 @@ class Classes extends Model
     protected $classType = ['AN' => 'Aula Normal', 'RP' => 'Reposição', 'FJ' => 'Falta Com Aviso', 'FF' => 'Falta'];
 
 
-    public function getStatusClassAttribute() {
+    public function getClassStatusAttribute() {
         return $this->statusClass[$this->status];
     }
 
@@ -28,6 +28,10 @@ class Classes extends Model
 
     public function getWeeknameAttribute() {
         return $this->weekname[$this->weekday];
+    }
+
+    public function parent() {
+        return $this->belongsTo(Classes::class, 'classes_id', 'id');
     }
 
     public function student() {
@@ -40,6 +44,14 @@ class Classes extends Model
 
     public function registration() {
         return $this->belongsTo(Registration::class);
+    }
+
+    public function exercices() {
+        return $this->belongsToMany(Exercice::class, 'class_exercices')->using(ClassExercice::class);
+    }
+
+    public function getLastClassAttribute() {
+        return $this->where('status', 1)->where('finished', 1)->where('student_id', $this->student_id)->orderBy('date', 'desc')->first();
     }
 
 }

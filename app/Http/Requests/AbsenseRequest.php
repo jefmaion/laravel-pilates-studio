@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateClassesRequest extends FormRequest
+class AbsenseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,15 @@ class UpdateClassesRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'absense_type' => 'required',
+            'comments' => 'required_if:absense_type,2',
+
+
+            'date'          => 'required_with:has_replacement',
+            'time'          => 'required_with:has_replacement',
+            'instructor_id' => 'required_with:has_replacement',
         ];
     }
+
+
 }

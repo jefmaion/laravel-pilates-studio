@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,11 +26,19 @@ class DatabaseSeeder extends Seeder
     private function runAll() {
         $files_arr = scandir( dirname(__FILE__) ); //store filenames into $files_array
         
+        $data = [];
+
         foreach ($files_arr as $key => $file){
             if ($file !== 'DatabaseSeeder.php' && $file[0] !== "." ){
-                $seeder = '\\Database\\Seeders\\' . explode('.', $file)[0];
-                $this->call($seeder);
+                $filedata = filectime(dirname(__FILE__) . '\\' .$file);
+                $data[$filedata]  = '\\Database\\Seeders\\' . explode('.', $file)[0];
             }
+        }
+
+        ksort($data);
+
+        foreach($data as $seeder) {
+            $this->call($seeder);
         }
     }
 }
