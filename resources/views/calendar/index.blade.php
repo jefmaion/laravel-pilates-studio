@@ -10,6 +10,46 @@
 </x-page-title>
 
 <x-card style="primary">
+
+    <div class="row">
+        {{-- <div class="col-1">
+            <div class="dropdown">
+                <button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownMenuButton2"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Ações
+                </button>
+                <div class="dropdown-menu" x-placement="bottom-start">
+                    <a class="dropdown-item has-icon" href="#"><i class="far fa-heart"></i> Action</a>
+                    <a class="dropdown-item has-icon" href="#"><i class="far fa-file"></i> Another action</a>
+                    <a class="dropdown-item has-icon" href="#"><i class="far fa-clock"></i> Something else here</a>
+                </div>
+            </div>
+        </div> --}}
+
+        <div class="col form-group">
+            <label>Instrutor</label>
+            <x-form.select class="item-calendar select2" name="instructor_id" :options="$instructors" />
+        </div>
+
+        <div class="col form-group">
+            <label>Modalidade</label>
+            <x-form.select class="item-calendar select2" name="modality_id" :options="$modalities" />
+        </div>
+
+        <div class="col form-group">
+            <label>Tipo de Aula</label>
+            <x-form.select class="item-calendar select2" name="type"
+                :options="['AN' => 'Aula Normal', 'RP' => 'Reposição', 'AE' => 'Aula Experimental']" />
+        </div>
+
+        <div class="col form-group">
+            <label>Status Aula</label>
+            <x-form.select class="item-calendar select2" name="status"
+                :options="[0 => 'Agendada', 1 => 'Realizada', 2 => 'Falta Com Aviso', 3 => 'Falta']" />
+        </div>
+
+    </div>
+
     <div id="myEvent"></div>
 </x-card>
 
@@ -26,45 +66,48 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('template/assets/bundles/fullcalendar/fullcalendar.min.css') }}">
+
 <link rel="stylesheet" href="{{ asset('template/assets/bundles/select2/dist/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('template/assets/bundles/fullcalendar/fullcalendar.min.css') }}">
+<link rel="stylesheet" href="{{ asset('template/assets/bundles/summernote/summernote-bs4.css') }}">
 <style>
+    .fc-event {
+        margin: 2px;
+        box-shadow: none !important;
+    }
 
-.fc-event {
-    margin: 2px;
-    box-shadow: none !important;
-}
+    .fc-time-grid .fc-slats td {
+        height: 4.5em;
+        border-bottom: 0;
 
-.fc-time-grid .fc-slats td {
-  height: 3em; // Change This to your required height
-  border-bottom: 0;
-}
+    }
 
-.risk {
-    text-decoration: line-through
-}
+    .risk {
+        text-decoration: line-through
+    }
 </style>
+
+
 @endsection
 
 
 @section('scripts')
-
 <script src="{{ asset('template/assets/bundles/fullcalendar/fullcalendar.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/locale/pt-br.js"></script>
 <script src="{{ asset('template/assets/bundles/select2/dist/js/select2.full.min.js') }}"></script>
-
+<script src="{{ asset('template/assets/bundles/summernote/summernote-bs4.js') }}"></script>
 <script>
-
-        
-var calendar = $('#myEvent').fullCalendar({
+    $(document).ready(function () {
+        var calendar = $('#myEvent').fullCalendar({
         header: {
             left: 'prev,next today',
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
         },
+        navLinks:true,
         height: 'auto',
         defaultView: 'agendaWeek',
-        editable: false,
+        // editable: true,
         selectable: true,
         allDaySlot: false,
         displayEventTime : false,
@@ -79,28 +122,34 @@ var calendar = $('#myEvent').fullCalendar({
         slotLabelFormat: [
             'HH:mm', // top level of text
         ],
+        // navLinkDayClick: function(date, jsEvent) {
+        //     console.log('day', date.format()); // date is a moment
+        //     console.log('coords', jsEvent.pageX, jsEvent.pageY);
+        // },
         events: {
             url: 'calendar/',
             data: function() {
                 obj = {}
-                $('.calendar-comp').each(function (index, element) {
+                $('.item-calendar').each(function (index, element) {
                     name = $(this).attr('name');
-                    obj[name] = $(element).val()
+                    obj[name] = $('[name="'+name+'"]').val()
                 });
-
                 return obj
             }
         },
+
 
         eventRender: function(event, element) {
             element.find(".fc-title").html(event.title);
         },
         eventClick:  function(event, jsEvent, view) {
-
-            // alert(event.id)
-            
             showClass(event.id)
         },
+
+        dateClick: function(info) {
+            alert('clicked ' + info.dateStr + ' on resource ');
+        },
+
         dayClick: function(date, jsEvent, view) {
 
             // alert('Clicked on: ' + date.format());
@@ -108,34 +157,20 @@ var calendar = $('#myEvent').fullCalendar({
             // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 
             // alert('Current view: ' + view.name);
-
-            // change the day's background color just for fun
-            // $(this).css('background-color', 'red');
+            alert('dia')
 
         },
         eventAfterRender: function(event, element, view) {
             // alert('sd');
-        }
+        },
         
     });
-        
-        
-                        
-        
-        
-            //             function getEvents() {
-            //                 return  {
-            //                      url: '{{ route('calendar.index') }}',
-            //                     data: {
-            //                         instructor: $('[name=instructor]').val()
-            //                     }
-            //                 }
-            //             }
-        
+
+    $('.item-calendar').change(function (e) { 
+        calendar.fullCalendar('refetchEvents');
+    });
                 
-            //             $('.calendar-comp').change(function (e) { 
-            //                 calendar.fullCalendar('refetchEvents');
-            //             });
+    });
         
             // });
         
@@ -144,15 +179,26 @@ var calendar = $('#myEvent').fullCalendar({
             type: "get",
             url: "calendar/" + id,
             success: function (response) {
-
-                // $('#modelId').modal('hide');
-                $('#modelId .modal-content').html(response);
-                $('#modelId').modal('show')
+                showModal(response)
             }
         });
     }
 
+    function showModal(content) {
+        // $('#modelId').modal('hide')
+        $('#modelId .modal-content').html(content)
+        $('#modelId').modal('show')
+    }
 
+    $('#modelId').on('hidden.bs.modal', function (e) {
+        // alert('s')
+        alert('asdasds')
+    })
+
+
+    $(function () {
+  $('[data-toggle="popover"]').popover()
+})
         
 </script>
 @endsection

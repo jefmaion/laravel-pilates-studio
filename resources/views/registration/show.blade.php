@@ -23,7 +23,7 @@
             <div class="author-box-details">
 
                 <div class="author-box-name">
-                    <h3><a href="{{ route('student.show', $registration->student) }}">{{ $registration->student->user->name }}</a></h3>
+                    <h3><a href="{{ route('student.show', $registration->student) }}">{{ $registration->student->user->name }}</a> <small><x-badge>{{ $registration->statusName }}</x-badge></small></h3>
                 </div>
 
                 <div class="author-box-job text-muted">
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="author-box-description">
-                    <x-badge>{{ $registration->statusName }}</x-badge>
+                    
                 </div>
 
             </div>
@@ -69,7 +69,8 @@
                                     <th>Hora</th>
                                     <th>Professor</th>
                                     <th>Tipo</th>
-                                    <th>Status</th>
+                                    <th class="text-center">Status</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,7 +80,12 @@
                                     <td>{{ $class->time }}</td>
                                     <td>{{ $class->instructor->user->name }}</td>
                                     <td>{{ $class->classType }}</td>
-                                    <td>{{ $class->classStatus }}</td>
+                                    <td class="text-center">{!! $class->classStatusBadge !!}</td>
+                                    <td>
+                                        @if(empty($class->evolution))
+                                        <a name="" id="" class="btn btn-warning" href="{{ route('class.edit', $class) }}" role="button">Editar Aula</a>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
 
@@ -109,13 +115,17 @@
                         Gerenciar
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
+                        @if($registration->status > 0)
                         <a class="dropdown-item has-icon" href="{{ route('registration.renew', $registration) }}"><i class="fas fa-pencil-alt    "></i> Renovar Matrícula</a>
                         <a class="dropdown-item has-icon" href="{{ route('registration.cancel', $registration) }}"><i class="fas fa-pencil-alt    "></i> Cancelar Matrícula</a>
                         <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}"><i class="fas fa-pencil-alt    "></i> Editar</a>
+                        @endif
                         <x-delete-button class="dropdown-item has-icon" route="{{ route('registration.destroy', $registration) }}"><i class="fas fa-trash-alt"></i>Excluir</x-delete-button>
                     </div>
                 </div>
             </x-slot>
+
+            
 
         </x-card>
     </div>

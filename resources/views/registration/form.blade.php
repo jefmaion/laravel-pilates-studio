@@ -41,10 +41,7 @@
         <x-form.input name="value" value="{{ old('value', currency($registration->value) ?? '') }}" />
     </div>
 
-    <div class="col form-group">
-        <label>Observações</label>
-        <x-form.textarea name="comments" value="">{{ old('comments', $registration->comments ?? '') }}</x-form.textarea>
-    </div>
+
 
     
 </div>
@@ -96,3 +93,11 @@
         
     </tbody>
 </table>
+
+
+<div class="row">
+    <div class="col form-group">
+        <label>Observações</label>
+        <x-form.textarea name="comments" value="">{{ old('comments', $registration->comments ?? '') }}</x-form.textarea>
+    </div>
+</div>

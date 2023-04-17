@@ -32,11 +32,9 @@ class RegistrationController extends Controller
 
         $registrations = Registration::latest()->get();
 
-
-        
         if($this->request->ajax()) {
             return $this->listToDataTable($registrations);
-         }
+        }
 
         return view('registration.index');
     }
@@ -60,6 +58,8 @@ class RegistrationController extends Controller
     public function store(StoreRegistrationRequest $request)
     {
         $data = $request->all();
+
+        dd($data);
 
         if($registration = $this->registrationService->makeRegistration($data)) {
             return redirect()->route('registration.show', $registration)->with('success', 'Matrícula Realizada com successo!');

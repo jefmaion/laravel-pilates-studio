@@ -17,6 +17,10 @@ class Controller extends BaseController
     public function __construct(Request $request)
     {
         $this->request = $request;
+        if (empty(auth()->user())) {
+            return redirect()->route('login');
+        }
+
     }
 
 

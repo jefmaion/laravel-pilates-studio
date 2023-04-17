@@ -12,14 +12,18 @@ class Classes extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
     
     protected $statusClass = ['Agendada', 'Presença', 'Falta com Aviso', 'Falta', 'Cancelada'];
-
+    protected $statusClassLabel = ['primary', 'success', 'warning', 'danger', 'dark'];
     protected $weekname    = ['Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado'];
-
-    protected $classType = ['AN' => 'Aula Normal', 'RP' => 'Reposição', 'FJ' => 'Falta Com Aviso', 'FF' => 'Falta'];
+    protected $classType   = ['AN' => 'Aula Normal', 'RP' => 'Reposição', 'FJ' => 'Falta Com Aviso', 'FF' => 'Falta'];
 
 
     public function getClassStatusAttribute() {
         return $this->statusClass[$this->status];
+    }
+
+    public function getClassStatusBadgeAttribute() {
+        $color = $this->statusClassLabel[$this->status];
+        return sprintf('<span class="badge badge-%s badge-shadow">%s</span>', $color, $this->classStatus);
     }
 
     public function getClassTypeAttribute() {
@@ -52,6 +56,25 @@ class Classes extends Model
 
     public function getLastClassAttribute() {
         return $this->where('status', 1)->where('finished', 1)->where('student_id', $this->student_id)->orderBy('date', 'desc')->first();
+    }
+
+    public function hasReplacement() {
+        return $this->where('classes_id', $this->id)->count();
+    }
+
+    public function getPendenciesAttribute() {
+
+        $pendencies = [];
+
+        if($this->status == 1 && empty($this->evolution)) {
+            $pendencies[] = 'Evolução não Cadastrada';
+        }
+
+        if($this->status == 2 && $this->hasReplacement() === 0) {
+            $pendencies[] = 'Reposição não agendada';
+        }
+
+        return $pendencies;
     }
 
 }

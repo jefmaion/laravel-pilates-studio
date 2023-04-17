@@ -58,9 +58,9 @@ class ClassesController extends Controller
      * @param  \App\Models\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function edit(Classes $classes)
+    public function edit(Classes $class)
     {
-        
+        return view('class.edit', compact('class'));
     }
 
     /**
@@ -70,43 +70,43 @@ class ClassesController extends Controller
      * @param  \App\Models\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateClassesRequest $request, Classes $classes)
+    public function update(UpdateClassesRequest $request, Classes $class)
     {
-        dd($request->all());
+        $data = $request->except(['_method', '_token']);
+
+        $class->fill($data)->update();
+
+        return redirect()->route('registration.show', $class->registration)->with('success', 'Aula Alterada');
     }
 
     public function absense(AbsenseRequest $request, Classes $class)
     {
-
-
-        
-
         $class->status = $request->input('absense_type');
         $class->comments = $request->input('comments');
         $class->finished = 1;
         
-
         if($request->input('has_replacement')) {
-
-
-
-            $newClass = $class->replicate();
-
-            $newClass->date = $request->input('date');
-            $newClass->time = $request->input('time');
-            $newClass->instructor_id = $request->input('instructor_id');
+            $newClass                          = $class->replicate();
+            $newClass->date                    = $request->input('date');
+            $newClass->time                    = $request->input('time');
+            $newClass->instructor_id           = $request->input('instructor_id');
+            $newClass->scheduled_instructor_id = $newClass->instructor_id;
             $newClass->type                    = 'RP';
             $newClass->status                  = 0;
             $newClass->finished                = 0;
-            $newClass->scheduled_instructor_id = $newClass->instructor_id;
-    
-            $newClass->parent()->associate($class);
-            
+            $newClass->comments                = null;
+
+            if(!$newClass->classes_id) {
+                $newClass->classes_id = $class->id;
+            }
+
+            // $newClass->parent()->associate($class);
             $newClass->save();
     
-            $class->parent()->associate($newClass);
-    
-          
+            // $class->parent()->associate($newClass);
+
+            $class->has_replacement = 1;
+
         }
 
         return $class->save();
@@ -114,11 +114,12 @@ class ClassesController extends Controller
 
     public function presence(Request $request, Classes $class)
     {
-
-        $class->status = 1;
-        $class->finished = 1;
+        $class->status    = 1;
+        $class->finished  = 1;
         $class->evolution = $request->input('evolution');
+
         $class->exercices()->sync($request->input('exercices'));
+
         return $class->save();
     }
 

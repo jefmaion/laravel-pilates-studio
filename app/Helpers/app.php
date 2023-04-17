@@ -27,3 +27,9 @@ if(!function_exists('currency')) {
 
     }
 }
+
+if(!function_exists('formatData')) {
+    function formatData($value, $format='d/m/Y', $suffix='') {
+        return date($format, strtotime($value)) . $suffix;
+    }
+}

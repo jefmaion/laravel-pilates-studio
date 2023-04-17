@@ -17,6 +17,7 @@ class CreateModalitiesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->string('acronym', 3)->nullable();
             $table->integer('enabled')->default(1);
         });
     }

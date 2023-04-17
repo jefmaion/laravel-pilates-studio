@@ -11,10 +11,19 @@
 
     <x-card style="primary">
 
-        <a class="btn btn-lg btn-success " href="{{ route('modality.create') }}" role="button">
-            <i class="fas fa-plus-circle    "></i>
-            Nova Modalidade
-        </a>
+        
+
+        <div class="row align-items-center">
+            <div class="col">
+                <a class="btn btn-lg btn-success " href="{{ route('modality.create') }}" role="button">
+                    <i class="fas fa-plus-circle    "></i>
+                    Nova Modalidade
+                </a>
+            </div>
+            <div class="col">
+                <h5 class="text-right text-muted font-weight-light my-auto">{{ $count }} Modalidade(s) Cadastrada(s)</h5>
+            </div>
+        </div>
 
         <hr>
 

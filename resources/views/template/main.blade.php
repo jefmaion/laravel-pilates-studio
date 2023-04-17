@@ -5,7 +5,7 @@
     @include('template.includes.head')
 </head>
 
-<body>
+<body class="light theme-white dark-sidebar">
     <div class="loader"></div>
     
     <div id="app">

@@ -16,12 +16,13 @@ class ExerciceController extends Controller
     public function index()
     {
         $exercices = Exercice::all();
+        $count = count($exercices);
 
         if($this->request->ajax()) {
             return $this->listToDataTable($exercices);
          }
  
-         return view('exercice.index', compact('exercices'));
+         return view('exercice.index', compact('count'));
     }
 
     /**

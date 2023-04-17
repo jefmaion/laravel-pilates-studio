@@ -15,9 +15,9 @@ class ModalitySeeder extends Seeder
     public function run()
     {
         $data = [
-            ['name' => 'Pilates', 'enabled' => 1],
-            ['name' => 'LPF', 'enabled' => 1],
-            ['name' => 'Bundge Fusion', 'enabled' => 1],
+            ['name' => 'Pilates', 'enabled' => 1, 'acronym' => 'PLT'],
+            ['name' => 'LPF', 'enabled' => 1, 'acronym' => 'LPF'],
+            ['name' => 'Bundge Fusion', 'enabled' => 1, 'acronym' => 'BDF'],
         ];
 
         foreach($data as $item) {

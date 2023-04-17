@@ -15,7 +15,7 @@
     <x-card style="primary">
         @csrf
         @include('instructor.form')
-        <x-slot name="footer">
+        <x-slot name="footer">  
             <a name="" id="" class="btn btn-light text-dark" href="{{ route('instructor.index') }}" role="button">
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
                 Voltar

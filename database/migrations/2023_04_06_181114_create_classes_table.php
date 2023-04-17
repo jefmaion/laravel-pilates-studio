@@ -33,6 +33,9 @@ class CreateClassesTable extends Migration
             $table->text('comments')->nullable();
             $table->text('evolution')->nullable();
 
+            $table->integer('has_replacement')->nullable()->default(0);
+            $table->date('replacement_limit')->nullable();
+
             $table->foreign('classes_id')->references('id')->on('classes');
             $table->foreign('registration_id')->references('id')->on('registrations');
             $table->foreign('student_id')->references('id')->on('students');

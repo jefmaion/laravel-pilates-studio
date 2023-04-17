@@ -16,12 +16,13 @@ class ModalityController extends Controller
     public function index()
     {
         $modalities = Modality::all();
+        $count = count($modalities);
 
         if($this->request->ajax()) {
             return $this->listToDataTable($modalities);
          }
  
-         return view('modality.index', compact('modalities'));
+         return view('modality.index', compact('count'));
     }
 
     /**

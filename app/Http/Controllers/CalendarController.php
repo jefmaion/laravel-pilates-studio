@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\Exercice;
 use App\Models\Instructor;
+use App\Models\Modality;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -17,16 +19,49 @@ class CalendarController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
 
-        $data = Classes::all();
+        
+
+        
 
         if($this->request->ajax()) {
+
+            $start = Carbon::parse($request->query('start'));
+            $end   = Carbon::parse($request->query('end'));
+
+        
+            $data  = Classes::whereBetween('date', [$start, $end]);
+
+            if($request->query('modality_id')) {
+                $data = Classes::whereHas('registration', function($q) use($request) {
+                    $q->where('modality_id','=', $request->query('modality_id'));
+                });
+            }
+          
+            $params = $request->except(['_', 'start', 'end', 'modality_id']);
+
+            foreach ($params as $key => $value) {
+                if ($value == "") continue;
+                $data->where($key, $value);
+            }
+
+            $data = $data->get();
+
             return $this->listToCalendar($data);
         }
 
-        return view('calendar.index');
+        $data = Instructor::all();
+        $instructors = [];
+        foreach($data as $inst) {
+            $instructors[] = [$inst->id, $inst->user->name];
+        }
+
+        $modalities = Modality::select(['id', 'name'])->get()->toArray();
+        
+
+        return view('calendar.index', compact('instructors', 'modalities'));
     }
 
     public function show($id) {
@@ -58,7 +93,6 @@ class CalendarController extends Controller
 
     private function listToCalendar($data) {
 
-
         $bgClassStatus = [
             0 => 'bg-primary',
             1 => 'bg-success',
@@ -70,25 +104,34 @@ class CalendarController extends Controller
 
         foreach($data as $item) {
 
+            $bg = $bgClassStatus[$item->status];
 
-            $badge = '<span class="bg-dark mt-1 rounded px-1"><small>'.$item->type.'</small></span>';
-
-            if($item->type !== 'RP') {
-                $badge = '';
+            if($item->type == 'RP' && $item->status == 0) {
+                $bg = 'bg-info';
             }
+            
+            // $badge = $this->checkEvent($item);
+
+            $badge = '';
+
+            if($item->pendencies) {
+                $badge = '<i class="fa fa-exclamation-triangle " aria-hidden="true" style="color:#F9584B"></i>';
+            }
+
+            
 
             $title = '<div>'.$badge.'<b>' .  $item->student->user->firstAndLast . '</b></div>';
             // $title .= '<div>'.$item->instructor->user->name.'</div>';
-            $title .= '<div>'.$item->registration->modality->name;
+            $title .= '<div>'.$item->registration->modality->acronym;
             $title .= ' | ' . $item->classType;
-            $title .= ' | ' . $item->instructor->user->firstName.'</div>';
+            // $title .= ' | ' . $item->instructor->user->firstName.'</div>';
 
             $calendar[] = [
                 'id' => $item->id,
                 'title' =>  $title,
                 'start'     => $item->date .  'T' . $item->time,
                 'end'       => $item->date .  'T' . date('H:i', strtotime($item->time . '+1 hour')),
-                'className' => [$bgClassStatus[$item->status]],
+                'className' => [$bg],
                 // 'color' => (isset($holidays[$item->date])) ? '#000' : 'null'
             ];
         }
@@ -96,6 +139,23 @@ class CalendarController extends Controller
         
 
         return response()->json($calendar);
+    }
+
+    private function checkEvent($item) {
+        $icon  = '<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i> ';
+
+
+
+        if($item->status == 1 && empty($item->evolution)) {
+            return $icon;
+        }
+
+        if($item->status == 2 && $item->hasReplacement() === 0) {
+            return $icon;
+        }
+
+        return null;
+        
     }
 
 }

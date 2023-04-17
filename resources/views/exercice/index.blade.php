@@ -11,10 +11,17 @@
 
 <x-card style="primary">
 
-    <a class="btn btn-lg btn-success " href="{{ route('exercice.create') }}" role="button">
-        <i class="fas fa-plus-circle    "></i>
-        Novo Exercicio/Aparelho
-    </a>
+    <div class="row align-items-center">
+        <div class="col">
+            <a class="btn btn-lg btn-success " href="{{ route('exercice.create') }}" role="button">
+                <i class="fas fa-plus-circle    "></i>
+                Novo Exercicio/Aparelho
+            </a>
+        </div>
+        <div class="col">
+            <h5 class="text-right text-muted font-weight-light my-auto">{{ $count }} Exercícios(s) Cadastrado(s)</h5>
+        </div>
+    </div>
 
     <hr>
 

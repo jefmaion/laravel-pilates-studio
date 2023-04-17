@@ -30,12 +30,13 @@ class InstructorController extends Controller
     {
         
         $instructors = $this->instructorService->listInstructor();
+        $count = count($instructors);
 
         if($this->request->ajax()) {
            return $this->listToDataTable($instructors);
         }
 
-        return view('instructor.index', compact('instructors'));
+        return view('instructor.index', compact('count'));
     }
 
     /**

@@ -320,6 +320,7 @@ $(function () {
   // Select2
   if (jQuery().select2) {
     $(".select2").select2();
+    $('.select2').addClass('w-100');
   }
 
   // Selectric
@@ -694,16 +695,17 @@ $(function () {
   //start up class add
 
   //add default class on body tag
-  jQuery("body").addClass("light");
-  jQuery("body").addClass("light-sidebar");
-  jQuery("body").addClass("theme-white");
-  // set theme default color
-  $(".choose-theme li").removeClass("active");
-  $(".choose-theme li[title|='white']").addClass("active");
-  //set default dark or light layout(1=light, 2=dark)
-  $(".select-layout[value|='1']").prop("checked", true);
-  //set default dark or light sidebar(1=light, 2=dark)
-  $(".select-sidebar[value|='1']").prop("checked", true);
-  // sticky header default set to true
-  $("#sticky_header_setting").prop("checked", true);
+  // jQuery("body").addClass("light");
+  // jQuery("body").addClass("light-sidebar");
+  // jQuery("body").addClass("theme-white");
+  // // set theme default color
+  // $(".choose-theme li").removeClass("active");
+  // $(".choose-theme li[title|='white']").addClass("active");
+  // //set default dark or light layout(1=light, 2=dark)
+  // $(".select-layout[value|='1']").prop("checked", true);
+  // //set default dark or light sidebar(1=light, 2=dark)
+  // $(".select-sidebar[value|='1']").prop("checked", true);
+  // // sticky header default set to true
+  // $("#sticky_header_setting").prop("checked", true);
+
 });

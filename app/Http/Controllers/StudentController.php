@@ -35,12 +35,13 @@ class StudentController extends Controller
 
      
         $students = $this->studentService->listStudents();
+        $count = count($students);
 
         if($this->request->ajax()) {
            return $this->listToDataTable($students);
         }
 
-        return view('student.index', compact('students'));
+        return view('student.index', compact('count'));
     }
 
     /**

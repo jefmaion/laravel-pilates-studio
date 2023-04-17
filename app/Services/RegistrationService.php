@@ -16,6 +16,8 @@ class RegistrationService
 
         $data = $this->prepareData($data);
 
+        
+
         if ($registration = Registration::create($data)) {
             $this->generateClasses($registration, $data['class']);
             return $registration;
@@ -48,6 +50,11 @@ class RegistrationService
     }
 
     private function prepareData($data) {
+
+        if(!isset($data['class'])) {
+            return $data;
+        }
+
         foreach ($data['class'] as $k => $item) {
             if (empty($item['time']) || empty($item['instructor_id'])) {
                 unset($data['class'][$k]);

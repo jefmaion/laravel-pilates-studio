@@ -6,6 +6,11 @@
     </div>
 
     <div class="col-12 form-group">
+        <label>Nome da Modalidade</label>
+        <x-form.input name="acronym" value="{{ old('acronym', $modality->acronym) }}" />
+    </div>
+
+    <div class="col-12 form-group">
         <x-form.switch-button name="enabled" value="{{ old('enabled', $modality->enabled) }}">Ativo</x-form.switch-button>
     </div>
 
