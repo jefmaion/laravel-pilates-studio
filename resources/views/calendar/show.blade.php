@@ -1,10 +1,6 @@
-
-<div class="modal-header bg-whitesmoke p-3">
+<div class="modal-header bg-whitesmoke border-bottom p-3">
     <h5 class="modal-title">
-        {!! $class->classStatusBadge !!} :: Aula de {{ $class->registration->modality->name }}
-
-
-
+        Aula de {{ $class->registration->modality->name }} - {{ date('d/m/Y', strtotime($class->date)) }}
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span>&times;</span>
@@ -18,52 +14,37 @@
             @include('calendar.header')
         </div>
 
-
         <div class="col-12">
-
-
-            @if(in_array($class->status, [0,1]))    
-
+            @if(in_array($class->status, [0,1]))
                 @if($class->evolution)
-                    <div class="mb-2 text-dark"><b>Evolução Aula</b></div>
-                    @include('calendar.parts.evolution', ['class' => $class])
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <div class="mb-2 text-dark"><b>Evolução Aula</b></div>
+                            @include('calendar.parts.evolution', ['class' => $class])
+                        </div>
+                    </div>
                 @else
-
-                    @if($class->lastClass)
-                        <div class="mb-2 text-dark"><b>Evolução da Última Aula <small>({{ formatData($class->lastClass->date) }})</small></b></div>
-                        @include('calendar.parts.evolution', ['class' => $class->lastClass])
+                    @if($class->lastClass && $class->status == 0)
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <div class="mb-2 text-dark"><b>Evolução da Última Aula ({{ formatData($class->lastClass->date)}})</b></div>
+                                @include('calendar.parts.evolution', ['class' => $class->lastClass])
+                            </div>
+                        </div>
                     @endif
-
                 @endif
-           
-            @endif
-
-            @if($class->comments)
-                <div class="mb-2 text-dark"><b>Observações</b></div>
-                {{ $class->comments }}
             @endif
             
-            {{-- <p><b>Motivo da Falta: </b>{{ $class->comments }}</p>
-            @if(isset($class->parent))
-            <a href="javascript:showClass({{ $class->parent->id }})">
-                Aula de reposição agendada para o dia {{ $class->parent->date }}
-            </a>
-            @endif --}}
+            @if(!empty($class->absense_comments))
+                <div class="mb-2 text-dark">
+                    <b>Motivo da falta: </b>{{ $class->absense_comments }}
+                </div>
+
+                
+            @endif
 
         </div>
-
     </div>
-
-
-
-
-
-
-
-
-
-
-
 </div>
 
 <div class="modal-footer bg-whitesmoke br">
@@ -73,50 +54,81 @@
         Fechar
     </button>
 
-    @if(!$class->finished)
-        <button type="button" class="btn btn-danger" data-url="{{ route('calendar.absense', $class) }}" id="btn-absense">
-            <i class="fas fa-user-times    "></i>
-            Registrar Falta
+    <div class="dropdown dropup d-inline">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-cogs    "></i>
+            Gerenciar
         </button>
-
-        <button type="button" class="btn btn-success" data-url="{{ route('calendar.presence', $class) }}" id="btn-presence">
-            <i class="fas fa-user-check    "></i>
-            Registrar Presença
-        </button>
-    @else
-    <a name="" id="" class="btn btn-primary" href="{{ route('class.edit', $class) }}" role="button">Editar Aula</a>
-    @endif
+        <div class="dropdown-menu" x-placement="bottom-start">
 
 
+            @if($class->status == 0)
+            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.presence', $class) }}">
+                <i class="fas fa-user-check    "></i>
+                Registrar Presença
+            </a>
+
+            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.absense', $class) }}" >
+                <i class="fas fa-user-times"></i>
+                Registrar Falta
+            </a>
+            @else
+
+            {{-- verifica se é falta com aviso e se nao existe reposicao --}}
+            @if($class->status == 2 && $class->has_replacement == 0)
+            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.remark', $class) }}">
+                <i class="fas fa-calendar-plus"></i>
+                Agendar Reposição
+            </a>
+            @endif
+
+            @if($class->status == 1 && empty($class->evolution))
+            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.evolution', $class) }}">
+                <i class="fas fa-file-contract    "></i>
+                Registrar Evolução
+            </a>
+            @endif
+
+            <a class="dropdown-item has-icon reset-class" href="#" data-id="{{ $class->id }}">
+                <i class="fas fa-user-times    "></i>
+                Remover Presença/Falta
+            </a>
+
+            @endif
+
+        </div>
+    </div>
 
 </div>
 
-
 <script>
-    $('#btn-absense').click(function (e) { 
+    $('.open-view').click(function (e) { 
         e.preventDefault();
         $.ajax({
             type: "get",
-            url: $(this).data('url'),
+            url: $(this).attr('href'),
             success: function (response) {
                 showModal(response)
-                // $('#modelId').modal('hide')
-                // $('#modelId .modal-content').hide().html(response).fadeIn();
-                // $('#modelId').modal('show')
+            }
+        });
+    }); 
+
+    $('.reset-class').click(function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        $.ajax({
+            type: "post",
+            url: 'class/'+id+'/reset',
+            data: {
+                _method: 'put',
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $('#modelId').modal('hide')
+                $('#myEvent').fullCalendar( 'refetchEvents' )
             }
         });
     });
 
-    $('#btn-presence').click(function (e) { 
-        e.preventDefault();
-        $.ajax({
-            type: "get",
-            url: $(this).data('url'),
-            success: function (response) {
-                // $('#modelId .modal-content').html(response);
-                // $('#modelId').modal('show')
-                showModal(response)
-            }
-        });
-    });
 </script>

@@ -23,7 +23,7 @@
             <div class="author-box-details">
 
                 <div class="author-box-name">
-                    <h3><a href="{{ route('student.show', $registration->student) }}">{{ $registration->student->user->name }}</a> <small><x-badge>{{ $registration->statusName }}</x-badge></small></h3>
+                    <h3><a href="{{ route('student.show', $registration->student) }}">{{ $registration->student->user->name }}</a></h3>
                 </div>
 
                 <div class="author-box-job text-muted">
@@ -33,13 +33,13 @@
                     {{ $registration->value }}
                 </div>
 
-                <div class="mt-3 author-box-job text-muted">
+                <div class="mt-1 author-box-job text-muted">
                     Cadastrado em {{ $registration->created_at->diffForHumans() }} |
                     Editado em {{ $registration->updated_at->diffForHumans() }}
                 </div>
 
                 <div class="author-box-description">
-                    
+                    <x-badge>{{ $registration->statusName }}</x-badge>
                 </div>
 
             </div>

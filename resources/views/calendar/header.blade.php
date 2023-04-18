@@ -1,6 +1,8 @@
 <ul class="list-unstyled list-unstyled-border list-unstyled-noborder">
     <li class="media">
-        
+        <figure class="avatar mr-2 avatar-xl mr-4">
+            <img src="{{ asset($class->student->user->image) }}" alt="">
+        </figure>
         <div class="media-body">
             <div class="media-title smb-1">
                 <a href="{{ route('registration.show', $class->registration) }}">
@@ -29,26 +31,55 @@
                             <i class="fa fa-user-circle" aria-hidden="true"></i>
                             {{ $class->instructor->user->name }}
 
-                            @if($class->parent)
+                            {{-- @if($class->parent)
                             ( <a href="javascript:showClass({{$class->parent->id}})">{{ date('d/m/Y',
                                 strtotime($class->parent->date)) }}</a> )
+                            @endif --}}
+
+                        </p>
+
+
+                        
+
+       
+                        <p>
+                            {!! $class->classStatusBadge !!}
+
+                            @if($class->has_replacement)
+                                <a href="javascript:showClass({{$class->parent->id}})">
+                                    <x-badge theme="info" class="badge-shadow">
+                                        <i class="fas fa-sync-alt    "></i>
+                                        <strong>
+                                            Nova Aula em {{ date('d/m/Y', strtotime($class->parent->date)) }}
+                                        </strong>
+                                    </x-badge>
+                                </a>
+                            @endif
+
+                            @if($class->type == 'RP' && $class->parent)
+                                <a href="javascript:showClass({{$class->parent->id}})">
+                                    <x-badge theme="info" class="badge-shadow">
+                                        <i class="fas fa-sync-alt    "></i>
+                                        <strong>Reposição do dia {{ date('d/m/y', strtotime($class->parent->date)) }}</strong>
+                                    </x-badge>
+                                </a>
                             @endif
 
 
-                        </p>
+                            
 
-       
+                            @if($class->pendencies)
+                            
+                                @foreach($class->pendencies as $pendency)
+                                <x-badge theme="warning" class="badge-shadow tet-dark">
+                                    <i class="fa fa-exclamation-circle text-dansger" aria-hidden="true"></i>
+                                    <strong>{{ $pendency }}</strong>
+                                </x-badge>
+                                @endforeach
+                            
+                            @endif
 
-                        @if($class->pendencies)
-                        <p>
-                            @foreach($class->pendencies as $pendency)
-                            <x-badge theme="warning" class="text-dark badge-shadow">
-                                <i class="fa fa-exclamation-circle " aria-hidden="true"></i>
-                                {{ $pendency }}
-                            </x-badge>
-                            @endforeach
                         </p>
-                        @endif
 
 
                         {{-- <p>
@@ -65,8 +96,6 @@
                 </div>
             </div>
         </div>
-        <figure class="avatar mr-2 avatar-xl mr-4">
-            <img src="{{ asset($class->student->user->image) }}" alt="">
-        </figure>
+       
     </li>
 </ul>   

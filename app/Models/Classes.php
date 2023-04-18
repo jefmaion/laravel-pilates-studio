@@ -23,7 +23,7 @@ class Classes extends Model
 
     public function getClassStatusBadgeAttribute() {
         $color = $this->statusClassLabel[$this->status];
-        return sprintf('<span class="badge badge-%s badge-shadow">%s</span>', $color, $this->classStatus);
+        return sprintf('<span class="badge badge-%s badge-shadow"><i class="fas fa-check"></i> %s</span>', $color, $this->classStatus);
     }
 
     public function getClassTypeAttribute() {
@@ -67,7 +67,7 @@ class Classes extends Model
         $pendencies = [];
 
         if($this->status == 1 && empty($this->evolution)) {
-            $pendencies[] = 'Evolução não Cadastrada';
+            $pendencies[] = 'Evolução não registrada';
         }
 
         if($this->status == 2 && $this->hasReplacement() === 0) {

@@ -1,6 +1,6 @@
-<div class="modal-header bg-whitesmoke p-3">
+<div class="modal-header p-3">
     <h5 class="modal-title">
-        <i class="fas fa-user-check"></i> Registrar Presença de {{ $class->student->user->firstName }}
+        <i class="fas fa-user-check"></i> Registrar Evolução de {{ $class->student->user->firstName }}
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span>&times;</span>
@@ -19,13 +19,7 @@
 
         <div class="col">
             <div class="row">
-
-                <div class="col form-group">
-                    <label>Comentários da Aula</label>
-                    <x-form.textarea  name="comments" rows="5" value=""></x-form.textarea>
-                </div>
-            
-                {{-- @include('class.evolution') --}}
+                @include('class.evolution')
             </div>
         </div>
     </div>
@@ -40,9 +34,9 @@
         Fechar
     </button>
 
-    <button type="submit" class="btn btn-success">
+    <button type="submit" class="btn btn-primary">
         <i class="fas fa-check-circle    "></i>
-        Registrar Presença
+        Registrar Evolução
     </button>
 
 </div>

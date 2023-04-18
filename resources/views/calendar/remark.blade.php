@@ -1,13 +1,13 @@
-<div class="modal-header bg-whitesmoke p-3">
+<div class="modal-header p-3">
     <h5 class="modal-title">
-        <i class="fas fa-user-check"></i> Registrar Presença de {{ $class->student->user->firstName }}
+        <i class="fas fa-user-check"></i> Reagendar Aula de {{ $class->student->user->firstName }}
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span>&times;</span>
     </button>
 </div>
 
-<form id="form-absense" action="{{ route('class.presence', $class) }}" method="post">
+<form id="form-absense" action="{{ route('class.remark', $class) }}" method="post">
     @csrf
     @method('put')
 <div class="modal-body">
@@ -20,12 +20,37 @@
         <div class="col">
             <div class="row">
 
-                <div class="col form-group">
-                    <label>Comentários da Aula</label>
-                    <x-form.textarea  name="comments" rows="5" value=""></x-form.textarea>
+
+
+                <div class="col-6 form-group">
+                    <label>Data</label>
+                    <x-form.input type="date" class="replacement" name="date"  />
                 </div>
-            
-                {{-- @include('class.evolution') --}}
+
+                <div class="col-6 form-group">
+                    <label>Horario</label>
+                    <x-form.select class="replacement" name="time" :options="[
+                    '07:00:00' => '07:00',
+                    '08:00:00' => '08:00',
+                    '09:00:00' => '09:00',
+                    '10:00:00' => '10:00',
+                    '11:00:00' => '11:00',
+                    '12:00:00' => '12:00',
+                    '13:00:00' => '13:00',
+                    '14:00:00' => '14:00',
+                    '15:00:00' => '15:00',
+                    '16:00:00' => '16:00',
+                    '17:00:00' => '17:00',
+                    '18:00:00' => '18:00',
+                    '19:00:00' => '19:00',
+                    '20:00:00' => '20:00',
+                ]"  />
+                </div>
+
+                <div class="col form-group">
+                    <label>Instrutor</label>
+                    <x-form.select class="replacement" name="instructor_id" :options="$instructors" value="" />
+                </div>
             </div>
         </div>
     </div>
@@ -40,9 +65,9 @@
         Fechar
     </button>
 
-    <button type="submit" class="btn btn-success">
+    <button type="submit" class="btn btn-primary">
         <i class="fas fa-check-circle    "></i>
-        Registrar Presença
+        Registrar Evolução
     </button>
 
 </div>

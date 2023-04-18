@@ -31,6 +31,7 @@ class CreateClassesTable extends Migration
             $table->integer('status')->default(0);
             $table->integer('finished')->default(0);
             $table->text('comments')->nullable();
+            $table->text('absense_comments')->nullable();
             $table->text('evolution')->nullable();
 
             $table->integer('has_replacement')->nullable()->default(0);

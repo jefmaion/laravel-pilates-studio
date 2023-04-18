@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AbsenseRequest;
+use App\Http\Requests\RemarkRequest;
 use App\Models\Classes;
 use App\Http\Requests\StoreClassesRequest;
 use App\Http\Requests\UpdateClassesRequest;
@@ -82,33 +83,9 @@ class ClassesController extends Controller
     public function absense(AbsenseRequest $request, Classes $class)
     {
         $class->status = $request->input('absense_type');
-        $class->comments = $request->input('comments');
+        $class->absense_comments = $request->input('absense_comments');
         $class->finished = 1;
         
-        if($request->input('has_replacement')) {
-            $newClass                          = $class->replicate();
-            $newClass->date                    = $request->input('date');
-            $newClass->time                    = $request->input('time');
-            $newClass->instructor_id           = $request->input('instructor_id');
-            $newClass->scheduled_instructor_id = $newClass->instructor_id;
-            $newClass->type                    = 'RP';
-            $newClass->status                  = 0;
-            $newClass->finished                = 0;
-            $newClass->comments                = null;
-
-            if(!$newClass->classes_id) {
-                $newClass->classes_id = $class->id;
-            }
-
-            // $newClass->parent()->associate($class);
-            $newClass->save();
-    
-            // $class->parent()->associate($newClass);
-
-            $class->has_replacement = 1;
-
-        }
-
         return $class->save();
     }
 
@@ -119,6 +96,33 @@ class ClassesController extends Controller
         $class->evolution = $request->input('evolution');
 
         $class->exercices()->sync($request->input('exercices'));
+
+        return $class->save();
+    }
+
+    public function reset(Classes $class) {
+        $class->status           = 0;
+        $class->absense_comments = null;
+        $class->comments         = null;
+        return $class->save();
+    }
+
+    public function remark(RemarkRequest $request, Classes $class) {
+
+        $newClass                          = $class->replicate();
+        $newClass->date                    = $request->input('date');
+        $newClass->time                    = $request->input('time');
+        $newClass->instructor_id           = $request->input('instructor_id');
+        $newClass->scheduled_instructor_id = $newClass->instructor_id;
+        $newClass->type                    = 'RP';
+        $newClass->status                  = 0;
+        $newClass->finished                = 0;
+        $newClass->absense_comments        = null;
+        $newClass->classes_id = $class->id;
+        $newClass->save();
+
+        $class->has_replacement = 1;
+        $class->parent()->associate($newClass);
 
         return $class->save();
     }

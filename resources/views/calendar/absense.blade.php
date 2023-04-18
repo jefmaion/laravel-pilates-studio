@@ -27,46 +27,11 @@
 
                 <div class="col-12 form-group">
                     <label>Comentários</label>
-                    <x-form.textarea name="comments" rows="4" value="">{{ $class->comments }}</x-form.textarea>
+                    <x-form.textarea name="absense_comments" rows="4">{{ $class->absense_comments }}</x-form.textarea>
                 </div>
             </div>
             
-            <div class="row">
-
-                <div class="col-12">
-                    <x-form.switch-button class="my-4" single name="has_replacement">Agendar Reposição</x-form.switch-button>
-                </div>
-
-                <div class="col-3 form-group">
-                    <label>Data</label>
-                    <x-form.input type="date" class="replacement" disabled name="date"  />
-                </div>
-
-                <div class="col-2 form-group">
-                    <label>Horario</label>
-                    <x-form.select class="replacement" disabled name="time" :options="[
-                    '07:00:00' => '07:00',
-                    '08:00:00' => '08:00',
-                    '09:00:00' => '09:00',
-                    '10:00:00' => '10:00',
-                    '11:00:00' => '11:00',
-                    '12:00:00' => '12:00',
-                    '13:00:00' => '13:00',
-                    '14:00:00' => '14:00',
-                    '15:00:00' => '15:00',
-                    '16:00:00' => '16:00',
-                    '17:00:00' => '17:00',
-                    '18:00:00' => '18:00',
-                    '19:00:00' => '19:00',
-                    '20:00:00' => '20:00',
-                ]"  />
-                </div>
-
-                <div class="col form-group">
-                    <label>Instrutor</label>
-                    <x-form.select class="replacement" disabled name="instructor_id" :options="$instructors" value="" />
-                </div>
-            </div>
+            
         </div>
     </div>
 

@@ -52,10 +52,14 @@ Route::get('registration/{registration}/renew', [RegistrationController::class, 
 Route::resource('class', ClassesController::class);
 Route::put('class/{class}/absense', [ClassesController::class, 'absense'])->name('class.absense');
 Route::put('class/{class}/presence', [ClassesController::class, 'presence'])->name('class.presence');
+Route::put('class/{class}/reset', [ClassesController::class, 'reset'])->name('class.reset');
+Route::put('class/{class}/remark', [ClassesController::class, 'remark'])->name('class.remark');
 
 Route::resource('calendar', CalendarController::class);
 Route::get('calendar/{id}/absense', [CalendarController::class, 'absense'])->name('calendar.absense');
 Route::get('calendar/{id}/presence', [CalendarController::class, 'presence'])->name('calendar.presence');
+Route::get('calendar/{id}/evolution', [CalendarController::class, 'evolution'])->name('calendar.evolution');
+Route::get('calendar/{id}/remark', [CalendarController::class, 'remark'])->name('calendar.remark');
 
 // Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 

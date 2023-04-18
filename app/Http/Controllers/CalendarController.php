@@ -6,6 +6,8 @@ use App\Models\Classes;
 use App\Models\Exercice;
 use App\Models\Instructor;
 use App\Models\Modality;
+use App\Models\Registration;
+use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -32,18 +34,19 @@ class CalendarController extends Controller
             $end   = Carbon::parse($request->query('end'));
 
         
-            $data  = Classes::whereBetween('date', [$start, $end]);
+            $data  = Classes::whereBetween('date', [$start, $end])->orderBy('id', 'desc');
 
-            if($request->query('modality_id')) {
+            if($request->query('_modality_id')) {
                 $data = Classes::whereHas('registration', function($q) use($request) {
-                    $q->where('modality_id','=', $request->query('modality_id'));
+                    $q->where('modality_id','=', $request->query('_modality_id'));
                 });
             }
           
-            $params = $request->except(['_', 'start', 'end', 'modality_id']);
+            $params = $request->except(['_', 'start', 'end', '_modality_id']);
 
             foreach ($params as $key => $value) {
                 if ($value == "") continue;
+                $key = ltrim($key, $key[0]);
                 $data->where($key, $value);
             }
 
@@ -58,10 +61,19 @@ class CalendarController extends Controller
             $instructors[] = [$inst->id, $inst->user->name];
         }
 
+        $data = Student::whereHas('registration', function($q)  {
+            $q->where('status',1);
+        })->get();
+
+        $students = [];
+        foreach($data as $inst) {
+            $students[] = [$inst->id, $inst->user->name];
+        }
+
         $modalities = Modality::select(['id', 'name'])->get()->toArray();
         
 
-        return view('calendar.index', compact('instructors', 'modalities'));
+        return view('calendar.index', compact('instructors', 'modalities', 'students'));
     }
 
     public function show($id) {
@@ -84,10 +96,25 @@ class CalendarController extends Controller
 
     public function presence($id) {
         $class = Classes::find($id);
+        return view('calendar.presence', compact('class'));
+    }
 
+    public function evolution($id) {
+        $class     = Classes::find($id);
         $exercices = Exercice::select(['id', 'name'])->get()->toArray();
+        return view('calendar.evolution', compact('class', 'exercices'));
+    }
 
-        return view('calendar.presence', compact('class', 'exercices'));
+    public function remark($id) {
+        $class = Classes::find($id);
+        $data  = Instructor::all();
+        
+        $instructors = [];
+        foreach($data as $inst) {
+            $instructors[] = [$inst->id, $inst->user->name];
+        }
+        
+        return view('calendar.remark', compact('class', 'instructors'));
     }
 
 
@@ -115,12 +142,12 @@ class CalendarController extends Controller
             $badge = '';
 
             if($item->pendencies) {
-                $badge = '<i class="fa fa-exclamation-triangle " aria-hidden="true" style="color:#F9584B"></i>';
+                $badge = '<i class="fa fa-exclamation-circle mr-1" aria-hidden="true" style="color:#F9584B"></i>';
             }
 
             
 
-            $title = '<div>'.$badge.'<b>' .  $item->student->user->firstAndLast . '</b></div>';
+            $title = '<div class="h6 mb-0">'.$badge.'<b>' .  $item->student->user->firstAndLast . '</b></div>';
             // $title .= '<div>'.$item->instructor->user->name.'</div>';
             $title .= '<div>'.$item->registration->modality->acronym;
             $title .= ' | ' . $item->classType;

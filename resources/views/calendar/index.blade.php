@@ -28,23 +28,28 @@
 
         <div class="col form-group">
             <label>Instrutor</label>
-            <x-form.select class="item-calendar select2" name="instructor_id" :options="$instructors" />
+            <x-form.select class="item-calendar select2" name="_instructor_id" :options="$instructors" />
+        </div>
+
+        <div class="col form-group">
+            <label>Aluno</label>
+            <x-form.select class="item-calendar select2" name="_student_id" :options="$students" />
         </div>
 
         <div class="col form-group">
             <label>Modalidade</label>
-            <x-form.select class="item-calendar select2" name="modality_id" :options="$modalities" />
+            <x-form.select class="item-calendar select2" name="_modality_id" :options="$modalities" />
         </div>
 
         <div class="col form-group">
             <label>Tipo de Aula</label>
-            <x-form.select class="item-calendar select2" name="type"
+            <x-form.select class="item-calendar select2" name="_type"
                 :options="['AN' => 'Aula Normal', 'RP' => 'Reposição', 'AE' => 'Aula Experimental']" />
         </div>
 
         <div class="col form-group">
             <label>Status Aula</label>
-            <x-form.select class="item-calendar select2" name="status"
+            <x-form.select class="item-calendar select2" name="_status"
                 :options="[0 => 'Agendada', 1 => 'Realizada', 2 => 'Falta Com Aviso', 3 => 'Falta']" />
         </div>
 
@@ -190,15 +195,10 @@
         $('#modelId').modal('show')
     }
 
-    $('#modelId').on('hidden.bs.modal', function (e) {
-        // alert('s')
-        alert('asdasds')
-    })
+    
 
 
-    $(function () {
-  $('[data-toggle="popover"]').popover()
-})
+    
         
 </script>
 @endsection
