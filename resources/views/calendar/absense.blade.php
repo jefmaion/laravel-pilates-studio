@@ -1,4 +1,4 @@
-<div class="modal-header bg-whitesmoke p-3">
+<div class="modal-header p-3">
     <h5 class="modal-title">
         Registrar Falta de {{ $class->student->user->firstName }}
     </h5>

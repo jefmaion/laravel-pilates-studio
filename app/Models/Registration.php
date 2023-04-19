@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -47,5 +48,59 @@ class Registration extends Model
 
     public function weekClass() {
         return $this->hasMany(RegistrationClass::class);
+    }
+
+    public function getEvolutionsAttribute() {
+        return $this->classes()->whereNotNull('evolution')->orderBy('date', 'desc')->get();
+    }
+
+    public function countClasses($type=null) {
+        if(!$type) {
+            return $this->classes()->where('type', 'AN')->count();
+        }
+
+        if($type === 'presences') {
+            return $this->classes()->where('status', 1)->count();
+        }
+
+        if($type === 'absenses') {
+            return $this->classes()->whereIn('status', [2,3])->count();
+        }
+
+        if($type === 'remarks') {
+            return $this->classes()->where('type', 'RP')->count();
+        }
+    }
+
+    public function getCountClassesAttribute() {
+        return $this->classes()->where('type', 'AN')->count();
+    }
+
+    public function getCountPresencesAttribute() {
+        return $this->classes()->where('status', 1)->count();
+    }
+
+    public function getCountAbsenseAttribute() {
+        return $this->classes()->where('status', 1)->count();
+    }
+
+    public function getRenewAttribute() {
+
+        $days = Carbon::now()->diffInDays($this->end, false);
+
+        if($days == 0) {
+            return '<span class="badge badge-pill badge-warning badge-shadow">Renovar hoje</span>';
+        }
+
+        if($days < 0) {
+            return '<span class="badge badge-pill badge-danger badge-shadow">Renovação Atrasada</span>';
+        }
+
+        if($days <= 5) {
+            return '<span class="badge badge-pill badge-warning badge-shadow">Renovar em '. $days . ' dias</span>';
+        }
+        
+
+        
     }
 }

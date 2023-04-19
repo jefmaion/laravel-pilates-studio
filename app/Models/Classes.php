@@ -62,6 +62,16 @@ class Classes extends Model
         return $this->where('classes_id', $this->id)->count();
     }
 
+    public function getExercicesIdsAttribute() {
+        $data = $this->exercices->toArray();
+
+        $ids = array_map(function($item){
+            return $item['pivot']['exercice_id'];
+        }, $data);
+
+        return $ids;
+    }
+
     public function getPendenciesAttribute() {
 
         $pendencies = [];

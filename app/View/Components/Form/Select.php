@@ -25,9 +25,17 @@ class Select extends Component
     }
 
 
-    private function prepareData($data, $value) {
+    private function prepareData($data, $value=null) {
 
         $return = [];
+
+        $value = (!is_array($value)) ? [$value] : $value;
+
+        $value = array_map(function($item){
+            return (string) $item;
+        }, $value);
+
+
 
         foreach($data as $val => $label) {
 
@@ -37,8 +45,17 @@ class Select extends Component
                 $label = $item[1];
 
             }
+            
+            $selected = null;
 
-            $selected = ((string) $value === (string) $val) ? 'selected' : null;
+            foreach($value as $v) {
+                if( (string) $v === (string) $val ) {
+                    $selected = 'selected';
+                    break;
+                }
+            }
+
+            // $selected = ((string) $value === (string) $val) ? 'selected' : null;
 
             $return[$val] = [
                 'value' => $val,
@@ -47,7 +64,6 @@ class Select extends Component
             ];
 
         }
-
         return $return;
     }
 

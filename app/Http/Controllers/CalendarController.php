@@ -83,6 +83,20 @@ class CalendarController extends Controller
         return view('calendar.show', compact('class'));
     }
 
+    public function edit($id) {
+
+        $class = Classes::find($id);
+
+   
+        $exercices = [];
+        $classExercicesIds = [];
+        if($class->status == 1) {
+            $exercices         = Exercice::select(['id', 'name'])->get()->toArray();
+        }
+
+        return view('calendar.edit', compact('class', 'exercices'));
+    }
+
     public function absense($id) {
         $class = Classes::find($id);
         $data = Instructor::all();
@@ -96,7 +110,8 @@ class CalendarController extends Controller
 
     public function presence($id) {
         $class = Classes::find($id);
-        return view('calendar.presence', compact('class'));
+        $exercices = Exercice::select(['id', 'name'])->get()->toArray();
+        return view('calendar.presence', compact('class', 'exercices'));
     }
 
     public function evolution($id) {

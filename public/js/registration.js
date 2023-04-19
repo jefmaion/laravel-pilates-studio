@@ -2,6 +2,7 @@
 
 dataTable('#table-registrations', {
     ajax:'/registration',
+    pageLength: 10,
     columns: [
         {data: 'name'},
         {data: 'modality'},

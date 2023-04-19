@@ -77,6 +77,10 @@ class ClassesController extends Controller
 
         $class->fill($data)->update();
 
+        if($request->ajax()){
+            return true;
+        }
+
         return redirect()->route('registration.show', $class->registration)->with('success', 'Aula Alterada');
     }
 

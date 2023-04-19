@@ -49,8 +49,7 @@
 
         <div class="col form-group">
             <label>Status Aula</label>
-            <x-form.select class="item-calendar select2" name="_status"
-                :options="[0 => 'Agendada', 1 => 'Realizada', 2 => 'Falta Com Aviso', 3 => 'Falta']" />
+            <x-form.select class="item-calendar select2" name="_status"  :options="[0 => 'Agendada', 1 => 'Realizada', 2 => 'Falta Com Aviso', 3 => 'Falta']" />
         </div>
 
     </div>

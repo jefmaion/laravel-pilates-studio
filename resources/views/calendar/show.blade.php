@@ -1,4 +1,4 @@
-<div class="modal-header bg-whitesmoke border-bottom p-3">
+<div class="modal-header p-3">
     <h5 class="modal-title">
         Aula de {{ $class->registration->modality->name }} - {{ date('d/m/Y', strtotime($class->date)) }}
     </h5>
@@ -10,27 +10,17 @@
 <div class="modal-body">
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 mb-2">
             @include('calendar.header')
         </div>
 
         <div class="col-12">
             @if(in_array($class->status, [0,1]))
                 @if($class->evolution)
-                    <div class="card mb-0">
-                        <div class="card-body">
-                            <div class="mb-2 text-dark"><b>Evolução Aula</b></div>
-                            @include('calendar.parts.evolution', ['class' => $class])
-                        </div>
-                    </div>
+                    @include('calendar.parts.evolution', ['class' => $class])
                 @else
                     @if($class->lastClass && $class->status == 0)
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="mb-2 text-dark"><b>Evolução da Última Aula ({{ formatData($class->lastClass->date)}})</b></div>
-                                @include('calendar.parts.evolution', ['class' => $class->lastClass])
-                            </div>
-                        </div>
+                        @include('calendar.parts.evolution', ['class' => $class->lastClass])
                     @endif
                 @endif
             @endif
@@ -39,8 +29,6 @@
                 <div class="mb-2 text-dark">
                     <b>Motivo da falta: </b>{{ $class->absense_comments }}
                 </div>
-
-                
             @endif
 
         </div>
@@ -62,6 +50,8 @@
         </button>
         <div class="dropdown-menu" x-placement="bottom-start">
 
+            
+
 
             @if($class->status == 0)
             <a class="dropdown-item has-icon open-view" href="{{ route('calendar.presence', $class) }}">
@@ -74,6 +64,11 @@
                 Registrar Falta
             </a>
             @else
+
+            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.edit', $class) }}">
+                <i class="fas fa-calendar-plus"></i>
+                Editar Aula
+            </a>
 
             {{-- verifica se é falta com aviso e se nao existe reposicao --}}
             @if($class->status == 2 && $class->has_replacement == 0)
