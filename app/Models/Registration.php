@@ -30,7 +30,30 @@ class Registration extends Model
     }
 
     public function getStatusNameAttribute() {
-        return $this->statusName[$this->status];
+
+        $badge = '<span class="badge badge-pill badge-%s badge-shadow">%s</span>';
+
+        $status = sprintf($badge, 'light', $this->statusName[$this->status]);
+
+        if($this->status == 1) {
+            
+            $status = sprintf($badge, 'success', $this->statusName[$this->status]);
+
+            if($this->daysToRenew == 0) {
+                $status = sprintf($badge, 'warning', 'Renovar Hoje');
+            }
+    
+            if($this->daysToRenew <= 5) {
+                $status = sprintf($badge, 'warning', 'Renovar em '. $this->daysToRenew . ' dias');
+            }
+
+            if($this->daysToRenew < 0) {
+                $status = sprintf($badge, 'danger', 'Renovação Atrasada');
+            }
+
+        }
+
+        return $status;
     }
 
 
@@ -72,32 +95,25 @@ class Registration extends Model
         }
     }
 
-    public function getCountClassesAttribute() {
-        return $this->classes()->where('type', 'AN')->count();
+    public function getDaysToRenewAttribute() {
+        return Carbon::now()->diffInDays($this->end, false);
     }
 
-    public function getCountPresencesAttribute() {
-        return $this->classes()->where('status', 1)->count();
-    }
-
-    public function getCountAbsenseAttribute() {
-        return $this->classes()->where('status', 1)->count();
-    }
 
     public function getRenewAttribute() {
 
-        $days = Carbon::now()->diffInDays($this->end, false);
 
-        if($days == 0) {
+
+        if($this->daysToRenew == 0) {
             return '<span class="badge badge-pill badge-warning badge-shadow">Renovar hoje</span>';
         }
 
-        if($days < 0) {
+        if($this->daysToRenew < 0) {
             return '<span class="badge badge-pill badge-danger badge-shadow">Renovação Atrasada</span>';
         }
 
-        if($days <= 5) {
-            return '<span class="badge badge-pill badge-warning badge-shadow">Renovar em '. $days . ' dias</span>';
+        if($this->daysToRenew <= 5) {
+            return '<span class="badge badge-pill badge-warning badge-shadow">Renovar em '. $this->daysToRenew . ' dias</span>';
         }
         
 

@@ -30,15 +30,22 @@ class RegistrationController extends Controller
     public function index()
     {
 
-        $registrations = Registration::latest()->get();
+        $checked       = ($this->request->get('active')) ? 'checked' : '';
 
-        // dd($registrations);
+        $registrations = Registration::latest();
 
+        if($checked) {
+            $registrations->where('status', 1);
+        }
+
+        $registrations = $registrations->get();
+
+        
         if($this->request->ajax()) {
             return $this->listToDataTable($registrations);
         }
 
-        return view('registration.index');
+        return view('registration.index', compact('checked'));
     }
 
     /**
@@ -181,6 +188,11 @@ class RegistrationController extends Controller
         $response = [];
 
         foreach($data as $item) {
+
+
+            
+
+
             $response[] = [
                 'name' => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
                 'start' => $item->start,

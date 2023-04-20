@@ -11,11 +11,20 @@
 
 <x-card style="primary">
 
-    <a class="btn btn-lg btn-success " href="{{ route('registration.create') }}" role="button">
+    <a class="btn btn-lg btn-success " href="{{ route('registration.create') }}"  role="button">
         <i class="fas fa-plus-circle    "></i>
         Nova Matrícula
     </a>
 
+
+    <div class="float-right">
+        <label class="custom-switch mt-2">
+            <input type="checkbox" name="check-list-active" value="{{ route('registration.index') }}" {{ $checked }} class="custom-switch-input">
+            <span class="custom-switch-indicator"></span>
+            <span class="custom-switch-description">Listar Matrículas Ativas</span>
+          </label>
+    
+    </div>
     <hr>
 
     <div class="table-responsive">

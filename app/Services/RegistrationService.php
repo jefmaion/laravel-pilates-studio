@@ -69,6 +69,7 @@ class RegistrationService
     private function generateClasses(Registration $registration, $data)
     {
 
+        $registration->classes()->where('finished', 0)->whereNotNull('classes_id')->update(['classes_id' =>null]);
         $registration->classes()->where('finished', 0)->delete();
         $registration->weekClass()->delete();
 

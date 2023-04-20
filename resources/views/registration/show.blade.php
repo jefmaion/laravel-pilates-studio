@@ -12,10 +12,12 @@
 
 <div class="row">
     <div class="col-12">
-        <x-card >
+        <x-card>
+
+
 
             <div class="row">
-                <div class="col-6">
+                <div class="col-5">
                     <div class="author-box">
 
                         <div class="author-box-left">
@@ -23,9 +25,9 @@
                                 class="rounded-circle author-box-picture">
                             <div class="clearfix"></div>
                         </div>
-        
+
                         <div class="author-box-details mb-4">
-        
+
                             <div class="author-box-name">
                                 <h3>
                                     <a href="{{ route('student.show', $registration->student) }}">
@@ -33,70 +35,66 @@
                                     </a>
                                 </h3>
                             </div>
-        
+
                             <div class="author-box-job text-muted">
                                 <h6 class="font-weight-light">
-                                {{ $registration->modality->name }}  | 
-                                {{ $registration->durationName }} ({{ $registration->class_per_week }}x) | 
-                                {{ $registration->value }}
+                                    {{ $registration->modality->name }} |
+                                    {{ $registration->durationName }} ({{ $registration->class_per_week }}x) |
+                                    {{ $registration->value }}
                                 </h6>
-                                <p class="text-muted"><b>Início: </b>{{ formatData($registration->start) }} | <b>Fim: </b>{{ formatData($registration->end) }}</p>
-        
-                                
+                                <p class="text-muted"><b>Início: </b>{{ formatData($registration->start) }} | <b>Fim:
+                                    </b>{{ formatData($registration->end) }}</p>
+
+
                             </div>
-        
+
                             {{-- <div class="mt-1 author-box-job text-muted">
                                 Cadastrado em {{ $registration->created_at->diffForHumans() }} |
                                 Editado em {{ $registration->updated_at->diffForHumans() }}
                             </div> --}}
-        
+
                             <div class="author-box-description">
-                                <x-badge class="badge-shadow">{{ $registration->statusName }}</x-badge>
-        
-                                
-                                {!! $registration->renew; !!}
-        
-        
+                                {!! $registration->statusName !!}
+
+
                             </div>
-        
+
                         </div>
-        
+
                     </div>
                 </div>
 
                 <div class="col">
 
-                    <x-card class="text-center" >
-                        <h2 class="font-light">{{ $registration->countClasses() }}</h2>
-                        Aulas
-                    </x-card>
+                    <div class="row">
+                        <div class="col ">
+                            <div class="media float-right">
+
+
+                                <div class="media-items">
+                                    <div class="media-item border-right">
+                                        <div class="media-label text-muted"><div><i class="fas fa-calendar    "></i></div> Aulas</div>
+                                        <div class="media-value">  {{ $registration->countClasses() }}</div>
+                                    </div>
+                                    <div class="media-item border-right">
+                                        <div class="media-label text-muted"> <div><i class="fas fa-calendar-check    "></i></div> Presenças</div>
+                                        <div class="media-value">{{ $registration->countClasses('presences') }}</div>
+                                    </div>
+                                    <div class="media-item border-right">
+                                        <div class="media-label text-muted"> <div><i class="fas fa-calendar-times    "></i></div> Faltas</div>
+                                        <div class="media-value">{{ $registration->countClasses('absenses') }}</div>
+                                    </div>
+                                    <div class="media-item">
+                                        <div class="media-label text-muted"> <div><i class="fas fa-sync    "></i></div> Reposições</div>
+                                        <div class="media-value">{{ $registration->countClasses('remarks') }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>  
 
                 </div>
-                
-                <div class="col">
 
-                    <x-card class="text-center">
-                        <h2 class="font-light">{{ $registration->countClasses('presences') }}</h2>
-                        Presença
-                    </x-card>
-
-                </div>
-                <div class="col">
-
-                    <x-card class="text-center">
-                        <h2 class="font-light">{{ $registration->countClasses('absenses') }}</h2>
-                        Faltas
-                    </x-card>
-
-                </div>
-                <div class="col">
-
-                    <x-card class="text-center" >
-                        <h2 class="font-light">{{ $registration->countClasses('remarks') }}</h2>
-                        Reposicoes
-                    </x-card>
-
-                </div>
             </div>
 
 
@@ -120,7 +118,10 @@
 
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="class" role="tabpanel" aria-labelledby="class-tab">
-                       
+
+
+
+
                         <div class="table-responsive">
                             <table class="table datatable table-striped w-100">
                                 <thead>
@@ -133,14 +134,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($registration->classes as $class) 
+                                    @foreach($registration->classes as $class)
                                     <tr>
-                                        <td scope="row">{{ date('d/m/Y', strtotime($class->date)) }} {{ $class->weekname }}</td>
+                                        <td scope="row">{{ date('d/m/Y', strtotime($class->date)) }} {{ $class->weekname
+                                            }}</td>
                                         <td>{{ $class->time }}</td>
                                         <td>{{ $class->instructor->user->name }}</td>
                                         <td>{{ $class->classType }}</td>
                                         <td class="text-center">{!! $class->classStatusBadge !!}</td>
-                                    
+
                                     </tr>
                                     @endforeach
 
@@ -149,24 +151,25 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="evolution" role="tabpanel" aria-labelledby="evolution-tab">
-                       
+
                         @foreach($registration->evolutions as $class)
                         <div class="card">
                             <div class="card-header">
-                                <strong>{{ date('d/m/Y', strtotime($class->date)) }}</strong> <small> - {{ $class->instructor->user->name }}</small>
+                                <strong>{{ date('d/m/Y', strtotime($class->date)) }}</strong> <small> - {{
+                                    $class->instructor->user->name }}</small>
                             </div>
                             <div class="card-body">
                                 <div class="media">
                                     <div class="media-body">
                                         <div class="media-right">
                                             <div class="text-dark">
-                                                
+
                                             </div>
                                         </div>
-                                       
+
                                         <div class="text-time">
                                             @foreach($class->exercices as $exercice)
-                                            {{ $exercice->name }} | 
+                                            {{ $exercice->name }} |
                                             @endforeach
                                         </div>
                                         <div class="media-description text-muted">
@@ -180,7 +183,7 @@
 
                     </div>
                     <div class="tab-pane fade" id="installment" role="tabpanel" aria-labelledby="installment-tab">
-                       
+
                     </div>
                 </div>
 
@@ -202,30 +205,41 @@
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
                         @if($registration->status > 0)
-                        <a class="dropdown-item has-icon" href="{{ route('registration.renew', $registration) }}"><i class="fas fa-pencil-alt    "></i> Renovar Matrícula</a>
-                        <a class="dropdown-item has-icon" href="{{ route('registration.cancel', $registration) }}"><i class="fas fa-pencil-alt    "></i> Cancelar Matrícula</a>
-                        <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}"><i class="fas fa-pencil-alt    "></i> Editar</a>
+
+                        <a class="dropdown-item has-icon" href="{{ route('registration.renew', $registration) }}">
+                            <i class="fas fa-pencil-alt    "></i> Renovar Matrícula
+                        </a>
+
+                        <a class="dropdown-item has-icon" href="{{ route('registration.cancel', $registration) }}">
+                            <i class="fas fa-pencil-alt    "></i> Cancelar Matrícula
+                        </a>
+
+                        <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}">
+                            <i class="fas fa-pencil-alt    "></i> Editar
+                        </a>
+
                         @endif
-                        <x-delete-button class="dropdown-item has-icon" route="{{ route('registration.destroy', $registration) }}"><i class="fas fa-trash-alt"></i>Excluir</x-delete-button>
+                        <x-delete-button class="dropdown-item has-icon"
+                            route="{{ route('registration.destroy', $registration) }}"><i
+                                class="fas fa-trash-alt"></i>Excluir</x-delete-button>
                     </div>
                 </div>
             </x-slot>
 
-            
+
 
         </x-card>
     </div>
 
     <div class="col-12">
-        
+
     </div>
 </div>
 
 @endsection
 
 @section('scripts')
-    @include('template.includes.datatable')
-    <script src="{{ asset('js/config.js') }}"></script>
-    <script src="{{ asset('js/registration.js') }}"></script>
+@include('template.includes.datatable')
+<script src="{{ asset('js/config.js') }}"></script>
+<script src="{{ asset('js/registration.js') }}"></script>
 @endsection
-
