@@ -7,7 +7,6 @@ dataTable('#table-registrations', {
         {data: 'name'},
         {data: 'modality'},
         {data: 'end'},
-        {data: 'created_at'},
         {data: 'status'},
     ]
 })

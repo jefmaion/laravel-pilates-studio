@@ -38,7 +38,7 @@ class InstructorService {
     }
 
     public function listInstructor() {
-        return Instructor::all();
+        return Instructor::latest()->get();
     }
 
 

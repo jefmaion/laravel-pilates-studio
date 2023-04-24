@@ -18,9 +18,14 @@ class Instructor extends BaseModel
     }
 
     public function modalities() {
-        // return $this->belongsToMany(Modality::class, 'instructor_modalities')->withPivot(['id', 'remuneration_type', 'remuneration_value', 'calc_on_absense', 'enabled']);
+        return $this->belongsToMany(Modality::class, 'instructor_modalities')
+                    ->using(InstructorModality::class)
+                    ->withPivot(['id', 'remuneration_type', 'remuneration_value', 'calc_on_absense', 'enabled']);
+    }
 
-        return $this->belongsToMany(Modality::class, 'instructor_modalities')->using(InstructorModality::class)->withPivot(['id', 'remuneration_type', 'remuneration_value', 'calc_on_absense', 'enabled']);
+
+    public function getModalityValues($id) {
+        return $this->modalities()->where('modality_id', $id)->first();
     }
 
 

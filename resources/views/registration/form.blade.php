@@ -48,6 +48,16 @@
                 <x-form.input name="value" value="{{ old('value', currency($registration->value) ?? '') }}" />
             </div>
 
+            <div class="col-6 form-group">
+                <label>Pagamento 1º Mensalidade</label>
+                <x-form.select name="first_payment_method_id" value="{{ old('first_payment_method_id') }}" :options="$paymentMethods" />
+            </div>
+
+            <div class="col-6 form-group">
+                <label>Pagamento Demais Mensalidade</label>
+                <x-form.select name="other_payment_method_id" value="{{ old('other_payment_method_id') }}" :options="$paymentMethods" />
+            </div>
+
             <div class="col form-group">
                 <label>Observações</label>
                 <x-form.textarea name="comments" rows="5">{{ old('comments', $registration->comments ?? '') }}</x-form.textarea>

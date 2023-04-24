@@ -25,6 +25,7 @@ class CreateRegistrationsTable extends Migration
             $table->integer('class_per_week')->nullable();
             $table->integer('due_day')->nullable();
             $table->decimal('value')->nullable();
+            $table->decimal('class_value')->nullable();
             $table->string('description')->nullable();
             $table->text('comments')->nullable();
             $table->integer('status')->default(1);

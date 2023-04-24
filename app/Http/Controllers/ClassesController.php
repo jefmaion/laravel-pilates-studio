@@ -7,10 +7,21 @@ use App\Http\Requests\RemarkRequest;
 use App\Models\Classes;
 use App\Http\Requests\StoreClassesRequest;
 use App\Http\Requests\UpdateClassesRequest;
+use App\Models\InstructorValues;
+use App\Services\ClassService;
 use Illuminate\Http\Request;
 
 class ClassesController extends Controller
 {
+
+    protected $classService;
+
+    public function __construct(Request $request, ClassService $classService)
+    {
+        parent::__construct($request);
+        $this->classService = $classService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -86,29 +97,23 @@ class ClassesController extends Controller
 
     public function absense(AbsenseRequest $request, Classes $class)
     {
-        $class->status = $request->input('absense_type');
-        $class->absense_comments = $request->input('absense_comments');
-        $class->finished = 1;
+
+        return $this->classService->absense($class, $request->input('absense_type'), $request->input('absense_comments'));
+
+        // $class->status = $request->input('absense_type');
+        // $class->absense_comments = $request->input('absense_comments');
+        // $class->finished = 1;
         
-        return $class->save();
+        // return $class->save();
     }
 
     public function presence(Request $request, Classes $class)
     {
-        $class->status    = 1;
-        $class->finished  = 1;
-        $class->evolution = $request->input('evolution');
-
-        $class->exercices()->sync($request->input('exercices'));
-
-        return $class->save();
+        return  $this->classService->presence($class, $request->input('exercices'), $request->input('evolution'));
     }
 
     public function reset(Classes $class) {
-        $class->status           = 0;
-        $class->absense_comments = null;
-        $class->comments         = null;
-        return $class->save();
+        return $this->classService->reset($class);
     }
 
     public function remark(RemarkRequest $request, Classes $class) {
@@ -122,11 +127,11 @@ class ClassesController extends Controller
         $newClass->status                  = 0;
         $newClass->finished                = 0;
         $newClass->absense_comments        = null;
-        $newClass->classes_id = $class->id;
+        $newClass->classes_id              = $class->id;
         $newClass->save();
 
         $class->has_replacement = 1;
-        $class->parent()->associate($newClass);
+        // $class->parent()->associate($newClass);
 
         return $class->save();
     }

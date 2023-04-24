@@ -43,24 +43,24 @@
 
        
                         <p>
-                            {!! $class->classStatusBadge !!}
+                            
 
                             @if($class->has_replacement)
-                                <a href="javascript:showClass({{$class->parent->id}})">
+                                {{-- <a href="javascript:showClass({{$class->parent->id}})">
                                     <x-badge theme="info" class="badge-shadow">
                                         <i class="fas fa-sync-alt    "></i>
                                         <strong>
                                             Nova Aula em {{ date('d/m/Y', strtotime($class->parent->date)) }}
                                         </strong>
                                     </x-badge>
-                                </a>
+                                </a> --}}
                             @endif
 
                             @if($class->type == 'RP' && $class->parent)
                                 <a href="javascript:showClass({{$class->parent->id}})">
                                     <x-badge theme="info" class="badge-shadow">
                                         <i class="fas fa-sync-alt    "></i>
-                                        <strong>Reposição do dia {{ date('d/m/y', strtotime($class->parent->date)) }}</strong>
+                                        Reposição do dia {{ date('d/m/y', strtotime($class->parent->date)) }}
                                     </x-badge>
                                 </a>
                             @endif
@@ -73,10 +73,25 @@
                                 @foreach($class->pendencies as $pendency)
                                 <x-badge theme="warning" class="badge-shadow tet-dark">
                                     <i class="fa fa-exclamation-circle text-dansger" aria-hidden="true"></i>
-                                    <strong>{{ $pendency }}</strong>
+                                    {{ $pendency }}
                                 </x-badge>
                                 @endforeach
                             
+                            @endif
+
+
+                            @if($class->registration->installmentToday)
+                                <x-badge theme="warning" class="badge-shadow text-dark">
+                                    <i class="fa fa-exclamation-circle " aria-hidden="true"></i>
+                                    Pagar Hoje
+                                </x-badge>
+                            @endif
+
+                            @if($class->registration->hasInstallmentLate)
+                                <x-badge theme="danger" class="badge-shadow tet-dark">
+                                    <i class="fa fa-exclamation-circle text-dansger" aria-hidden="true"></i>
+                                    Mensalidade Atrasada
+                                </x-badge>
                             @endif
 
                         </p>

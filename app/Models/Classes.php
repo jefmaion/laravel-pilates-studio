@@ -54,6 +54,10 @@ class Classes extends Model
         return $this->belongsToMany(Exercice::class, 'class_exercices')->using(ClassExercice::class);
     }
 
+    public function remunerations() {
+        return $this->hasMany(InstructorRemuneration::class);
+    }
+
     public function getLastClassAttribute() {
         return $this->where('status', 1)->where('finished', 1)->where('student_id', $this->student_id)->orderBy('date', 'desc')->first();
     }

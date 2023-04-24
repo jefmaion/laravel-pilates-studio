@@ -56,9 +56,9 @@
         </form>
     </div>
 
-    <div class="col d-flex">
+    <div class="col-8 d-flex">
         <x-card title="Modalidades Permitidas" class="flex-fill">
-            <table class="table table-striped" id="table-instructor-modality">
+            <table class="table table-striped w-100" id="table-instructor-modality">
                 <thead>
                     <tr>
                         <th>Modalidade</th>
@@ -73,7 +73,7 @@
                     @foreach($instructor->modalities as $modality)
                     <tr>
                         <td scope="row">{{ $modality->name }}</td>
-                        <td>{{ $modality->pivot->remuneration_type }}</td>
+                        <td>{{ $modality->pivot->remuneration_type_text }}</td>
                         <td>{{ $modality->pivot->remuneration_value }}</td>
                         <td>{{ $modality->pivot->calc_on_absense }}</td>
                         <td>

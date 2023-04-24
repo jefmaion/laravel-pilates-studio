@@ -160,9 +160,17 @@ class CalendarController extends Controller
                 $badge = '<i class="fa fa-exclamation-circle mr-1" aria-hidden="true" style="color:#F9584B"></i>';
             }
 
+            if($item->registration->installmentToday) {
+                $badge = '<i class="fa fa-exclamation-circle mr-1" aria-hidden="true" style="color:#F9584B"></i>';
+            }
+
+            if($item->registration->hasInstallmentLate) {
+                $badge = '<i class="fa fa-exclamation-circle mr-1" aria-hidden="true" style="color:#F9584B"></i>';
+            }
+
             
 
-            $title = '<div class="h6 mb-0">'.$badge.'<b>' .  $item->student->user->firstAndLast . '</b></div>';
+            $title = '<div class="mb-0">'.$badge.'<b>' .  $item->student->user->firstAndLast . '</b></div>';
             // $title .= '<div>'.$item->instructor->user->name.'</div>';
             $title .= '<div>'.$item->registration->modality->acronym;
             $title .= ' | ' . $item->classType;

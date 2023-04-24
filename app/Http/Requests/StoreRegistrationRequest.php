@@ -35,6 +35,9 @@ class StoreRegistrationRequest extends FormRequest
             'due_day' => 'required',
             'value' => 'required',
 
+            'first_payment_method_id' => 'required',
+            'other_payment_method_id' => 'required',
+
             'class' => 'array|min:'.$this->class_per_week.'|max:'.$this->class_per_week,
             'class.*.instructor_id' => 'required_with:class.*.time',
             'class.*.time' => 'required_with:class.*.instructor_id'

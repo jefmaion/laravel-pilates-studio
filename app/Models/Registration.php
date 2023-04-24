@@ -73,9 +73,25 @@ class Registration extends Model
         return $this->hasMany(RegistrationClass::class);
     }
 
+    public function installments() {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function getInstallmentTodayAttribute() {
+        return $this->installments()->where('date', date('Y-m-d'))->where('status', 0)->first();
+    }
+
+    public function getHasInstallmentLateAttribute() {
+        return $this->installments()->where('date', '<', date('Y-m-d'))->where('status', 0)->count();
+    }
+
     public function getEvolutionsAttribute() {
         return $this->classes()->whereNotNull('evolution')->orderBy('date', 'desc')->get();
     }
+
+    // public function getClassValueAttribute() {
+    //     return $this->value / $this->classes()->where('type', 'AN')->count();
+    // }
 
     public function countClasses($type=null) {
         if(!$type) {

@@ -15,7 +15,7 @@ class ModalityController extends Controller
      */
     public function index()
     {
-        $modalities = Modality::all();
+        $modalities = Modality::latest()->get();
         $count = count($modalities);
 
         if($this->request->ajax()) {

@@ -30,12 +30,18 @@ class DatabaseSeeder extends Seeder
 
         foreach ($files_arr as $key => $file){
             if ($file !== 'DatabaseSeeder.php' && $file[0] !== "." ){
-                $filedata = filectime(dirname(__FILE__) . '\\' .$file);
-                $data[$filedata]  = '\\Database\\Seeders\\' . explode('.', $file)[0];
+
+                if($file !== 'RegistrationSeeder.php') {
+                    $filedata = filectime(dirname(__FILE__) . '\\' .$file);
+                    $data[$filedata]  = '\\Database\\Seeders\\' . explode('.', $file)[0];
+                }
+
+                
             }
         }
 
         ksort($data);
+
 
         foreach($data as $seeder) {
             $this->call($seeder);

@@ -15,7 +15,7 @@ class ExerciceController extends Controller
      */
     public function index()
     {
-        $exercices = Exercice::all();
+        $exercices = Exercice::latest()->get();
         $count = count($exercices);
 
         if($this->request->ajax()) {

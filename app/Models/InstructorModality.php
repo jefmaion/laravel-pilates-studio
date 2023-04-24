@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class InstructorModality extends Pivot
 {
    
+    protected $table = 'instructor_modalities';
+
     private $calcOnAbsense = [
         1 => 'Sim',
         0 => 'Não'
@@ -21,16 +23,17 @@ class InstructorModality extends Pivot
 
 
 
-    public function getCalcOnAbsenseAttribute() {
+    public function getCalcOnAbsenseTextAttribute() {
         return $this->calcOnAbsense[$this->attributes['calc_on_absense']];
     }
 
-    public function getRemunerationTypeAttribute() {
+    public function getRemunerationTypeTextAttribute() {
         return $this->remunerationType[$this->attributes['remuneration_type']];
     }
 
-    public function getRemunerationValueAttribute() {
-        return number_format($this->attributes['remuneration_value'], 2, ',', '.');
-    }
+    // public function getRemunerationValueAttribute() {
+    //     return number_format($this->attributes['remuneration_value'], 2, ',', '.');
+    // }
+
 
 }

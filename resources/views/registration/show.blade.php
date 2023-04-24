@@ -183,7 +183,30 @@
 
                     </div>
                     <div class="tab-pane fade" id="installment" role="tabpanel" aria-labelledby="installment-tab">
+                        <div class="table-responsive">
+                            <table class="table datatable table-striped w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Data de Vencimento</th>
+                                        <th>Forma</th>
+                                        <th>Valor</th>
+                                        <th class="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($registration->installments as $installment)
+                                    <tr>
+                                      <td>{{ date('d/m/Y', strtotime($installment->date)) }}</td>
+                                      <td>{{ $installment->value }}</td>
+                                      <td>{{ $installment->paymentMethod->name }}</td>
+                                      <td>{!! $installment->statusLabel  !!}</td>
 
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

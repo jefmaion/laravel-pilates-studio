@@ -7,6 +7,7 @@ use App\Models\Instructor;
 use App\Models\Modality;
 use App\Models\Registration;
 use App\Models\Student;
+use App\Models\Transaction;
 use App\Services\RegistrationService;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -57,6 +58,9 @@ class RegistrationSeeder extends Seeder
                 $startDate = (date('w', strtotime($registration->start)) == $class['weekday']) ? Carbon::parse($registration->start) :  Carbon::parse($registration->start)->next((int) $class['weekday']); // Get the first friday.
                 $endDate   = Carbon::parse($registration->end);
 
+
+                $numClasses = 0;
+
                 for ($date = $startDate; $date->lte($endDate); $date->addWeek()) {
 
                     Classes::create([
@@ -69,7 +73,32 @@ class RegistrationSeeder extends Seeder
                         'time' => $class['time'],
                         'weekday' => $class['weekday'],
                     ]);
+
+                    $numClasses++;
                 }
+
+                $registration->update(['class_value' => $registration->value / $numClasses]);
+            }
+
+            $dueDate =  Carbon::parse(date('Y-m-', strtotime($item['start'])) . $item['due_day']) ;
+
+            for($i=1; $i<= $item['duration']; $i++) {
+
+                $paymentMethod = ($i==1) ? 1 : 2;
+
+                Transaction::create([
+                    'registration_id'   => $registration->id,
+                    'student_id'        => $registration->student->id,
+                    'payment_method_id' => $paymentMethod,
+                    'category_id'       => 1,
+                    'type'              => 'R',
+                    'date'              => $dueDate,
+                    'value'             => $item['value'],
+                    'description'       => 'Mensalidade '.$i.'/'.$item['duration'] . ' de '.$registration->student->user->name,
+                ]);
+
+                $dueDate = date('Y-m-d', strtotime($dueDate . ' +1 months'));
+                $dueDate =  Carbon::parse(date('Y-m-', strtotime($dueDate)) . $item['due_day']) ;
             }
         }
     }

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreRegistrationRequest;
 use App\Http\Requests\UpdateRegistrationRequest;
 use App\Models\Instructor;
 use App\Models\Modality;
+use App\Models\PaymentMethod;
 use App\Models\Student;
 use App\Services\RegistrationService;
 use Illuminate\Http\Request;
@@ -99,6 +100,7 @@ class RegistrationController extends Controller
         $view = 'registration.edit';
 
         $modalities = Modality::select(['id', 'name'])->get()->toArray();
+        $paymentMethods = PaymentMethod::select(['id', 'name'])->get()->toArray();
         $data = Instructor::all();
         
         $instructors = [];
@@ -128,7 +130,7 @@ class RegistrationController extends Controller
             $view = 'registration.renew';
         }
 
-        return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass'));
+        return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass', 'paymentMethods'));
 
     }
 

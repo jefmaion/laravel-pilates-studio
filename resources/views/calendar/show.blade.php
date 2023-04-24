@@ -1,6 +1,6 @@
 <div class="modal-header p-3">
     <h5 class="modal-title">
-        Aula de {{ $class->registration->modality->name }} - {{ date('d/m/Y', strtotime($class->date)) }}
+        Aula de {{ $class->registration->modality->name }} - {{ date('d/m/Y', strtotime($class->date)) }} - {!! $class->classStatusBadge !!}
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span>&times;</span>

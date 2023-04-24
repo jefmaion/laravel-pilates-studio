@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountReceivableController;
 use App\Http\Controllers\AvatarUploadController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ClassesController;
@@ -60,6 +61,9 @@ Route::get('calendar/{id}/absense', [CalendarController::class, 'absense'])->nam
 Route::get('calendar/{id}/presence', [CalendarController::class, 'presence'])->name('calendar.presence');
 Route::get('calendar/{id}/evolution', [CalendarController::class, 'evolution'])->name('calendar.evolution');
 Route::get('calendar/{id}/remark', [CalendarController::class, 'remark'])->name('calendar.remark');
+
+
+Route::resource('account/receive', AccountReceivableController::class);
 
 // Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 

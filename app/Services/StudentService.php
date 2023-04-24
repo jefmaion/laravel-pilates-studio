@@ -38,7 +38,7 @@ class StudentService {
     }
 
     public function listStudents() {
-        return Student::all();
+        return Student::latest()->get();
     }
 
 
