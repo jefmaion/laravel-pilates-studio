@@ -7,12 +7,7 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\User;
 use App\Services\StudentService;
-use App\View\Components\Avatar;
-use App\View\Components\Badge;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\View;
-use stdClass;
 
 class StudentController extends Controller
 {
@@ -32,14 +27,11 @@ class StudentController extends Controller
      */
     public function index()
     {
-
-     
-        $students = $this->studentService->listStudents();
-        $count = count($students);
-
         if($this->request->ajax()) {
-           return $this->listToDataTable($students);
+           return $this->studentService->listToDataTable();
         }
+
+        $count = $this->studentService->countAll();
 
         return view('student.index', compact('count'));
     }
@@ -63,15 +55,11 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
-
         $data = $request->except(['_token', '_method']);
-
-       
 
         if($this->studentService->createStudent($data)) {
             return redirect()->route('student.index')->with('success','Aluno cadastrado com sucesso!');
         }
-        
     }
 
     /**
@@ -80,8 +68,12 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function show($id)
     {
+        if(!$student = $this->studentService->find($id)) {
+            return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
+        }
+
         return view('student.show', compact('student'));
     }
 
@@ -91,8 +83,12 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function edit(Student $student)
+    public function edit($id)
     {
+        if(!$student = $this->studentService->find($id)) {
+            return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
+        }
+
         return view('student.edit', compact('student'));
     }
 
@@ -103,10 +99,13 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStudentRequest $request, Student $student)
+    public function update(UpdateStudentRequest $request, $id)
     {
         $data = $request->except(['_token', '_method']);
 
+        if(!$student = $this->studentService->find($id)) {
+            return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
+        }
 
         if($this->studentService->updateStudent($student, $data)) {
             return redirect()->route('student.index')->with('success','Aluno atualizado com sucesso!');
@@ -119,28 +118,17 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function destroy($id)
     {
+        if(!$student = $this->studentService->find($id)) {
+            return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
+        }
+
         if($this->studentService->deleteStudent($student)) {
             return redirect()->route('student.index')->with('success','Aluno excluido com sucesso!');
         }
     }
 
 
-    private function listToDataTable($data) {
-
-        $response = [];
-
-        foreach($data as $item) {
-            $response[] = [
-                'id' => $item->id,
-                'name' => image(asset($item->user->image)) . anchor(route('student.show', $item), $item->user->name, 'ml-2'),
-                'phone_wpp' => $item->user->phone_wpp,
-                'created_at' => $item->created_at->format('d/m/Y')
-            ];
-        }
-
-
-        return response()->json(['data' => $response]);
-    }
+    
 }

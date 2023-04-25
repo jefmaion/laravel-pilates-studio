@@ -31,9 +31,20 @@ class InstructorModality extends Pivot
         return $this->remunerationType[$this->attributes['remuneration_type']];
     }
 
-    // public function getRemunerationValueAttribute() {
-    //     return number_format($this->attributes['remuneration_value'], 2, ',', '.');
-    // }
+    public function getRemunerationValueTextAttribute() {
+
+        $value = currency($this->attributes['remuneration_value']);
+
+        if($this->attributes['remuneration_type'] == 'F') {
+            $value = 'R$ ' . $value;
+        } else {
+            $value = $value . '%';
+        }
+
+        $this->attributes['remuneration_value'] = $value;
+
+        return $this->attributes['remuneration_value'];
+    }
 
 
 }

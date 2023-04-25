@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Instructor;
 use App\Http\Requests\StoreInstructorRequest;
 use App\Http\Requests\UpdateInstructorRequest;
 use App\Models\User;
@@ -11,8 +10,7 @@ use Illuminate\Http\Request;
 
 class InstructorController extends Controller
 {
-
-
+    
     protected $instructorService;
 
     public function __construct(Request $request, InstructorService $instructorService)
@@ -28,13 +26,11 @@ class InstructorController extends Controller
      */
     public function index()
     {
-        
-        $instructors = $this->instructorService->listInstructor();
-        $count = count($instructors);
-
         if($this->request->ajax()) {
-           return $this->listToDataTable($instructors);
+           return $this->instructorService->listToDataTable();
         }
+
+        $count       = $this->instructorService->countAll();
 
         return view('instructor.index', compact('count'));
     }
@@ -60,11 +56,11 @@ class InstructorController extends Controller
     {
         $data = $request->except(['_token', '_method']);
 
-       
-
         if($this->instructorService->createInstructor($data)) {
-            return redirect()->route('instructor.index')->with('success','Aluno cadastrado com sucesso!');
+            return redirect()->route('instructor.index')->with('success','Professor cadastrado com sucesso!');
         }
+
+        return redirect()->route('instructor.index')->with('error','Não foi possível cadastrar o professor');
     }
 
     /**
@@ -73,8 +69,12 @@ class InstructorController extends Controller
      * @param  \App\Models\Instructor  $instructor
      * @return \Illuminate\Http\Response
      */
-    public function show(Instructor $instructor)
+    public function show($id)
     {
+        if(!$instructor = $this->instructorService->find($id)) {
+            return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
+        }
+
         return view('instructor.show', compact('instructor'));
     }
 
@@ -84,8 +84,12 @@ class InstructorController extends Controller
      * @param  \App\Models\Instructor  $instructor
      * @return \Illuminate\Http\Response
      */
-    public function edit(Instructor $instructor)
+    public function edit($id)
     {
+        if(!$instructor = $this->instructorService->find($id)) {
+            return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
+        }
+
         return view('instructor.edit', compact('instructor'));
     }
 
@@ -96,13 +100,16 @@ class InstructorController extends Controller
      * @param  \App\Models\Instructor  $instructor
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateInstructorRequest $request, Instructor $instructor)
+    public function update(UpdateInstructorRequest $request, $id)
     {
         $data = $request->except(['_token', '_method']);
 
+        if(!$instructor = $this->instructorService->find($id)) {
+            return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
+        }
 
         if($this->instructorService->updateInstructor($instructor, $data)) {
-            return redirect()->route('instructor.index')->with('success','Aluno atualizado com sucesso!');
+            return redirect()->route('instructor.index')->with('success','Professor atualizado com sucesso!');
         }
     }
 
@@ -112,27 +119,16 @@ class InstructorController extends Controller
      * @param  \App\Models\Instructor  $instructor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Instructor $instructor)
+    public function destroy($id)
     {
+        if(!$instructor = $this->instructorService->find($id)) {
+            return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
+        }
+
         if($this->instructorService->deleteInstructor($instructor)) {
-            return redirect()->route('instructor.index')->with('success','Aluno excluido com sucesso!');
+            return redirect()->route('instructor.index')->with('success','Professor excluido com sucesso!');
         }
     }
 
-    private function listToDataTable($data) {
-
-        $response = [];
-
-        foreach($data as $item) {
-            $response[] = [
-                'id' => $item->id,
-                'name' => image(asset($item->user->image)) . anchor(route('instructor.show', $item), $item->user->name, 'ml-2'),
-                'phone_wpp' => $item->user->phone_wpp,
-                'created_at' => $item->created_at->format('d/m/Y')
-            ];
-        }
-
-
-        return response()->json(['data' => $response]);
-    }
+    
 }

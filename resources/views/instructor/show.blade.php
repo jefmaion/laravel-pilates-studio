@@ -56,7 +56,7 @@
                 Gerenciar
             </button>
             <div class="dropdown-menu" x-placement="bottom-start">
-                <a class="dropdown-item has-icon" href="{{ route('avatar.index', $instructor->user) }}"><i class="fas fa-image    "></i> Trocar Foto</a>
+                <a class="dropdown-item has-icon" href="{{ route('avatar.index', [$instructor->user, 'to' => Request::path()]) }}"><i class="fas fa-image    "></i> Trocar Foto</a>
                 <a class="dropdown-item has-icon" href="{{ route('instructor.edit', $instructor) }}"><i class="fas fa-pencil-alt    "></i> Editar</a>
                 <x-delete-button class="dropdown-item has-icon" route="{{ route('instructor.destroy', $instructor) }}"><i class="fas fa-trash-alt"></i> Excluir</x-delete-button>
                 <a class="dropdown-item has-icon" href="{{ route('instructor.modality.index', $instructor) }}"><i class="fas fa-pencil-alt    "></i> Modalidades</a>

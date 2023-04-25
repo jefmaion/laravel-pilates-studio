@@ -86,7 +86,7 @@ class ClassesController extends Controller
     {
         $data = $request->except(['_method', '_token']);
 
-        $class->fill($data)->update();
+        $this->classService->updateClass($class, $data);
 
         if($request->ajax()){
             return true;
@@ -97,14 +97,7 @@ class ClassesController extends Controller
 
     public function absense(AbsenseRequest $request, Classes $class)
     {
-
         return $this->classService->absense($class, $request->input('absense_type'), $request->input('absense_comments'));
-
-        // $class->status = $request->input('absense_type');
-        // $class->absense_comments = $request->input('absense_comments');
-        // $class->finished = 1;
-        
-        // return $class->save();
     }
 
     public function presence(Request $request, Classes $class)
@@ -112,28 +105,14 @@ class ClassesController extends Controller
         return  $this->classService->presence($class, $request->input('exercices'), $request->input('evolution'));
     }
 
-    public function reset(Classes $class) {
+    public function reset(Classes $class) 
+    {
         return $this->classService->reset($class);
     }
 
-    public function remark(RemarkRequest $request, Classes $class) {
-
-        $newClass                          = $class->replicate();
-        $newClass->date                    = $request->input('date');
-        $newClass->time                    = $request->input('time');
-        $newClass->instructor_id           = $request->input('instructor_id');
-        $newClass->scheduled_instructor_id = $newClass->instructor_id;
-        $newClass->type                    = 'RP';
-        $newClass->status                  = 0;
-        $newClass->finished                = 0;
-        $newClass->absense_comments        = null;
-        $newClass->classes_id              = $class->id;
-        $newClass->save();
-
-        $class->has_replacement = 1;
-        // $class->parent()->associate($newClass);
-
-        return $class->save();
+    public function remark(RemarkRequest $request, Classes $class) 
+    {
+        return $this->classService->remarkClass($class, $request->all());
     }
 
     /**

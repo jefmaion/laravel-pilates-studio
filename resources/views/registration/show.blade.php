@@ -17,7 +17,7 @@
 
 
             <div class="row">
-                <div class="col-5">
+                <div class="col-8">
                     <div class="author-box">
 
                         <div class="author-box-left">
@@ -40,7 +40,7 @@
                                 <h6 class="font-weight-light">
                                     {{ $registration->modality->name }} |
                                     {{ $registration->durationName }} ({{ $registration->class_per_week }}x) |
-                                    {{ $registration->value }}
+                                    R$ {{ currency($registration->value) }}
                                 </h6>
                                 <p class="text-muted"><b>Início: </b>{{ formatData($registration->start) }} | <b>Fim:
                                     </b>{{ formatData($registration->end) }}</p>
@@ -197,7 +197,7 @@
                                     @foreach($registration->installments as $installment)
                                     <tr>
                                       <td>{{ date('d/m/Y', strtotime($installment->date)) }}</td>
-                                      <td>{{ $installment->value }}</td>
+                                      <td>R$ {{ currency($installment->value) }}</td>
                                       <td>{{ $installment->paymentMethod->name }}</td>
                                       <td>{!! $installment->statusLabel  !!}</td>
 

@@ -5,8 +5,12 @@ namespace App\Services;
 use App\Models\Student;
 use App\Models\User;
 
-class StudentService {
+class StudentService extends Service {
 
+    public function __construct(Student $student)
+    {
+        parent::__construct($student);
+    }
 
     public function createStudent(array $request) {
 
@@ -38,8 +42,45 @@ class StudentService {
     }
 
     public function listStudents() {
-        return Student::latest()->get();
+        return Student::with('user')->latest()->get();
     }
 
+
+    public function listEnrolledStudents() {
+        return Student::with('user')->whereHas('registration', function($q)  {
+                $q->where('status',1);
+            })->get();
+    }
+
+    public function listCombo($justEnrolled=false) {
+
+        $data = $this->listStudents();
+
+        if($justEnrolled) {
+            $data = $this->listEnrolledStudents();
+        }
+
+        return array_map(function($student) {
+            return [$student['id'], $student['user']['name']];
+        }, $data->toArray());
+    }
+
+    public function listToDataTable() {
+
+        $response = [];
+        $data = $this->listStudents();
+
+        foreach($data as $item) {
+            $response[] = [
+                'id' => $item->id,
+                'name' => image(asset($item->user->image)) . anchor(route('student.show', $item), $item->user->name, 'ml-2'),
+                'phone_wpp' => $item->user->phone_wpp,
+                'created_at' => $item->created_at->format('d/m/Y')
+            ];
+        }
+
+
+        return json_encode(['data' => $response]);
+    }
 
 }

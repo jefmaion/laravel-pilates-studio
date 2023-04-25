@@ -24,7 +24,7 @@ class UpdateModalityRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'unique:modalities,name,'.$this->modality->id]
+            'name' => ['required', 'unique:modalities,name,'.$this->modality]
         ];
     }
 }

@@ -5,9 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Exercice;
 use App\Http\Requests\StoreExerciceRequest;
 use App\Http\Requests\UpdateExerciceRequest;
+use App\Services\ExerciceService;
+use Illuminate\Http\Request;
 
 class ExerciceController extends Controller
 {
+
+    protected $exerciceService;
+
+    public function __construct(Request $request, ExerciceService $exerciceService)
+    {
+        parent::__construct($request);
+        $this->exerciceService = $exerciceService;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -15,14 +27,15 @@ class ExerciceController extends Controller
      */
     public function index()
     {
-        $exercices = Exercice::latest()->get();
-        $count = count($exercices);
 
         if($this->request->ajax()) {
-            return $this->listToDataTable($exercices);
-         }
+            return $this->exerciceService->listToDataTable();
+        }
+
+        $exercices = $this->exerciceService->latest();
+        $count     = count($exercices);
  
-         return view('exercice.index', compact('count'));
+        return view('exercice.index', compact('count'));
     }
 
     /**
@@ -44,15 +57,14 @@ class ExerciceController extends Controller
      */
     public function store(StoreExerciceRequest $request)
     {
-        $data = $request->except(['_token', '_method']);
-
+        $data       = $request->except(['_token', '_method']);
         $redirectTo = route('exercice.index');
 
-        if(Exercice::create($data)) {
-            return redirect($redirectTo)->with('success','Item created successfully!');
+        if($this->exerciceService->create($data)) {
+            return redirect($redirectTo)->with('success','Exercício criado com sucesso!');
         }
 
-        return redirect($redirectTo)->with('error','Not Created');
+        return redirect($redirectTo)->with('error','Houve algum erro ao salvar o exercício');
     }
 
     /**
@@ -61,8 +73,12 @@ class ExerciceController extends Controller
      * @param  \App\Models\Exercice  $exercice
      * @return \Illuminate\Http\Response
      */
-    public function show(Exercice $exercice)
+    public function show($id)
     {
+        if(!$exercice = $this->exerciceService->find($id)) {
+            return redirect()->route('exercice.index')->with('error', 'Exercício não encontrado');
+        }
+
         return view('exercice.show', compact('exercice'));
     }
 
@@ -72,8 +88,12 @@ class ExerciceController extends Controller
      * @param  \App\Models\Exercice  $exercice
      * @return \Illuminate\Http\Response
      */
-    public function edit(Exercice $exercice)
+    public function edit($id)
     {
+        if(!$exercice = $this->exerciceService->find($id)) {
+            return redirect()->route('exercice.index')->with('error', 'Exercício não encontrado');
+        }
+
         return view('exercice.edit', compact('exercice'));
     }
 
@@ -84,19 +104,19 @@ class ExerciceController extends Controller
      * @param  \App\Models\Exercice  $exercice
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateExerciceRequest $request, Exercice $exercice)
+    public function update(UpdateExerciceRequest $request, $id)
     {
         $data = $request->except(['_token', '_method']);
 
-        $exercice->fill($data);
-
-        $redirectTo = route('exercice.show', $exercice);
-
-        if($exercice->save()) {
-            return redirect($redirectTo)->with('success','Item created successfully!');
+        if(!$exercice = $this->exerciceService->find($id)) {
+            return redirect()->route('exercice.index')->with('error', 'Exercício não encontrado');
         }
 
-        return redirect($redirectTo)->with('error','Not Created');
+        if($this->exerciceService->update($exercice, $data)) {
+            return redirect()->route('exercice.show', $exercice)->with('success','Exercício atualizado com sucesso!');
+        }
+
+        return redirect()->route('exercice.index')->with('error','Não foi possível atualizar');
     }
 
     /**
@@ -105,30 +125,19 @@ class ExerciceController extends Controller
      * @param  \App\Models\Exercice  $exercice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Exercice $exercice)
+    public function destroy($id)
     {
-        $redirectTo = route('exercice.index');
 
-        if($exercice->delete()) {
-            return redirect($redirectTo)->with('success','Item removed successfully!');
+        if(!$exercice = $this->exerciceService->find($id)) {
+            return redirect()->route('exercice.index')->with('error', 'Exercício não encontrado');
         }
 
-        return redirect($redirectTo)->with('error','Item not removed successfully!');
-    }
-
-    private function listToDataTable($data) {
-
-        $response = [];
-
-        foreach($data as $item) {
-            $response[] = [
-                'id' => $item->id,
-                'type' => $item->type,
-                'name' => sprintf('<a href="%s">%s</a>', route('exercice.show', $item), $item->name),
-                'created_at' => $item->created_at->format('d/m/Y')
-            ];
+        if($this->exerciceService->delete($exercice)) {
+            return redirect()->route('exercice.index')->with('success','Exercício removido com sucesso');
         }
 
-        return response()->json(['data' => $response]);
+        return redirect()->route('exercice.index')->with('error','Item not removed successfully!');
     }
+
+    
 }

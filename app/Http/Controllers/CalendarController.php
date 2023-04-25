@@ -2,133 +2,95 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Classes;
-use App\Models\Exercice;
-use App\Models\Instructor;
-use App\Models\Modality;
-use App\Models\Registration;
-use App\Models\Student;
-use Carbon\Carbon;
+use App\Services\CalendarService;
+use App\Services\ClassService;
+use App\Services\ExerciceService;
+use App\Services\InstructorService;
+use App\Services\ModalityService;
+use App\Services\StudentService;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
 {
 
+    protected $calendarService;
+    protected $studentService;
+    protected $instructorService;
+    protected $modalityService;
+    protected $classService;
+    protected $exerciceService;
 
-    public function __construct(Request $request)
+    public function __construct(
+        Request $request, 
+        CalendarService $calendarService, 
+        StudentService $studentService,
+        InstructorService $instructorService,
+        ModalityService $modalityService,
+        ClassService $classService,
+        ExerciceService $exerciceService
+    )
     {
         parent::__construct($request);
+        $this->calendarService   = $calendarService;
+        $this->studentService    = $studentService;
+        $this->instructorService = $instructorService;
+        $this->modalityService   = $modalityService;
+        $this->classService      = $classService;
+        $this->exerciceService   = $exerciceService;
     }
-
 
     public function index(Request $request)
     {
 
-        
-
-        
-
         if($this->request->ajax()) {
-
-            $start = Carbon::parse($request->query('start'));
-            $end   = Carbon::parse($request->query('end'));
-
-        
-            $data  = Classes::whereBetween('date', [$start, $end])->orderBy('id', 'desc');
-
-            if($request->query('_modality_id')) {
-                $data = Classes::whereHas('registration', function($q) use($request) {
-                    $q->where('modality_id','=', $request->query('_modality_id'));
-                });
-            }
-          
-            $params = $request->except(['_', 'start', 'end', '_modality_id']);
-
-            foreach ($params as $key => $value) {
-                if ($value == "") continue;
-                $key = ltrim($key, $key[0]);
-                $data->where($key, $value);
-            }
-
-            $data = $data->get();
-
+            $data = $this->calendarService->listClasses($request->all());
             return $this->listToCalendar($data);
         }
 
-        $data = Instructor::all();
-        $instructors = [];
-        foreach($data as $inst) {
-            $instructors[] = [$inst->id, $inst->user->name];
-        }
-
-        $data = Student::whereHas('registration', function($q)  {
-            $q->where('status',1);
-        })->get();
-
-        $students = [];
-        foreach($data as $inst) {
-            $students[] = [$inst->id, $inst->user->name];
-        }
-
-        $modalities = Modality::select(['id', 'name'])->get()->toArray();
+        $instructors = $this->instructorService->listCombo();
+        $students    = $this->studentService->listCombo(true);
+        $modalities  = $this->modalityService->listCombo();
         
-
         return view('calendar.index', compact('instructors', 'modalities', 'students'));
     }
 
     public function show($id) {
-
-        $class = Classes::find($id);
-
+        $class = $this->classService->findClass($id);
         return view('calendar.show', compact('class'));
     }
 
     public function edit($id) {
 
-        $class = Classes::find($id);
-
-   
+        $class     = $this->classService->findClass($id);
         $exercices = [];
-        $classExercicesIds = [];
         if($class->status == 1) {
-            $exercices         = Exercice::select(['id', 'name'])->get()->toArray();
+            $exercices         = $this->exerciceService->listCombo();
         }
 
         return view('calendar.edit', compact('class', 'exercices'));
     }
 
     public function absense($id) {
-        $class = Classes::find($id);
-        $data = Instructor::all();
-        
-        $instructors = [];
-        foreach($data as $inst) {
-            $instructors[] = [$inst->id, $inst->user->name];
-        }
+        $class       = $this->classService->findClass($id);
+        $instructors = $this->instructorService->listCombo();
         return view('calendar.absense', compact('class', 'instructors'));
     }
 
     public function presence($id) {
-        $class = Classes::find($id);
-        $exercices = Exercice::select(['id', 'name'])->get()->toArray();
+        $class     = $this->classService->findClass($id);
+        $exercices = $this->exerciceService->listCombo();
         return view('calendar.presence', compact('class', 'exercices'));
     }
 
     public function evolution($id) {
-        $class     = Classes::find($id);
-        $exercices = Exercice::select(['id', 'name'])->get()->toArray();
+        $class     = $this->classService->findClass($id);
+        $exercices = $this->exerciceService->listCombo();
         return view('calendar.evolution', compact('class', 'exercices'));
     }
 
     public function remark($id) {
-        $class = Classes::find($id);
-        $data  = Instructor::all();
-        
-        $instructors = [];
-        foreach($data as $inst) {
-            $instructors[] = [$inst->id, $inst->user->name];
-        }
-        
+        $class       = $this->classService->findClass($id);
+        $instructors = $this->instructorService->listCombo();
         return view('calendar.remark', compact('class', 'instructors'));
     }
 
@@ -152,8 +114,6 @@ class CalendarController extends Controller
                 $bg = 'bg-info';
             }
             
-            // $badge = $this->checkEvent($item);
-
             $badge = '';
 
             if($item->pendencies) {
@@ -191,21 +151,6 @@ class CalendarController extends Controller
         return response()->json($calendar);
     }
 
-    private function checkEvent($item) {
-        $icon  = '<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i> ';
-
-
-
-        if($item->status == 1 && empty($item->evolution)) {
-            return $icon;
-        }
-
-        if($item->status == 2 && $item->hasReplacement() === 0) {
-            return $icon;
-        }
-
-        return null;
-        
-    }
+    
 
 }

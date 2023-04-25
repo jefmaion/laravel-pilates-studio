@@ -5,22 +5,37 @@ namespace App\Http\Controllers;
 use App\Models\Registration;
 use App\Http\Requests\StoreRegistrationRequest;
 use App\Http\Requests\UpdateRegistrationRequest;
-use App\Models\Instructor;
-use App\Models\Modality;
-use App\Models\PaymentMethod;
-use App\Models\Student;
+use App\Services\InstructorService;
+use App\Services\ModalityService;
+use App\Services\PaymentMethodService;
 use App\Services\RegistrationService;
+use App\Services\StudentService;
 use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
 {
 
     protected $registrationService;
+    protected $modalityService;
+    protected $paymentMethodService;
+    protected $instructorService;
+    protected $studentService;
 
-    public function __construct(Request $request, RegistrationService $registrationService)
+    public function __construct(
+        Request $request, 
+        RegistrationService $registrationService,
+        ModalityService $modalityService,
+        PaymentMethodService $paymentMethod,
+        InstructorService $instructorService,
+        StudentService $studentService
+    )
     {
         parent::__construct($request);
         $this->registrationService = $registrationService;
+        $this->modalityService = $modalityService;
+        $this->paymentMethodService = $paymentMethod;
+        $this->instructorService = $instructorService;
+        $this->studentService = $studentService;
     }
 
     /**
@@ -31,22 +46,11 @@ class RegistrationController extends Controller
     public function index()
     {
 
-        $checked       = ($this->request->get('active')) ? 'checked' : '';
-
-        $registrations = Registration::latest();
-
-        if($checked) {
-            $registrations->where('status', 1);
-        }
-
-        $registrations = $registrations->get();
-
-        
         if($this->request->ajax()) {
-            return $this->listToDataTable($registrations);
+            return $this->registrationService->listToDataTable($this->request->get('active'));
         }
 
-        return view('registration.index', compact('checked'));
+        return view('registration.index');
     }
 
     /**
@@ -56,7 +60,7 @@ class RegistrationController extends Controller
      */
     public function create()
     {
-        return $this->edit(new Registration(), false);
+        return $this->edit(null, false);
     }
 
     /**
@@ -72,7 +76,6 @@ class RegistrationController extends Controller
         if($registration = $this->registrationService->makeRegistration($data)) {
             return redirect()->route('registration.show', $registration)->with('success', 'Matrícula Realizada com successo!');
         }
-
     }
 
     /**
@@ -81,10 +84,12 @@ class RegistrationController extends Controller
      * @param  \App\Models\Registration  $registration
      * @return \Illuminate\Http\Response
      */
-    public function show(Registration $registration)
+    public function show($id)
     {
+        if(!$registration = $this->registrationService->find($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
 
-        // dd($registration->totalClasses);
         return view('registration.show', compact('registration'));
     }
 
@@ -94,40 +99,40 @@ class RegistrationController extends Controller
      * @param  \App\Models\Registration  $registration
      * @return \Illuminate\Http\Response
      */
-    public function edit(Registration $registration, $renew=false)
+    public function edit($id=null, $renew=false)
     {
-        
-        $view = 'registration.edit';
 
-        $modalities = Modality::select(['id', 'name'])->get()->toArray();
-        $paymentMethods = PaymentMethod::select(['id', 'name'])->get()->toArray();
-        $data = Instructor::all();
+        if(is_null($id)) {
+            $registration = new Registration();
+        }
         
-        $instructors = [];
-        foreach($data as $inst) {
-            $instructors[] = [$inst->id, $inst->user->name];
+        $view         = 'registration.edit';
+
+        if(!is_null($id)) { 
+            if(!$registration = $this->registrationService->find($id)) {
+                return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+            }
         }
 
-        $data = Student::all();
+        $modalities     = $this->modalityService->listCombo();
+        $instructors    = $this->instructorService->listCombo();
+        $paymentMethods = $this->paymentMethodService->listCombo();
+        $students       = $this->studentService->listCombo();
         
-        $students = [];
-        foreach($data as $inst) {
-            $students[] = [$inst->id, $inst->user->name];
-        }
-
         $weekclass = [];
         foreach($registration->weekclass as $wk) {
             $weekclass['time'][$wk->weekday] = $wk->time;
             $weekclass['instructor'][$wk->weekday] = $wk->instructor_id;
         }
 
-        
         if(empty($registration->id)) {
             $view = 'registration.create';
         }
 
         if($renew) {
             $view = 'registration.renew';
+
+            $registration->start = $registration->end;
         }
 
         return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass', 'paymentMethods'));
@@ -141,12 +146,14 @@ class RegistrationController extends Controller
      * @param  \App\Models\Registration  $registration
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRegistrationRequest $request, Registration $registration)
+    public function update(UpdateRegistrationRequest $request, $id)
     {
 
         $data = $request->all();
 
- 
+        if(!$registration = $this->registrationService->find($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
 
         if($this->registrationService->updateRegistration($registration, $data)) {
             return redirect()->route('registration.show', $registration)->with('success', 'Matrícula Atualizada com successo!');
@@ -159,52 +166,44 @@ class RegistrationController extends Controller
      * @param  \App\Models\Registration  $registration
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Registration $registration)
+    public function destroy($id)
     {   
+        if(!$registration = $this->registrationService->find($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
 
-        $registration->weekclass()->delete();
-        $registration->classes()->delete();
-        $registration->delete();
-
-
-        return redirect()->route('registration.index')->with('success', 'Matrícula Excluida com successo!');
+        if($this->registrationService->delete($registration)) {
+            return redirect()->route('registration.index')->with('success', 'Matrícula Excluida com successo!');
+        }
     }
 
-    public function cancel(Registration $registration) {
+    public function cancel($id) {
+
+        if(!$registration = $this->registrationService->find($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
+
         return view('registration.cancel', compact('registration'));
     }
 
-    public function abort(Registration $registration, Request $request) {
+    public function abort($id, Request $request) {
+
+        if(!$registration = $this->registrationService->find($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
 
         $this->registrationService->cancelRegistration($registration, $request->input('comments'));
+
         return redirect()->route('registration.index')->with('success', 'Matrícula Cancelada com successo!');
        
     }
 
-    public function renew(Registration $registration) {
-        return $this->edit($registration, true);
+    public function renew($id) {
+
+       
+
+        return $this->edit($id, true);
     }
 
-    private function listToDataTable($data) {
-
-        $response = [];
-
-        foreach($data as $item) {
-
-
-            
-
-
-            $response[] = [
-                'name' => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
-                'start' => $item->start,
-                'end' => $item->end->format('d/m/Y'),
-                'status' => $item->statusName,
-                'modality' => $item->modality->name,
-                'created_at' => $item->created_at->format('d/m/Y')
-            ];
-        }
-
-        return response()->json(['data' => $response]);
-    }
+    
 }

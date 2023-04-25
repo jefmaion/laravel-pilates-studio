@@ -1,3 +1,4 @@
+
 @if ($message = Session::get('success'))
 <div class="alert-message alert alert-success alert-block">
 	<button type="button" class="close" data-dismiss="alert">×</button>	
@@ -51,10 +52,8 @@
 @section('scripts')
     @parent
     <script>
-        $(document).ready(function () {
-            if($('.alert-message').length > 0) {
-                $('.alert-message').delay(5000).fadeOut(500)
-            }
-        });
+        if($('.alert-message').length > 0) {
+            $('.alert-message').delay(5000).fadeOut(500)
+        }
     </script>
 @endsection

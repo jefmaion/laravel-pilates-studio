@@ -1,5 +1,7 @@
 @extends('template.main')
 
+
+
 @section('content')
 
 <x-page-title>
@@ -38,17 +40,17 @@
 
         <a name="" id="" class="btn btn-light text-dark" href="{{ route('student.index') }}" role="button">
             <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-            Voltar
+            Voltar 
         </a>
 
         <div class="dropdown d-inline">
             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-cogs    "></i>
-                Gerenciar
+                Gerenciar 
             </button>
             <div class="dropdown-menu" x-placement="bottom-start">
-                <a class="dropdown-item has-icon" href="{{ route('avatar.index', $student->user) }}"><i class="fas fa-image    "></i> Trocar Foto</a>
+                <a class="dropdown-item has-icon" href="{{ route('avatar.index', [$student->user, 'to' => Request::path()]) }}"><i class="fas fa-image    "></i> Trocar Foto</a>
                 <a class="dropdown-item has-icon" href="{{ route('student.edit', $student) }}"><i class="fas fa-pencil-alt    "></i> Editar</a>
                 <x-delete-button class="dropdown-item has-icon" route="{{ route('student.destroy', $student) }}"><i class="fas fa-trash-alt"></i> Excluir
                 </x-delete-button>
@@ -58,4 +60,6 @@
 
 </x-card>
 
+
 @endsection
+

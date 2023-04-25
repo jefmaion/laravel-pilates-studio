@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Modality;
 use App\Http\Requests\StoreModalityRequest;
 use App\Http\Requests\UpdateModalityRequest;
+use App\Services\ModalityService;
+use Illuminate\Http\Request;
 
 class ModalityController extends Controller
 {
+
+    protected $modalityService;
+
+    public function __construct(Request $request, ModalityService $modalityService)
+    {
+        parent::__construct($request);
+        $this->modalityService = $modalityService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,12 +26,13 @@ class ModalityController extends Controller
      */
     public function index()
     {
-        $modalities = Modality::latest()->get();
-        $count = count($modalities);
 
         if($this->request->ajax()) {
-            return $this->listToDataTable($modalities);
-         }
+            return $this->modalityService->listToDataTable();
+        }
+
+        $modalities = $this->modalityService->latest();
+        $count      = count($modalities);
  
          return view('modality.index', compact('count'));
     }
@@ -46,13 +58,11 @@ class ModalityController extends Controller
     {
         $data = $request->validated();
 
-        $redirectTo = route('modality.index');
-
-        if(Modality::create($data)) {
-            return redirect($redirectTo)->with('success','Item created successfully!');
+        if($this->modalityService->create($data)) {
+            return redirect()->route('modality.index')->with('success','Modalidade cadastrada com sucesso!');
         }
 
-        return redirect($redirectTo)->with('error','Not Created');
+        return redirect()->route('modality.index')->with('error','Não foi possível cadastrar a modalidade');
     }
 
     /**
@@ -61,8 +71,12 @@ class ModalityController extends Controller
      * @param  \App\Models\Modality  $modality
      * @return \Illuminate\Http\Response
      */
-    public function show(Modality $modality)
+    public function show($id)
     {
+        if(!$modality = $this->modalityService->find($id)) {
+            return redirect()->route('modality.index')->with('warning','Modalidade não encontrada!');
+        }
+
         return view('modality.show', compact('modality'));
     }
 
@@ -72,8 +86,13 @@ class ModalityController extends Controller
      * @param  \App\Models\Modality  $modality
      * @return \Illuminate\Http\Response
      */
-    public function edit(Modality $modality)
+    public function edit($id)
     {
+
+        if(!$modality = $this->modalityService->find($id)) {
+            return redirect()->route('modality.index')->with('warning','Modalidade não encontrada!');
+        }
+
         return view('modality.edit', compact('modality'));
     }
 
@@ -84,20 +103,21 @@ class ModalityController extends Controller
      * @param  \App\Models\Modality  $modality
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateModalityRequest $request, Modality $modality)
+    public function update(UpdateModalityRequest $request, $id)
     {
 
         $data = $request->except(['_token', '_method']);
 
-        $modality->fill($data);
-
-        $redirectTo = route('modality.show', $modality);
-
-        if($modality->save()) {
-            return redirect($redirectTo)->with('success','Item created successfully!');
+        if(!$modality = $this->modalityService->find($id)) {
+            return redirect()->route('modality.index')->with('warning','Modalidade não encontrada!');
         }
 
-        return redirect($redirectTo)->with('error','Not Created');
+        if($this->modalityService->update($modality, $data)) {
+            return redirect()->route('modality.show', $modality)->with('success','Modalidade atualizada com sucesso!');
+        }
+
+
+        return redirect()->route('modality.show', $modality)->with('error','Não foi possível atualizar!');
     }
 
     /**
@@ -106,31 +126,18 @@ class ModalityController extends Controller
      * @param  \App\Models\Modality  $modality
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modality $modality)
+    public function destroy($id)
     {
-        $redirectTo = route('modality.index');
 
-        if($modality->delete()) {
-            return redirect($redirectTo)->with('success','Item removed successfully!');
+        if(!$modality = $this->modalityService->find($id)) {
+            return redirect()->route('modality.index')->with('warning','Modalidade não encontrada!');
         }
 
-        return redirect($redirectTo)->with('error','Item not removed successfully!');
-    }
-
-
-    private function listToDataTable($data) {
-
-        $response = [];
-
-        foreach($data as $item) {
-            $response[] = [
-                'id' => $item->id,
-                'name' => sprintf('<a href="%s">%s</a>', route('modality.show', $item), $item->name),
-                'status' => $item->status,
-                'created_at' => $item->created_at->format('d/m/Y')
-            ];
+        if(!$this->modalityService->delete($modality)) {
+            return redirect()->route('modality.index')->with('error',$this->modalityService->getErrorMessage());
         }
 
-        return response()->json(['data' => $response]);
+        return redirect()->route('modality.index')->with('success','Modalidade excluída com sucesso!');
     }
+
 }

@@ -7,19 +7,33 @@ use App\Http\Requests\StoreInstructorModalityRequest;
 use App\Http\Requests\UpdateInstructorModalityRequest;
 use App\Models\Instructor;
 use App\Models\Modality;
+use App\Services\InstructorService;
+use App\Services\ModalityService;
 
 class InstructorModalityController extends Controller
 {
+
+    protected $instructorService;
+    protected $modalityService;
+
+    public function __construct(ModalityService $modalityService, InstructorService $instructorService)
+    {
+        $this->modalityService = $modalityService;
+        $this->instructorService = $instructorService;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Instructor $instructor)
+    public function index($idInstructor)
     {
+        if(!$instructor = $this->instructorService->find($idInstructor)) {
+            return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
+        }
 
-        $modalities = Modality::select(['id', 'name'])->get()->toArray();
-
+        $modalities = $this->modalityService->listCombo();
 
         return view('instructor.modality.index', compact('instructor', 'modalities'));
     }
@@ -40,14 +54,18 @@ class InstructorModalityController extends Controller
      * @param  \App\Http\Requests\StoreInstructorModalityRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreInstructorModalityRequest $request, Instructor $instructor)
+    public function store(StoreInstructorModalityRequest $request, $idInstructor)
     {
 
         $data = $request->except(['_method', '_token']);
 
-        $instructor->modalities()->attach($instructor, $data);
+        if(!$instructor = $this->instructorService->find($idInstructor)) {
+            return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
+        }
 
-        return redirect()->route('instructor.modality.index', $instructor)->with('success', 'Adicionado com sucesso');
+        $this->instructorService->addModality($instructor, $data);
+
+        return redirect()->route('instructor.modality.index', $instructor)->with('success', 'Modalidade atribuída com sucesso');
 
     }
 
@@ -91,9 +109,15 @@ class InstructorModalityController extends Controller
      * @param  \App\Models\InstructorModality  $instructorModality
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Instructor $instructor, $id )
+    public function destroy($idInstructor, $id )
     {
-        $instructor->modalities()->detach($id);
-        return redirect()->route('instructor.modality.index', $instructor)->with('success', 'Removido com sucesso');
+
+        if(!$instructor = $this->instructorService->find($idInstructor)) {
+            return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
+        }
+
+        $this->instructorService->removeModality($instructor, $id);
+        
+        return redirect()->route('instructor.modality.index', $instructor)->with('success', 'Modalidade removida com sucesso');
     }
 }

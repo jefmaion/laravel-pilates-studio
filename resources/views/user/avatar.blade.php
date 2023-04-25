@@ -33,7 +33,7 @@
 			</form>
 
 			<x-slot name="footer">
-				<a name="" id="" class="btn btn-light text-dark" href="{{ old('back') }}" role="button">
+				<a name="" id="" class="btn btn-light text-dark" href="{{ url(Request::get('to')) }}" role="button">
 					<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
 					Voltar
 				</a>

@@ -7,9 +7,13 @@ use App\Models\Registration;
 use App\Models\Transaction;
 use Carbon\Carbon;
 
-class RegistrationService
+class RegistrationService extends Service
 {
 
+    public function __construct(Registration $registration)
+    {
+        parent::__construct($registration);
+    }
 
 
     public function makeRegistration($data)
@@ -49,6 +53,44 @@ class RegistrationService
 
         $registration->classes()->where('finished', 0)->delete();
 
+    }
+
+    public function delete($registration) {
+        $registration->weekclass()->delete();
+        $registration->classes()->where('finished', 0)->delete();
+        $registration->installments()->where('status', 0)->delete();
+        return $registration->delete();
+    }
+
+    public function listToDataTable($justActive=false) {
+
+        $response = [];
+
+        $registrations = Registration::latest();
+
+        if($justActive) {
+            $registrations->where('status', 1);
+        }
+
+        $data = $registrations->get();
+
+        foreach($data as $item) {
+
+
+            
+
+
+            $response[] = [
+                'name' => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
+                'start' => $item->start,
+                'end' => $item->end->format('d/m/Y'),
+                'status' => $item->statusName,
+                'modality' => $item->modality->name,
+                'created_at' => $item->created_at->format('d/m/Y')
+            ];
+        }
+
+        return json_encode(['data' => $response]);
     }
 
     private function prepareData($data) {

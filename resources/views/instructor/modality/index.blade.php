@@ -18,6 +18,8 @@
 
                 <div class="row">
 
+                    <input type="hidden" name="instructor_id" value="{{ $instructor->id }}">
+
                     <div class="col-12 form-group">
                         <label>Modalidade</label>
                         <x-form.select name="modality_id" :options="$modalities" value="{{ old('modality_id') }}" />
@@ -25,7 +27,7 @@
 
                     <div class="col-12 form-group">
                         <label>Tipo de Remuneração</label>
-                        <x-form.select name="remuneration_type" :options="['P' => 'Percentual de aula (%) ',  'F' => 'Valor Fixo', 'S' => 'Sócio (%) ']" value="{{ old('remuneration_type') }}" />
+                        <x-form.select name="remuneration_type" :options="['P' => 'Percentual de aula (%) ',  'F' => 'Valor Fixo']" value="{{ old('remuneration_type') }}" />
                     </div>
 
                     <div class="col form-group">
@@ -63,9 +65,8 @@
                     <tr>
                         <th>Modalidade</th>
                         <th>Tipo de Remuneração</th>
-                        
-                        <th>Valor</th>
-                        <th>Calula na Falta</th>
+                        <th class="text-center">Valor</th>
+                        <th class="text-center">Calula na Falta</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -74,11 +75,12 @@
                     <tr>
                         <td scope="row">{{ $modality->name }}</td>
                         <td>{{ $modality->pivot->remuneration_type_text }}</td>
-                        <td>{{ $modality->pivot->remuneration_value }}</td>
-                        <td>{{ $modality->pivot->calc_on_absense }}</td>
+                        <td class="text-center">{{ $modality->pivot->remuneration_value_text }}</td>
+                        <td class="text-center">{{ $modality->pivot->calc_on_absense_text }}</td>
                         <td>
-                            <x-delete-button class="btn btn-danger" route="{{ route('instructor.modality.destroy', [$instructor, $modality->id]) }}">
-                                <i class="fas fa-trash-alt"></i> Remover Modalidade</x-delete-button>
+                            <x-delete-button class="btn btn-danger" route="{{ route('instructor.modality.destroy', [$instructor->id, $modality->id]) }}">
+                                <i class="fas fa-trash-alt"></i> Remover Modalidade
+                            </x-delete-button>
                         </td>
                     </tr>
                     @endforeach

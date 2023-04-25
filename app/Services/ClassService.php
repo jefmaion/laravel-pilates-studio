@@ -11,6 +11,34 @@ use App\Models\Modality;
 class ClassService
 {
 
+    public function findClass($id) {
+        return Classes::find($id);
+    }
+
+    public function updateClass(Classes $class, $data) {
+        return $class->fill($data)->update();
+    }
+
+    public function remarkClass(Classes $class, $data) {
+
+        $newClass                          = $class->replicate();
+        $newClass->date                    = $data['date'];
+        $newClass->time                    = $data['time'];
+        $newClass->instructor_id           = $data['instructor_id'];
+        $newClass->scheduled_instructor_id = $newClass->instructor_id;
+        $newClass->type                    = 'RP';
+        $newClass->status                  = 0;
+        $newClass->finished                = 0;
+        $newClass->absense_comments        = null;
+        $newClass->classes_id              = $class->id;
+        $newClass->save();
+
+        $class->has_replacement = 1;
+        // $class->parent()->associate($newClass);
+
+        return $class->save();
+    }
+
     public function reset(Classes $class) {
         $class->status           = 0;
         $class->absense_comments = null;
