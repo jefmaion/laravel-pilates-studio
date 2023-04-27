@@ -7,6 +7,7 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ExerciceController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InstallmentController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\InstructorModalityController;
 use App\Http\Controllers\ModalityController;
@@ -45,9 +46,12 @@ Route::resource('instructor/{instructor}/modality', InstructorModalityController
 Route::resource('modality', ModalityController::class);
 Route::resource('exercice', ExerciceController::class);
 Route::resource('registration', RegistrationController::class);
+
 Route::get('registration/{registration}/cancel', [RegistrationController::class, 'cancel'])->name('registration.cancel');
 Route::post('registration/{registration}/abort', [RegistrationController::class, 'abort'])->name('registration.abort');
 Route::get('registration/{registration}/renew', [RegistrationController::class, 'renew'])->name('registration.renew');
+
+Route::resource('installment', InstallmentController::class);
 
 
 Route::resource('class', ClassesController::class);
@@ -61,9 +65,13 @@ Route::get('calendar/{id}/absense', [CalendarController::class, 'absense'])->nam
 Route::get('calendar/{id}/presence', [CalendarController::class, 'presence'])->name('calendar.presence');
 Route::get('calendar/{id}/evolution', [CalendarController::class, 'evolution'])->name('calendar.evolution');
 Route::get('calendar/{id}/remark', [CalendarController::class, 'remark'])->name('calendar.remark');
+Route::get('calendar/{id}/remark/select', [CalendarController::class, 'select'])->name('calendar.select');
+
 
 
 Route::resource('account/receive', AccountReceivableController::class);
+Route::get('account/receive/{id}/receive', [AccountReceivableController::class, 'receive'])->name('receive.receive');
+
 
 // Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 

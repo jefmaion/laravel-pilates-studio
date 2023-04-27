@@ -32,6 +32,10 @@
             <a href="{{ route('exercice.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Exercícios</span></a>
         </li>
 
+        {{-- <li class="dropdown {{ (\Request::is('installment*')) ? 'active' : '' }}">
+            <a href="{{ route('installment.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Mensalidades</span></a>
+        </li> --}}
+
         <li class="dropdown {{ (\Request::is('account/receive*')) ? 'active' : '' }}">
             <a href="{{ route('receive.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Contas a Receber</span></a>
         </li>

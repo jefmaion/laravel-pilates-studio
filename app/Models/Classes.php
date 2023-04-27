@@ -63,7 +63,7 @@ class Classes extends Model
     }
 
     public function hasReplacement() {
-        return $this->where('classes_id', $this->id)->count();
+        return $this->where('classes_id', $this->id)->first();
     }
 
     public function getExercicesIdsAttribute() {
@@ -84,10 +84,11 @@ class Classes extends Model
             $pendencies[] = 'Evolução não registrada';
         }
 
-        if($this->status == 2 && $this->hasReplacement() === 0) {
+        if($this->status == 2 && is_null($this->hasReplacement())) {
             $pendencies[] = 'Reposição não agendada';
         }
 
+        
         return $pendencies;
     }
 

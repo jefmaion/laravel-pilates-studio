@@ -6,9 +6,14 @@ dataTable('#table-registrations', {
     columns: [
         {data: 'name'},
         {data: 'modality'},
+        {data: 'value'},
         {data: 'end'},
+        {data: 'classes'},
         {data: 'status'},
-    ]
+    ],
+    columnDefs: [
+        { className: 'text-center', targets: [2,3,4,5] }
+    ],
 })
 
 

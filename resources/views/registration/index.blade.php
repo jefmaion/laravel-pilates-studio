@@ -29,8 +29,10 @@
                 <tr>
                     <th>Aluno</th>
                     <th>Modalidade</th>
-                    <th>Data Final</th>
-                    <th>Status</th>
+                    <th class="text-center">Mensalidade</th>
+                    <th class="text-center">Vencimento da Matrícula</th>
+                    <th class="text-center">Progresso de Aulas</th>
+                    <th class="text-center">Status</th>
                 </tr>
             </thead>
         </table>

@@ -113,6 +113,7 @@ class ClassesController extends Controller
     public function remark(RemarkRequest $request, Classes $class) 
     {
         return $this->classService->remarkClass($class, $request->all());
+        // return redirect()->route('calendar.index')->with('success', 'Aula Reagendada com successo!');
     }
 
     /**

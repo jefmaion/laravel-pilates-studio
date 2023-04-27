@@ -1,6 +1,10 @@
 <div class="modal-header p-3">
     <h5 class="modal-title">
-        Aula de {{ $class->registration->modality->name }} - {{ date('d/m/Y', strtotime($class->date)) }} - {!! $class->classStatusBadge !!}
+         {{-- {{ date('d/m/Y', strtotime($class->date)) }} - {!! $class->classStatus !!} --}}
+         
+         
+         <i class="fas fa-info-circle    "></i>
+         Informações da Aula
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span>&times;</span>
@@ -50,33 +54,27 @@
         </button>
         <div class="dropdown-menu" x-placement="bottom-start">
 
-            
-
-
-            @if($class->status == 0)
-            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.presence', $class) }}">
-                <i class="fas fa-user-check    "></i>
-                Registrar Presença
-            </a>
-
-            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.absense', $class) }}" >
-                <i class="fas fa-user-times"></i>
-                Registrar Falta
-            </a>
-            @else
-
             <a class="dropdown-item has-icon open-view" href="{{ route('calendar.edit', $class) }}">
                 <i class="fas fa-calendar-plus"></i>
                 Editar Aula
             </a>
 
-            {{-- verifica se é falta com aviso e se nao existe reposicao --}}
-            @if($class->status == 2 && $class->has_replacement == 0)
-            <a class="dropdown-item has-icon open-view" href="{{ route('calendar.remark', $class) }}">
-                <i class="fas fa-calendar-plus"></i>
-                Agendar Reposição
-            </a>
-            @endif
+
+            @if($class->status == 0)
+                <a class="dropdown-item has-icon open-view" href="{{ route('calendar.presence', $class) }}">
+                    <i class="fas fa-user-check    "></i>
+                    Registrar Presença
+                </a>
+
+                <a class="dropdown-item has-icon open-view" href="{{ route('calendar.absense', $class) }}" >
+                    <i class="fas fa-user-times"></i>
+                    Registrar Falta
+                </a>
+
+
+              
+
+            @else
 
             @if($class->status == 1 && empty($class->evolution))
             <a class="dropdown-item has-icon open-view" href="{{ route('calendar.evolution', $class) }}">
@@ -84,6 +82,17 @@
                 Registrar Evolução
             </a>
             @endif
+
+            
+            {{-- verifica se é falta com aviso e se nao existe reposicao --}}
+            @if($class->status == 2 &&  is_null($class->hasReplacement()))
+            <a class="dropdown-item has-icon" id="btn-remark"  href="{{ route('calendar.select', $class) }}">
+                <i class="fas fa-calendar-plus"></i>
+                Agendar Reposição
+            </a>
+            @endif
+
+            
 
             <a class="dropdown-item has-icon reset-class" href="#" data-id="{{ $class->id }}">
                 <i class="fas fa-user-times    "></i>
@@ -121,9 +130,15 @@
             },
             success: function (response) {
                 $('#modelId').modal('hide')
-                $('#myEvent').fullCalendar( 'refetchEvents' )
+                refreshCalendar();
             }
         });
+    });
+
+    $('#btn-remark').click(function (e) { 
+        e.preventDefault();
+        setRemark(true, $(this).attr('href'))
+        $('#modelId').modal('hide')
     });
 
 </script>

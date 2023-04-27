@@ -15,6 +15,10 @@ class ClassService
         return Classes::find($id);
     }
 
+    public function listClassByDay($date=null, $time=null) {
+        return  Classes::where('date', $date)->where('time', $time)->get();
+    }
+
     public function updateClass(Classes $class, $data) {
         return $class->fill($data)->update();
     }
@@ -41,19 +45,27 @@ class ClassService
 
     public function reset(Classes $class) {
         $class->status           = 0;
+        $class->finished         = 0;
         $class->absense_comments = null;
         $class->comments         = null;
 
+        $class->instructor_id    =$class->scheduled_instructor_id;
+
         $class->remunerations()->whereNull('pay_date')->delete();
+
+        if($remark = $class->hasReplacement()) {
+            $remark->delete();
+        }
 
         return $class->save();
     }
 
     public function absense(Classes $class, $type, $comments = '')
     {
-        $class->status = $type;
+        $class->status           = $type;
         $class->absense_comments = $comments;
-        $class->finished = 1;
+        $class->finished         = 1;
+        $class->instructor_id    = auth()->user()->instructor->id;
 
         if(!$class->save()) {
             return false; 
@@ -70,6 +82,7 @@ class ClassService
         $class->status    = 1;
         $class->finished  = 1;
         $class->evolution = $evolution;
+        $class->instructor_id = auth()->user()->instructor->id;
 
         if ($exercices) {
             $class->exercices()->sync($exercices);

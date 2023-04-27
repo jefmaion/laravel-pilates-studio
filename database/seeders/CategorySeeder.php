@@ -15,8 +15,9 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $data = [
-            ['name' => 'Receitas'],
-            ['name' => 'Despesas', ],
+            ['name' => 'Matrículas'],
+            ['name' => 'Venda de Produtos'],
+            ['name' => 'Despesas'],
             ['name' => 'Outros'],
         ];
 

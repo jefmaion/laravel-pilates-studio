@@ -16,17 +16,16 @@
                     <div class="mb-1">
 
                         <p class="mb-1">
-                            <i class="fas fa-boxes"></i>
-                            {{ $class->registration->modality->name }} <span
-                                class="mx-1 text-light">|</span>
-                            {{ $class->registration->durationName }} ({{
-                            $class->registration->class_per_week }}x) <span class="mx-1 text-light">|</span>
-                            {{ $class->student->user->phone_wpp }}
+                            
+                           <i class="fas fa-phone    "></i> {{ $class->student->user->phone_wpp }}<span class="mx-1 text-light">|</span>
+                            <i class="fas fa-boxes"></i> {{ $class->registration->modality->name }} <span class="mx-1 text-light">|</span>
+                            {{ $class->registration->durationName }} ({{$class->registration->class_per_week }}x) <span class="mx-1 text-light">|</span>
+                            
                         </p>
 
                         <p class="mb-1">
                             <i class="fas fa-clock"></i>
-                            {{ date('H', strtotime($class->time)) }}h00 <span class="mx-1 text-light">|</span>
+                            {{ formatData($class->date, 'd/m') }} {{ date('H\hi', strtotime($class->time)) }} <span class="mx-1 text-light">|</span>
                             {{ $class->classType }} <span class="mx-1 text-light">|</span>
                             <i class="fa fa-user-circle" aria-hidden="true"></i>
                             {{ $class->instructor->user->name }}

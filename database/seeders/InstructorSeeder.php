@@ -16,10 +16,13 @@ class InstructorSeeder extends Seeder
     public function run()
     {
         $data = [
-            ['name' => 'Gleice Reis de Oliveira', 'gender' => 'F', 'birth_date' => '1981-05-27', 'cpf' => '00000000000', 'address' => 'Rua Dom Humberto Mazzoni', 'number' => '315', 'complement' => '', 'district' => 'VL PADRE ANCHIETA', 'city' => 'CAMPINAS', 'state' => 'SP', 'phone_wpp' => '19 99247-3123 '],
-            ['name' => 'Heloisa Reis e Silva', 'gender' => 'F', 'birth_date' => '1957-07-28', 'cpf' => '11111111111', 'address' => 'Rua Batista Raffi', 'number' => '457', 'complement' => '', 'district' => 'NOVA AARECIDA', 'city' => 'CAMPINAS', 'state' => 'SP', 'phone_wpp' => '99712-6981'],
-            ['name' => 'Bianca Lima', 'gender' => 'F', 'birth_date' => '1983-08-22', 'cpf' => '22222222222', 'address' => 'Rua Dr. Paulo Florence', 'number' => '604', 'complement' => '', 'district' => 'VILA ITÁLIA', 'city' => 'CAMPINAS', 'state' => 'SP', 'phone_wpp' => '98846-0124'],
+            ['name' => 'Gleice Reis de Oliveira',  'email' => 'gleicelilica@hotmail.com', 'password' => bcrypt('123123123'), 'gender' => 'F', 'birth_date' => '1981-05-27', 'cpf' => '00000000000', 'address' => 'Rua Dom Humberto Mazzoni', 'number' => '315', 'complement' => '', 'district' => 'VL PADRE ANCHIETA', 'city' => 'CAMPINAS', 'state' => 'SP', 'phone_wpp' => '19 99247-3123 '],
+            ['name' => 'Heloisa Reis e Silva', 'email' => 'heloisa@hotmail.com', 'password' => bcrypt('123123123'), 'gender' => 'F', 'birth_date' => '1957-07-28', 'cpf' => '11111111111', 'address' => 'Rua Batista Raffi', 'number' => '457', 'complement' => '', 'district' => 'NOVA AARECIDA', 'city' => 'CAMPINAS', 'state' => 'SP', 'phone_wpp' => '99712-6981'],
+            ['name' => 'Bianca Lima', 'email' => 'bianca@hotmail.com', 'password' => bcrypt('123123123'), 'gender' => 'F', 'birth_date' => '1983-08-22', 'cpf' => '22222222222', 'address' => 'Rua Dr. Paulo Florence', 'number' => '604', 'complement' => '', 'district' => 'VILA ITÁLIA', 'city' => 'CAMPINAS', 'state' => 'SP', 'phone_wpp' => '98846-0124'],
         ];
+
+
+
 
 
         foreach ($data as $item) {

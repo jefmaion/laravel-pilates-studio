@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
-use App\Http\Requests\StoreTransactionRequest;
-use App\Http\Requests\UpdateTransactionRequest;
+use App\Services\InstallmentService;
+use Illuminate\Http\Request;
 
-class TransactionController extends Controller
+class InstallmentController extends Controller
 {
+    protected $installmentService;
+
+    public function __construct(Request $request, InstallmentService $installmentService)
+    {
+        parent::__construct($request);
+        $this->installmentService = $installmentService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +22,15 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+
+        if($this->request->ajax()) {
+            return $this->installmentService->listToDataTable();
+        }
+
+        $installments = $this->installmentService->latest();
+        $count     = count($installments);
+ 
+        return view('installment.index', compact('count'));
     }
 
     /**
@@ -31,10 +46,10 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTransactionRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTransactionRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -42,10 +57,10 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Transaction  $transaction
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Transaction $transaction)
+    public function show($id)
     {
         //
     }
@@ -53,10 +68,10 @@ class TransactionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Transaction  $transaction
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Transaction $transaction)
+    public function edit($id)
     {
         //
     }
@@ -64,11 +79,11 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTransactionRequest  $request
-     * @param  \App\Models\Transaction  $transaction
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTransactionRequest $request, Transaction $transaction)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -76,10 +91,10 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Transaction  $transaction
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Transaction $transaction)
+    public function destroy($id)
     {
         //
     }

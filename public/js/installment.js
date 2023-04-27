@@ -1,19 +1,14 @@
 
 
 dataTable('#table-modality', {
-    ajax:'/account/receive',
+    ajax:'/installment',
     columns: [
         {data: 'status'},
         {data: 'date'},
-        {data: 'pay_date'},
         
         {data: 'name'},
-       
-        {data: 'category'},
-        {data: 'method'},
+        {data: 'modality'},
         {data: 'value'},
-        {data: 'amount'},
-        
         {data: 'created_at'},
     ]
 })

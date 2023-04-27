@@ -126,6 +126,7 @@
                             <table class="table datatable table-striped w-100">
                                 <thead>
                                     <tr>
+                                        <th>Dia da Semana</th>
                                         <th>Data</th>
                                         <th>Hora</th>
                                         <th>Professor</th>
@@ -136,8 +137,8 @@
                                 <tbody>
                                     @foreach($registration->classes as $class)
                                     <tr>
-                                        <td scope="row">{{ date('d/m/Y', strtotime($class->date)) }} {{ $class->weekname
-                                            }}</td>
+                                        <td scope="row">{{ $class->weekname}}</td>
+                                        <td>{{ date('d/m/Y', strtotime($class->date)) }} </td>
                                         <td>{{ $class->time }}</td>
                                         <td>{{ $class->instructor->user->name }}</td>
                                         <td>{{ $class->classType }}</td>
@@ -188,6 +189,7 @@
                                 <thead>
                                     <tr>
                                         <th>Data de Vencimento</th>
+                                        <th>Data de Pagamento</th>
                                         <th>Forma</th>
                                         <th>Valor</th>
                                         <th class="text-center">Status</th>
@@ -196,7 +198,10 @@
                                 <tbody>
                                     @foreach($registration->installments as $installment)
                                     <tr>
-                                      <td>{{ date('d/m/Y', strtotime($installment->date)) }}</td>
+                                      <td>
+                                        <a href="{{ route('receive.receive', $installment) }}">{{ date('d/m/Y', strtotime($installment->date)) }}</a>
+                                      </td>
+                                      <td>{{ formatData($installment->due_date) }}</td>
                                       <td>R$ {{ currency($installment->value) }}</td>
                                       <td>{{ $installment->paymentMethod->name }}</td>
                                       <td>{!! $installment->statusLabel  !!}</td>

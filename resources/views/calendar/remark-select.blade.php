@@ -1,6 +1,6 @@
 <div class="modal-header p-3">
     <h5 class="modal-title">
-        <i class="fas fa-user-check"></i> Reagendar Aula de {{ $class->student->user->firstName }}
+        <i class="fas fa-user-check"></i> Reposição de Aula
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span>&times;</span>
@@ -12,44 +12,59 @@
     @method('put')
 <div class="modal-body">
 
+    <h3></h3>
+
     <div class="row">
-        <div class="col-12">
+       
+        <input type="hidden" name="date" value="{{ $newDate['day'] }}">
+        <input type="hidden" name="time" value="{{ $newDate['time'] }}">
+
+        <div class="col-12 mb-2">
             @include('calendar.header')
         </div>
 
-        <div class="col">
+        <div class="col-12">
+            <h5>{{ $newDate['full'] }} às {{ $newDate['time'] }}</h5>
             <div class="row">
 
 
+                {{-- <div class="col-6">
 
-                <div class="col-6 form-group">
-                    <label>Data</label>
-                    <x-form.input type="date" class="replacement" name="date"  />
-                </div>
+                    <p><strong>Dia: </strong>{{ $newDate['full'] }}</p>
+                    <p><strong>Horário: </strong>{{ $newDate['time'] }}</p>
+                </div> --}}
 
-                <div class="col-6 form-group">
-                    <label>Horario</label>
-                    <x-form.select class="replacement" name="time" :options="[
-                    '07:00:00' => '07:00',
-                    '08:00:00' => '08:00',
-                    '09:00:00' => '09:00',
-                    '10:00:00' => '10:00',
-                    '11:00:00' => '11:00',
-                    '12:00:00' => '12:00',
-                    '13:00:00' => '13:00',
-                    '14:00:00' => '14:00',
-                    '15:00:00' => '15:00',
-                    '16:00:00' => '16:00',
-                    '17:00:00' => '17:00',
-                    '18:00:00' => '18:00',
-                    '19:00:00' => '19:00',
-                    '20:00:00' => '20:00',
-                ]"  />
-                </div>
+                
 
                 <div class="col form-group">
-                    <label>Instrutor</label>
+
                     <x-form.select class="replacement" name="instructor_id" :options="$instructors" value="" />
+                </div>
+
+                <div class="col-12">
+                    @if(count($classes) > 0)
+
+                    <h5 class="lead">Outros alunos estarão nesse dia!</h5>
+                    <table class="table table-striped table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Aluno</th>
+                                <th>Aula</th>
+                                <th>Modalidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($classes as $other)
+                            <tr>
+                                <td scope="row">{{ $other->student->user->name }}</td>
+                                <td scope="row">{{ $other->classType }}</td>
+                                <td>{{ $other->registration->modality->name }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                        
+                    @endif
                 </div>
             </div>
         </div>
@@ -67,7 +82,7 @@
 
     <button type="submit" class="btn btn-primary">
         <i class="fas fa-check-circle    "></i>
-        Registrar Evolução
+        Agendar Reposição
     </button>
 
 </div>
@@ -92,7 +107,8 @@ $('#form-absense').submit(function (e) {
         dataType: "json",
         success: function (response) {
             $('#modelId').modal('hide')
-            $('#myEvent').fullCalendar( 'refetchEvents' )
+            refreshCalendar()
+            setRemark(false, null)
         },
         error: function(response) {
             $('.is-invalid').removeClass('is-invalid')

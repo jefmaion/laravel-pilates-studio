@@ -14,7 +14,7 @@
     </div>
 
     <div class="col form-group">
-        <label>Registro</label>
+        <label>Doc. Conselho Regional (CREF/CREFITO)</label>
         <x-form.input name="profession_register" value="{{ old('profession_register', $instructor->profession_register ?? '') }}" />
     </div>
 

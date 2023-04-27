@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AccountReceivable;
 use App\Models\Classes;
 use App\Models\Instructor;
 use App\Models\Modality;
@@ -86,15 +87,14 @@ class RegistrationSeeder extends Seeder
 
                 $paymentMethod = ($i==1) ? 1 : 2;
 
-                Transaction::create([
+                AccountReceivable::create([
                     'registration_id'   => $registration->id,
                     'student_id'        => $registration->student->id,
                     'payment_method_id' => $paymentMethod,
                     'category_id'       => 1,
-                    'type'              => 'R',
                     'date'              => $dueDate,
                     'value'             => $item['value'],
-                    'description'       => 'Mensalidade '.$i.'/'.$item['duration'] . ' de '.$registration->student->user->name,
+                    'description'       => $registration->student->user->firstName .' - ' .$registration->modality->name. ' - '. $i.'/'.$item['duration'],
                 ]);
 
                 $dueDate = date('Y-m-d', strtotime($dueDate . ' +1 months'));

@@ -7,3 +7,18 @@
 textarea.form-control {
     height: auto !important;
 }
+
+.text-blue { color: var(--blue) !important; }
+.text-indigo { color: var(--indigo) !important; }
+.text-purple { color: var(--purple) !important; }
+.text-pink { color: var(--pink) !important; }
+.text-red { color: var(--red) !important; }
+.text-orange { color: var(--orange) !important; }
+.text-yellow { color: var(--yellow) !important; }
+.text-green { color: var(--green) !important; }
+.text-teal { color: var(--teal) !important; }
+.text-cyan { color: var(--cyan) !important; }
+.text-white { color: var(--white) !important; }
+.text-gray { color: var(--gray) !important; }
+.text-gray-dark { color: var(--gray-dark) !important; }
+

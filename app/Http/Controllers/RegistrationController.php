@@ -73,6 +73,8 @@ class RegistrationController extends Controller
     {
         $data = $request->all();
 
+        // dd($data);
+
         if($registration = $this->registrationService->makeRegistration($data)) {
             return redirect()->route('registration.show', $registration)->with('success', 'Matrícula Realizada com successo!');
         }

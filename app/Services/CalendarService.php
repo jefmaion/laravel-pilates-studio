@@ -19,7 +19,7 @@ class CalendarService
     
         $data  = Classes::whereBetween('date', [$start, $end])->orderBy('id', 'desc');
 
-        if($params['_modality_id']) {
+        if(isset($params['_modality_id'])) {
             $data = Classes::whereHas('registration', function($q) use($params) {
                 $q->where('modality_id','=', $params['_modality_id']);
             });

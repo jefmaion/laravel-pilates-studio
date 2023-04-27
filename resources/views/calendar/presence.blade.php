@@ -67,7 +67,7 @@ $('#form-absense').submit(function (e) {
         dataType: "json",
         success: function (response) {
             $('#modelId').modal('hide')
-            $('#myEvent').fullCalendar( 'refetchEvents' )
+            refreshCalendar()
         },
         error: function(response) {
             $('.is-invalid').removeClass('is-invalid')

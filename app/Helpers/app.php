@@ -30,6 +30,12 @@ if(!function_exists('currency')) {
 
 if(!function_exists('formatData')) {
     function formatData($value, $format='d/m/Y', $suffix='') {
+
+        if(empty($value)) {
+            return null;
+        }
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+date_default_timezone_set('America/Sao_Paulo');
         return date($format, strtotime($value)) . $suffix;
     }
 }

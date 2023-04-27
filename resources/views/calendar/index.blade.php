@@ -9,7 +9,15 @@
     </x-slot>
 </x-page-title>
 
-<x-card style="primary">
+<x-card style="primary" id="card-main" class="">
+
+    {{-- <div class="alert bg-orange remark-alert d-none" role="alert">
+        <strong>Reagendar Aula</strong> <a href="#" onclick="setRemark(false)">Cancelar</a>
+
+        
+    </div> --}}
+
+    <button type="button" class="btn btn-lg bg-orange remark-alert d-none mb-3" onclick="setRemark(false)"><h5 class="m-0">Cancelar Reagendamento</h5></button>
 
     <div class="row">
         {{-- <div class="col-1">
@@ -28,7 +36,7 @@
 
         <div class="col form-group">
             <label>Instrutor</label>
-            <x-form.select class="item-calendar select2" name="_instructor_id" :options="$instructors" />
+            <x-form.select class="item-calendar select2" name="_instructor_id" :options="$instructors" value="" />
         </div>
 
         <div class="col form-group">
@@ -54,7 +62,9 @@
 
     </div>
 
-    <div id="myEvent"></div>
+    <div id="calendar-class" ></div>
+
+    
 </x-card>
 
 @endsection
@@ -74,22 +84,7 @@
 <link rel="stylesheet" href="{{ asset('template/assets/bundles/select2/dist/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('template/assets/bundles/fullcalendar/fullcalendar.min.css') }}">
 <link rel="stylesheet" href="{{ asset('template/assets/bundles/summernote/summernote-bs4.css') }}">
-<style>
-    .fc-event {
-        margin: 2px;
-        box-shadow: none !important;
-    }
-
-    .fc-time-grid .fc-slats td {
-        height: 4.5em;
-        border-bottom: 0;
-
-    }
-
-    .risk {
-        text-decoration: line-through
-    }
-</style>
+<link rel="stylesheet" href="{{ asset('css/fullcalendar.css') }}">
 
 
 @endsection
@@ -97,86 +92,67 @@
 
 @section('scripts')
 <script src="{{ asset('template/assets/bundles/fullcalendar/fullcalendar.min.js') }}"></script>
+<script src="{{ asset('js/config.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/locale/pt-br.js"></script>
 <script src="{{ asset('template/assets/bundles/select2/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('template/assets/bundles/summernote/summernote-bs4.js') }}"></script>
 <script>
+
+    var calendar = null
+    var remark = false
+    var remarkUrl = null
+
     $(document).ready(function () {
-        var calendar = $('#myEvent').fullCalendar({
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,agendaWeek,agendaDay'
-        },
-        navLinks:true,
-        height: 'auto',
-        defaultView: 'agendaWeek',
-        // editable: true,
-        selectable: true,
-        allDaySlot: false,
-        displayEventTime : false,
-        minTime: "07:00:00",
-        maxTime: "21:00:00",
-        slotDuration: '00:60:00',
-        // eventLimit: true,
-        nowIndicator:true,
-        timeFormat: 'H(:mm)',
-        slotEventOverlap:false,
-        hiddenDays: [0],
-        slotLabelFormat: [
-            'HH:mm', // top level of text
-        ],
-        // navLinkDayClick: function(date, jsEvent) {
-        //     console.log('day', date.format()); // date is a moment
-        //     console.log('coords', jsEvent.pageX, jsEvent.pageY);
-        // },
-        events: {
-            url: 'calendar/',
-            data: function() {
-                obj = {}
-                $('.item-calendar').each(function (index, element) {
-                    name = $(this).attr('name');
-                    obj[name] = $('[name="'+name+'"]').val()
-                });
-                return obj
+
+        calendar = $('#calendar-class').fullCalendar({...config.fullcalendar,...{
+                events: {
+                    url: 'calendar/',
+                    data: function() {
+                        obj = {}
+                        $('.item-calendar').each(function (index, element) {
+                            name = $(this).attr('name');
+                            obj[name] = $('[name="'+name+'"]').val()
+                        });
+                        return obj
+                    }
+                },
+
+                eventRender: function(event, element) {
+                    element.find(".fc-title").html(event.title);
+                },
+                eventClick:  function(event, jsEvent, view) {
+                    if(!remark) {
+                        showClass(event.id)
+                    }
+                },
+                dateClick: function(info) {
+                    alert('clicked ' + info.dateStr + ' on resource ');
+                },
+                dayClick: function(date, jsEvent, view) {
+                    $.ajax({
+                        url: remarkUrl,
+                        data: {
+                            date: date.format()
+                        },
+                        success: function(doc) {
+                            showModal(doc)
+                        }
+                    });
+                }
             }
-        },
+        });
 
+        $('.item-calendar').change(function (e) { 
+            refreshCalendar();
+        });
 
-        eventRender: function(event, element) {
-            element.find(".fc-title").html(event.title);
-        },
-        eventClick:  function(event, jsEvent, view) {
-            showClass(event.id)
-        },
-
-        dateClick: function(info) {
-            alert('clicked ' + info.dateStr + ' on resource ');
-        },
-
-        dayClick: function(date, jsEvent, view) {
-
-            // alert('Clicked on: ' + date.format());
-
-            // alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-            // alert('Current view: ' + view.name);
-            alert('dia')
-
-        },
-        eventAfterRender: function(event, element, view) {
-            // alert('sd');
-        },
-        
-    });
-
-    $('.item-calendar').change(function (e) { 
-        calendar.fullCalendar('refetchEvents');
-    });
                 
     });
         
-            // });
+
+    function refreshCalendar() {
+        calendar.fullCalendar('refetchEvents');
+    }
         
     function showClass(id) {
         $.ajax({
@@ -189,11 +165,27 @@
     }
 
     function showModal(content) {
-        // $('#modelId').modal('hide')
         $('#modelId .modal-content').html(content)
         $('#modelId').modal('show')
     }
 
+
+    function setRemark(status, url) {
+        remark = status
+        remarkUrl = url
+        classes = 'border border-warning fc-border-yellow'
+
+        $('#card-main').removeClass(classes);
+        $('.remark-alert').addClass('d-none')
+        // $('.fc td').removeClass('fc-border-yellow')
+
+        if(status) {
+            $('#card-main').addClass(classes);
+            $('.remark-alert').removeClass('d-none')
+            // $('.fc td').addClass('fc-border-yellow')
+        }
+        
+    }
     
 
 

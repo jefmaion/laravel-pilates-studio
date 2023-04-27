@@ -46,7 +46,14 @@ class User extends Authenticatable
 
     protected $dates = ['created_at'];
 
-    
+    public function instructor() {
+        return $this->belongsTo(Instructor::class, 'id', 'user_id');
+    }
+
+
+    public function student() {
+        return $this->belongsTo(Student::class);
+    }
 
     public function getFirstNameAttribute() {
         $name = explode(" ", $this->name);

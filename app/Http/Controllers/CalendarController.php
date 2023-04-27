@@ -8,6 +8,7 @@ use App\Services\ExerciceService;
 use App\Services\InstructorService;
 use App\Services\ModalityService;
 use App\Services\StudentService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -88,44 +89,70 @@ class CalendarController extends Controller
         return view('calendar.evolution', compact('class', 'exercices'));
     }
 
-    public function remark($id) {
+    public function remark($id, $select=false) {
+        $class       = $this->classService->findClass($id);
+        return view('calendar.remark-calendar', compact('class'));
+
+    
+       
+    }
+
+    public function select($id, Request $request) {
+
+        $date = Carbon::parse($request->input('date'))->locale('pt-BR');
+
+        $newDate = [
+            'day'  =>$date->format('Y-m-d'),
+            'time' => $date->format('H:i:s'),
+            'full' => ucwords($date->translatedFormat('l, d \d\e F \d\e Y'))
+        ];
+
+        $classes = $this->classService->listClassByDay($date->format('Y-m-d'), $date->format('H:i:s'));
+
         $class       = $this->classService->findClass($id);
         $instructors = $this->instructorService->listCombo();
-        return view('calendar.remark', compact('class', 'instructors'));
+
+        return view('calendar.remark-select', compact('class', 'instructors', 'newDate', 'classes'))->render();
     }
+
 
 
     private function listToCalendar($data) {
 
         $bgClassStatus = [
             0 => 'bg-primary',
-            1 => 'bg-success',
+            1 => 'bg-green',
             2 => 'bg-warning',
-            3 => 'bg-danger'
+            3 => 'bg-red'
         ];
 
         $calendar = [];
+        $raw = [];
 
         foreach($data as $item) {
 
             $bg = $bgClassStatus[$item->status];
 
             if($item->type == 'RP' && $item->status == 0) {
-                $bg = 'bg-info';
+                $bg = 'bg-light-blue';
             }
             
             $badge = '';
 
+            if($item->finished) {
+                $badge = '<i class="fas fa-check    "></i> ';
+            }
+
             if($item->pendencies) {
-                $badge = '<i class="fa fa-exclamation-circle mr-1" aria-hidden="true" style="color:#F9584B"></i>';
+                $badge = '<i class="fa fa-exclamation-circle mr-1 text-red" aria-hidden="true" sstyle="color:#F9584B"></i>';
             }
 
             if($item->registration->installmentToday) {
-                $badge = '<i class="fa fa-exclamation-circle mr-1" aria-hidden="true" style="color:#F9584B"></i>';
+                $badge = '<i class="fa fa-exclamation-circle mr-1 text-red" aria-hidden="true" sstyle="color:#F9584B"></i>';
             }
 
             if($item->registration->hasInstallmentLate) {
-                $badge = '<i class="fa fa-exclamation-circle mr-1" aria-hidden="true" style="color:#F9584B"></i>';
+                $badge = '<i class="fa fa-exclamation-circle mr-1 text-red" aria-hidden="true" sstyle="color:#F9584B"></i>';
             }
 
             
@@ -143,6 +170,21 @@ class CalendarController extends Controller
                 'end'       => $item->date .  'T' . date('H:i', strtotime($item->time . '+1 hour')),
                 'className' => [$bg],
                 // 'color' => (isset($holidays[$item->date])) ? '#000' : 'null'
+                'raw' => [
+                    'id' => $item->id,
+                    'title' =>  $item->student->user->firstAndLast. '|' .$item->registration->modality->acronym,
+                    'start'     => $item->date .  'T' . $item->time,
+                    'end'       => $item->date .  'T' . date('H:i', strtotime($item->time . '+1 hour')),
+                    'className' =>['fc-event-remark', 'bg-light']
+                ]
+            ];
+
+
+            $raw[] = [
+                'id' => $item->id,
+                'title' =>  $item->student->user->firstAndLast . '|' .$item->registration->modality->acronym,
+                'start'     => $item->date .  'T' . $item->time,
+                'end'       => $item->date .  'T' . date('H:i', strtotime($item->time . '+1 hour')),
             ];
         }
 

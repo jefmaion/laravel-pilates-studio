@@ -17,6 +17,7 @@ class PaymentMethodsSeeder extends Seeder
         $data = [
             ['name' => 'Crédito'],
             ['name' => 'Débito', ],
+            ['name' => 'Dinheiro'],
             ['name' => 'Pix'],
         ];
 

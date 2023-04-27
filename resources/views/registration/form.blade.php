@@ -58,9 +58,13 @@
                 <x-form.select name="other_payment_method_id" value="{{ old('other_payment_method_id') }}" :options="$paymentMethods" />
             </div>
 
-            <div class="col form-group">
+            <div class="col-12 form-group">
                 <label>Observações</label>
                 <x-form.textarea name="comments" rows="5">{{ old('comments', $registration->comments ?? '') }}</x-form.textarea>
+            </div>
+
+            <div class="col form-group">
+                <x-form.switch-button class="mt-4" name="is_paid" value="" >Marcar 1º Mensalidade como Pago</x-form.switch-button>
             </div>
 
 

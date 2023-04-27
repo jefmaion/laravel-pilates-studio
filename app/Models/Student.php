@@ -19,4 +19,17 @@ class Student extends BaseModel
     public function registration() {
         return $this->hasMany(Registration::class);
     }
+
+    public function classes() {
+        return $this->hasMany(Classes::class)->where('finished', 1);
+    }
+
+    public function installments() {
+        return $this->hasMany(Transaction::class);
+    }
+
+
+    public function evolutions() {
+        return $this->classes()->whereNotNull('evolution');
+    }
 }

@@ -6,7 +6,7 @@
     </div>
 
     <div class="col-12 form-group">
-        <label>Nome da Modalidade</label>
+        <label>Sigla</label>
         <x-form.input name="acronym" value="{{ old('acronym', $modality->acronym) }}" />
     </div>
 

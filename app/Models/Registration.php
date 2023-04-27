@@ -74,7 +74,7 @@ class Registration extends Model
     }
 
     public function installments() {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(AccountReceivable::class);
     }
 
     public function getInstallmentTodayAttribute() {
@@ -108,6 +108,11 @@ class Registration extends Model
 
         if($type === 'remarks') {
             return $this->classes()->where('type', 'RP')->count();
+        }
+
+
+        if($type === 'finished') {
+            return $this->classes()->where('finished', 1)->count();
         }
     }
 

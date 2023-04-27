@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\AccountReceivable;
 use App\Models\Classes;
+use App\Models\Installment;
 use App\Models\Registration;
+use App\Models\RegistrationInstallment;
 use App\Models\Transaction;
 use Carbon\Carbon;
 
@@ -85,7 +88,9 @@ class RegistrationService extends Service
                 'start' => $item->start,
                 'end' => $item->end->format('d/m/Y'),
                 'status' => $item->statusName,
+                'value' => currency($item->value),
                 'modality' => $item->modality->name,
+                'classes' => ($item->countClasses('presences')+$item->countClasses('absenses')) . ' de ' . $item->countClasses() ,
                 'created_at' => $item->created_at->format('d/m/Y')
             ];
         }
@@ -164,7 +169,7 @@ class RegistrationService extends Service
 
     public function generateInstallments(Registration $registration, $data) {
 
-
+        
         $registration->installments()->whereNull('pay_date')->delete();
 
         $dueDate =  Carbon::parse(date('Y-m-', strtotime($data['start'])) . $data['due_day']) ;
@@ -173,16 +178,28 @@ class RegistrationService extends Service
 
             $paymentMethod = ($i==1) ? $data['first_payment_method_id'] : $data['other_payment_method_id'];
 
-            Transaction::create([
+            $installment = [
+
                 'registration_id'   => $registration->id,
                 'student_id'        => $registration->student->id,
                 'payment_method_id' => $paymentMethod,
                 'category_id'       => 1,
-                'type'              => 'R',
                 'date'              => $dueDate,
                 'value'             => $data['value'],
-                'description'       => 'Mensalidade '.$i.'/'.$data['duration'] . ' de '.$registration->student->name,
-            ]);
+                'description'       => $registration->student->user->firstName .' - ' .$registration->modality->name. ' - '. $i.'/'.$data['duration'],
+            ];
+
+            
+
+            if($data['is_paid'] == 1 && $i == 1) {
+                $installment = array_merge($installment, [
+                    'pay_date' => $dueDate,
+                    'status' => 1,
+                    'user_id' => auth()->user()->id
+                ]);
+            }
+
+            AccountReceivable::create($installment);
 
             $dueDate = date('Y-m-d', strtotime($dueDate . ' +1 months'));
             $dueDate =  Carbon::parse(date('Y-m-', strtotime($dueDate)) . $data['due_day']) ;
