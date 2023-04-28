@@ -31,15 +31,16 @@
             <table class="table table-striped datatable table-ssm" id="table-modality" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Status</th>
+                        
+                        
                         <th>Vencimento</th>
-                        <th>Pagamento</th>
                         <th>Descrição</th>
                         <th>Categoria</th>
                         <th>Forma</th>
+                        <th>Status</th>
                         <th>Valor a Receber</th>
                         <th>Valor Recebido</th>
-                        <th>Ação</th>
+                        <th>Data Pagamento</th>
                     </tr>
                 </thead>
             </table>

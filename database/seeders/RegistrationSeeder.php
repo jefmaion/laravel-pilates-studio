@@ -30,7 +30,7 @@ class RegistrationSeeder extends Seeder
 
             $classPerWeek = rand(1, 3);
             $duration = rand(1, 3);
-            $start = date('Y-m-d', strtotime(date('Y-m-d') . ' -10 days'));
+            $start = date('Y-m-d', strtotime(date('Y-m-d') . ' -30 days'));
 
             $item = [
                 'student_id' => $student->id,
@@ -87,7 +87,10 @@ class RegistrationSeeder extends Seeder
 
                 $paymentMethod = ($i==1) ? 1 : 2;
 
-                AccountReceivable::create([
+                
+
+                $installment = [
+
                     'registration_id'   => $registration->id,
                     'student_id'        => $registration->student->id,
                     'payment_method_id' => $paymentMethod,
@@ -95,7 +98,19 @@ class RegistrationSeeder extends Seeder
                     'date'              => $dueDate,
                     'value'             => $item['value'],
                     'description'       => $registration->student->user->firstName .' - ' .$registration->modality->name. ' - '. $i.'/'.$item['duration'],
-                ]);
+                ];
+    
+                
+    
+                if($i == 1) {
+                    $installment = array_merge($installment, [
+                        'pay_date' => $dueDate,
+                        'status' => 1,
+                        'user_id' => 1
+                    ]);
+                }
+
+                AccountReceivable::create($installment);
 
                 $dueDate = date('Y-m-d', strtotime($dueDate . ' +1 months'));
                 $dueDate =  Carbon::parse(date('Y-m-', strtotime($dueDate)) . $item['due_day']) ;

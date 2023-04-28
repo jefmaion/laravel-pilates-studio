@@ -267,6 +267,7 @@
 @endsection
 
 @section('scripts')
+@parent
 @include('template.includes.datatable')
 <script src="{{ asset('js/config.js') }}"></script>
 <script src="{{ asset('js/registration.js') }}"></script>

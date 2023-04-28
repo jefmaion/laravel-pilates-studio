@@ -1,3 +1,7 @@
+
+<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+
 <div class="modal-header p-3">
     <h5 class="modal-title">
         <i class="fas fa-user-check"></i> Registrar Evolução de {{ $class->student->user->firstName }}
@@ -45,7 +49,7 @@
 </form>
 
 
-
+</div></div>
 
 <script>
 

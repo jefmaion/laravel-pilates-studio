@@ -22,8 +22,11 @@ class Classes extends Model
     }
 
     public function getClassStatusBadgeAttribute() {
-        $color = $this->statusClassLabel[$this->status];
-        return sprintf('<span class="badge badge-%s badge-shadow"><i class="fas fa-check"></i> %s</span>', $color, $this->classStatus);
+        return sprintf('<span class="badge badge-%s badge-shadow"><i class="fas fa-check"></i> %s</span>', $this->classStatusColor, $this->classStatus);
+    }
+
+    public function getClassStatusColorAttribute() {
+        return $this->statusClassLabel[$this->status];
     }
 
     public function getClassTypeAttribute() {

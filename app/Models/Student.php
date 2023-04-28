@@ -28,8 +28,11 @@ class Student extends BaseModel
         return $this->hasMany(Transaction::class);
     }
 
-
     public function evolutions() {
-        return $this->classes()->whereNotNull('evolution');
+        return $this->classes()->whereNotNull('evolution')->orderBy('date','desc');
+    }
+
+    public function lastEvolutions() {
+        return $this->evolutions()->limit(3);
     }
 }

@@ -6,7 +6,7 @@
         <div class="row">
 
             <div class="col-12 form-group">
-                <label>Aluno</label>
+                <label>Aluno (<a href="{{ route('student.create') }}">Novo Aluno</a>)</label> 
                 <x-form.select name="student_id" :options="$students"
                     value="{{ old('student_id', $registration->student_id ?? '') }}" />
             </div>
@@ -17,35 +17,36 @@
                     value="{{ date('Y-m-d', strtotime(old('start', $registration->start ?? date('Y-m-d')))) }}" />
             </div>
 
-            <div class="col-4 form-group">
+            <div class="col-8 form-group">
                 <label>Modalidade</label>
                 <x-form.select name="modality_id" :options="$modalities"
                     value="{{ old('modality_id', $registration->modality_id ?? '') }}" />
             </div>
 
-            <div class="col-4 form-group">
-                <label>Aulas por semana</label>
-                <x-form.input name="class_per_week"
-                    value="{{ old('class_per_week', $registration->class_per_week ?? '') }}" />
-            </div>
+            
 
 
-            <div class="col-4 form-group">
+            <div class="col-5 form-group">
                 <label>Plano</label>
                 <x-form.select name="duration" :options="[1 => 'Mensal', 2 => 'Bimestral', 3 => 'Trimestral']"
                     value="{{ old('duration', $registration->duration ?? '') }}" />
             </div>
 
+            <div class="col-2 form-group">
+                <label>Aulas p/ semana</label>
+                <x-form.input name="class_per_week"
+                    value="{{ old('class_per_week', $registration->class_per_week ?? '') }}" />
+            </div>
 
 
-            <div class="col-4 form-group">
-                <label>Dia de Vencimento</label>
+            <div class="col-2 form-group">
+                <label>Dia Vencimento</label>
                 <x-form.input name="due_day" value="{{ old('due_day', $registration->due_day ?? date('d')) }}" />
             </div>
 
-            <div class="col-4 form-group">
+            <div class="col-3 form-group">
                 <label>Valor</label>
-                <x-form.input name="value" value="{{ old('value', currency($registration->value) ?? '') }}" />
+                <x-form.input name="value" class="money" value="{{ old('value', currency($registration->value) ?? '') }}" />
             </div>
 
             <div class="col-6 form-group">
@@ -64,7 +65,7 @@
             </div>
 
             <div class="col form-group">
-                <x-form.switch-button class="mt-4" name="is_paid" value="" >Marcar 1º Mensalidade como Pago</x-form.switch-button>
+                <x-form.switch-button  name="is_paid" value="" >Marcar 1º Mensalidade como Pago</x-form.switch-button>
             </div>
 
 
@@ -127,6 +128,10 @@
     </div>
 </div>
 
+@section('scripts')
+<script src="{{ asset('js/jquery.mask.min.js') }}"></script>
+<script src="{{ asset('js/jquery.mask.config.js') }}"></script>
+@endsection
 
 
 {{-- <table class="table">

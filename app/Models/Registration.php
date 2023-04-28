@@ -24,38 +24,9 @@ class Registration extends Model
         'Cancelado', 'Em Andamento'
     ];
 
-
     public function getDurationNameAttribute() {
         return $this->durationName[$this->duration];
     }
-
-    public function getStatusNameAttribute() {
-
-        $badge = '<span class="badge badge-pill badge-%s badge-shadow">%s</span>';
-
-        $status = sprintf($badge, 'light', $this->statusName[$this->status]);
-
-        if($this->status == 1) {
-            
-            $status = sprintf($badge, 'success', $this->statusName[$this->status]);
-
-            if($this->daysToRenew == 0) {
-                $status = sprintf($badge, 'warning', 'Renovar Hoje');
-            }
-    
-            if($this->daysToRenew <= 5) {
-                $status = sprintf($badge, 'warning', 'Renovar em '. $this->daysToRenew . ' dias');
-            }
-
-            if($this->daysToRenew < 0) {
-                $status = sprintf($badge, 'danger', 'Renovação Atrasada');
-            }
-
-        }
-
-        return $status;
-    }
-
 
     public function student() {
         return $this->belongsTo(Student::class);
@@ -89,9 +60,9 @@ class Registration extends Model
         return $this->classes()->whereNotNull('evolution')->orderBy('date', 'desc')->get();
     }
 
-    // public function getClassValueAttribute() {
-    //     return $this->value / $this->classes()->where('type', 'AN')->count();
-    // }
+    public function getDaysToRenewAttribute() {
+        return Carbon::now()->diffInDays($this->end, false);
+    }
 
     public function countClasses($type=null) {
         if(!$type) {
@@ -110,20 +81,37 @@ class Registration extends Model
             return $this->classes()->where('type', 'RP')->count();
         }
 
-
         if($type === 'finished') {
             return $this->classes()->where('finished', 1)->count();
         }
     }
 
-    public function getDaysToRenewAttribute() {
-        return Carbon::now()->diffInDays($this->end, false);
+    
+
+    public function getStatusNameAttribute() {
+
+        $badge = '<span class="badge badge-pill badge-%s badge-shadow">%s</span>';
+
+        if($this->status == 1) {
+            
+            if($this->daysToRenew == 0) {
+                return sprintf($badge, 'warning', 'Renovar matrícula Hoje');
+            }
+    
+            if($this->daysToRenew > 0 && $this->daysToRenew <= 5) {
+                return sprintf($badge, 'warning', 'Renovar matrícula em '. $this->daysToRenew . ' dias');
+            }
+
+            if($this->daysToRenew < 0) {
+                return sprintf($badge, 'danger', 'Renovação Atrasada');
+            }
+
+            return sprintf($badge, 'success', 'Matrícula ' . $this->statusName[$this->status]);
+        }
+        
     }
 
-
     public function getRenewAttribute() {
-
-
 
         if($this->daysToRenew == 0) {
             return '<span class="badge badge-pill badge-warning badge-shadow">Renovar hoje</span>';
@@ -136,8 +124,6 @@ class Registration extends Model
         if($this->daysToRenew <= 5) {
             return '<span class="badge badge-pill badge-warning badge-shadow">Renovar em '. $this->daysToRenew . ' dias</span>';
         }
-        
-
         
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AccountReceivable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,11 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        return $this->runAll();
+        // return $this->runAll();
         // \App\Models\User::factory(10)->create();
         $this->call([
             StudentSeeder::class,
+            ModalitySeeder::class,
             ExerciceSeeder::class,
+            InstructorSeeder::class,
+            InstructorModalitySeeder::class,
+            ClassTypeSeeder::class,
+            ClassesSeeder::class,
+            PaymentMethodsSeeder::class,
+            CategorySeeder::class,
+            TransactionSeeder::class,
+            AccountReceivableSeeder::class,
         ]);
     }
 

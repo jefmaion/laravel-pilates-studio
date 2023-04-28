@@ -40,11 +40,11 @@
     <strong>
         <i class="fas fa-exclamation-circle"></i> Ooops!</strong> Verifique os erros abaixo
 
-    <ul>
+    {{-- <ul>
         @foreach($errors->all() as $error)
             <li>{{ $error }}</li>
         @endforeach
-    </ul>
+    </ul> --}}
 </div>
 
 @endif

@@ -24,11 +24,17 @@
                         </p>
 
                         <p class="mb-1">
+
+                            <i class="fas fa-calendar    "></i>
+                            {{ formatData($class->date, 'd/m') }} <span class="mx-1 text-light">|</span>
+
                             <i class="fas fa-clock"></i>
-                            {{ formatData($class->date, 'd/m') }} {{ date('H\hi', strtotime($class->time)) }} <span class="mx-1 text-light">|</span>
+                             {{ date('H\hi', strtotime($class->time)) }} <span class="mx-1 text-light">|</span>
                             {{ $class->classType }} <span class="mx-1 text-light">|</span>
+
                             <i class="fa fa-user-circle" aria-hidden="true"></i>
                             {{ $class->instructor->user->name }}
+                            
 
                             {{-- @if($class->parent)
                             ( <a href="javascript:showClass({{$class->parent->id}})">{{ date('d/m/Y',
@@ -37,35 +43,33 @@
 
                         </p>
 
+                
 
-                        
-
-       
                         <p>
-                            
 
-                            @if($class->has_replacement)
-                                {{-- <a href="javascript:showClass({{$class->parent->id}})">
+                            @if($class->registration->daysToRenew <= 5)
+                                {!! $class->registration->statusName !!}
+                            @endif
+
+                            @if($class->hasReplacement())
+                                <a href="javascript:showClass({{$class->hasReplacement()->id}})">
                                     <x-badge theme="info" class="badge-shadow">
                                         <i class="fas fa-sync-alt    "></i>
                                         <strong>
-                                            Nova Aula em {{ date('d/m/Y', strtotime($class->parent->date)) }}
+                                            Reposição em {{ date('d/m/Y', strtotime($class->hasReplacement()->date)) }}
                                         </strong>
                                     </x-badge>
-                                </a> --}}
+                                </a>
                             @endif
 
                             @if($class->type == 'RP' && $class->parent)
                                 <a href="javascript:showClass({{$class->parent->id}})">
                                     <x-badge theme="info" class="badge-shadow">
                                         <i class="fas fa-sync-alt    "></i>
-                                        Reposição do dia {{ date('d/m/y', strtotime($class->parent->date)) }}
+                                        Aula de {{ date('d/m/y', strtotime($class->parent->date)) }}
                                     </x-badge>
                                 </a>
                             @endif
-
-
-                            
 
                             @if($class->pendencies)
                             
@@ -77,7 +81,6 @@
                                 @endforeach
                             
                             @endif
-
 
                             @if($class->registration->installmentToday)
                                 <x-badge theme="warning" class="badge-shadow text-dark">
