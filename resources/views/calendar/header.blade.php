@@ -47,13 +47,16 @@
 
                         <p>
 
-                            @if($class->registration->daysToRenew <= 5)
-                                {!! $class->registration->statusName !!}
+                            @if($class->registration->daysToRenew == 0 && $class->registration->status == 1)
+                                <x-badge theme="warning" class="badge-shadow bg-orange">
+                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                    Renovar Hoje
+                                </x-badge>
                             @endif
 
                             @if($class->hasReplacement())
                                 <a href="javascript:showClass({{$class->hasReplacement()->id}})">
-                                    <x-badge theme="info" class="badge-shadow">
+                                    <x-badge theme="info" class="badge-shadow bg-orange">
                                         <i class="fas fa-sync-alt    "></i>
                                         <strong>
                                             Reposição em {{ date('d/m/Y', strtotime($class->hasReplacement()->date)) }}
@@ -64,7 +67,7 @@
 
                             @if($class->type == 'RP' && $class->parent)
                                 <a href="javascript:showClass({{$class->parent->id}})">
-                                    <x-badge theme="info" class="badge-shadow">
+                                    <x-badge theme="info" class="badge-shadow bg-orange">
                                         <i class="fas fa-sync-alt    "></i>
                                         Aula de {{ date('d/m/y', strtotime($class->parent->date)) }}
                                     </x-badge>
@@ -74,9 +77,9 @@
                             @if($class->pendencies)
                             
                                 @foreach($class->pendencies as $pendency)
-                                <x-badge theme="warning" class="badge-shadow tet-dark">
-                                    <i class="fa fa-exclamation-circle text-dansger" aria-hidden="true"></i>
-                                    {{ $pendency }}
+                                <x-badge theme="warning" class="badge-shadow bg-orange">
+                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                    {{$pendency}}
                                 </x-badge>
                                 @endforeach
                             

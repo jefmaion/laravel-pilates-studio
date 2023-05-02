@@ -40,7 +40,7 @@ config.fullcalendar = {
     maxTime: "21:00:00",
     slotDuration: '00:60:00',
     // eventLimit: true,
-    nowIndicator:false,
+    nowIndicator:true,
     timeFormat: 'H(:mm)',
     slotEventOverlap:false,
     hiddenDays: [0],

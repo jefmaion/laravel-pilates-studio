@@ -144,17 +144,20 @@ class CalendarController extends Controller
             }
 
             if($item->pendencies) {
-                $badge = '<i class="fa fa-exclamation-circle mr-1 text-red" aria-hidden="true" sstyle="color:#F9584B"></i>';
+                $badge = '<i class="fa fa-exclamation-circle mr-1 text-pink" aria-hidden="true" sstyle="color:#F9584B"></i>';
             }
 
             if($item->registration->installmentToday) {
-                $badge = '<i class="fa fa-exclamation-circle mr-1 text-red" aria-hidden="true" sstyle="color:#F9584B"></i>';
+                $badge = '<i class="fa fa-exclamation-circle mr-1 text-pink" aria-hidden="true" sstyle="color:#F9584B"></i>';
             }
 
             if($item->registration->hasInstallmentLate) {
-                $badge = '<i class="fa fa-exclamation-circle mr-1 text-red" aria-hidden="true" sstyle="color:#F9584B"></i>';
+                $badge = '<i class="fa fa-exclamation-circle mr-1 text-pink" aria-hidden="true" sstyle="color:#F9584B"></i>';
             }
-
+            
+            if($item->registration->daysToRenew <= 5) {
+                $badge = '<i class="fa fa-exclamation-circle mr-1 text-pink" aria-hidden="true" sstyle="color:#F9584B"></i>';
+            }
             
 
             $title = '<div class="mb-0">'.$badge.'<b>' .  $item->student->user->firstAndLast . '</b></div>';

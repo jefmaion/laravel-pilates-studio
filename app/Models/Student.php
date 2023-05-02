@@ -29,10 +29,14 @@ class Student extends BaseModel
     }
 
     public function evolutions() {
-        return $this->classes()->whereNotNull('evolution')->orderBy('date','desc');
+        return $this->classes()->orderBy('date','desc')->whereNotNull('evolution');
     }
 
     public function lastEvolutions() {
         return $this->evolutions()->limit(3);
+    }
+
+    public function countReplacement($month=null) {
+        return (2 - $this->hasMany(Classes::class)->whereMonth('date', ($month ?? date('n')))->where('type', 'RP')->count());
     }
 }

@@ -7,7 +7,7 @@
 
 
                 <i class="fas fa-info-circle    "></i>
-                Informações da Aula - {{ $class->classStatus }}
+                Informações da Aula - {!! $class->classStatusBadge !!}
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span>&times;</span>
@@ -120,7 +120,7 @@
                     Remover Presença/Falta
                 </a>
 
-                @if($class->status == 1 && empty($class->evolution))
+                @if(!$class->hasRegistration)
                 <a class="btn btn-success text-white open-view" href="{{ route('calendar.evolution', $class) }}">
                     <i class="fas fa-file-contract    "></i>
                     Registrar Evolução
@@ -132,7 +132,7 @@
                 @if($class->status == 2 && is_null($class->hasReplacement()))
                 <a class="btn bg-warning " id="btn-remark" href="{{ route('calendar.select', $class) }}">
                     <i class="fas fa-calendar-plus"></i>
-                    Agendar Reposição
+                    Agendar Reposição ({{ $class->student->countReplacement(date('n', strtotime($class->date))) }})
                 </a>
                 @endif
 

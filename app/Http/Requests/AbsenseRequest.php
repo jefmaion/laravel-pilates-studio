@@ -29,5 +29,13 @@ class AbsenseRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'absense_type.required'        => 'Selecione o tipo da falta',
+            'absense_comments.required_if' => 'Descreva o motivo da falta',
+        ];
+    }
+
 
 }

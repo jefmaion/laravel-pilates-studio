@@ -25,8 +25,7 @@
 
                             <div class="col-12 form-group">
                                 <label>Tipo de Falta</label>
-                                <x-form.select name="absense_type" value="{{ $class->status ?? '' }}"
-                                    :options="[2 => 'Falta COM aviso', 3 => 'Falta SEM aviso']" />
+                                <x-form.select name="absense_type" value="{{ $class->status ?? '' }}" :options="[ 3 => 'Falta', 2 => 'Falta COM aviso']" />
                             </div>
 
                             <div class="col-12 form-group">

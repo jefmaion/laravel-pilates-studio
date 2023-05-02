@@ -31,7 +31,9 @@
                     <x-form.textarea  name="comments" rows="2" value=""></x-form.textarea>
                 </div> --}}
             
-                @include('class.evolution')
+                <div class="col-12">
+                    @include('class.evolution')
+                </div>
             </div>
         </div>
     </div>

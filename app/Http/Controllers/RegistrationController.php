@@ -201,9 +201,6 @@ class RegistrationController extends Controller
     }
 
     public function renew($id) {
-
-       
-
         return $this->edit($id, true);
     }
 

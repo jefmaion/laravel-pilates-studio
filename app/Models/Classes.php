@@ -22,7 +22,7 @@ class Classes extends Model
     }
 
     public function getClassStatusBadgeAttribute() {
-        return sprintf('<span class="badge badge-%s badge-shadow"><i class="fas fa-check"></i> %s</span>', $this->classStatusColor, $this->classStatus);
+        return sprintf('<span class="badge badge-%s badge-shadow"><i class="-fas -fa-check"></i> %s</span>', $this->classStatusColor, $this->classStatus);
     }
 
     public function getClassStatusColorAttribute() {
@@ -69,6 +69,14 @@ class Classes extends Model
         return $this->where('classes_id', $this->id)->first();
     }
 
+    public function getHasRegistrationAttribute() {
+        if($this->status == 1 && empty($this->evolution) && $this->exercices()->count() == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getExercicesIdsAttribute() {
         $data = $this->exercices->toArray();
 
@@ -83,7 +91,7 @@ class Classes extends Model
 
         $pendencies = [];
 
-        if($this->status == 1 && empty($this->evolution)) {
+        if(!$this->hasRegistration) {
             $pendencies[] = 'Evolução não registrada';
         }
 
