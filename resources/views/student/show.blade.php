@@ -38,6 +38,37 @@
 
 
 
+  
+
+    <x-slot name="footer">
+
+        <a name="" id="" class="btn btn-light text-dark" href="{{ route('student.index') }}" role="button">
+            <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+            Voltar
+        </a>
+
+        <div class="dropdown d-inline">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cogs    "></i>
+                Gerenciar
+            </button>
+            <div class="dropdown-menu" x-placement="bottom-start">
+                <a class="dropdown-item has-icon"
+                    href="{{ route('avatar.index', [$student->user, 'to' => Request::path()]) }}"><i
+                        class="fas fa-image    "></i> Trocar Foto</a>
+                <a class="dropdown-item has-icon" href="{{ route('student.edit', $student) }}"><i
+                        class="fas fa-pencil-alt    "></i> Editar</a>
+                <x-delete-button class="dropdown-item has-icon" route="{{ route('student.destroy', $student) }}"><i
+                        class="fas fa-trash-alt"></i> Excluir
+                </x-delete-button>
+            </div>
+        </div>
+    </x-slot>
+
+</x-card>
+
+<x-card>
     <ul class="mt-4 nav nav-tabs" id="myTab2" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab2" data-toggle="tab" href="#home2" role="tab" aria-controls="home"
@@ -84,6 +115,7 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th>Aula</th>
+                            <th>Modalidade</th>
                             <th>Professor</th>
                             <th>Status</th>
                         </tr>
@@ -93,6 +125,7 @@
                         <tr>
                             <td></td>
                             <td>{{ $class->date }} {{ $class->time }}</td>
+                            <td>{{ $class->registration->modality->name }}</td>
                             <td>{{ $class->instructor->user->name }}</td>
                             <td>{{ $class->classStatus }}</td>
                         </tr>
@@ -116,10 +149,10 @@
                     <tbody>
                         @foreach($student->installments as $installment)
                         <tr>
-                            <td></td>
+                            <td>{{ $installment->registration->modality->name }}</td>
                             <td>{{ $installment->date }}</td>
                             <td>{{ $installment->payDate }}</td>
-                            <td>{{ $installment->value }}</td>
+                            <td>{{ $installment->value }} </td>
                             <td>{!! $installment->statusLabel !!}</td>
                         </tr>
                         @endforeach
@@ -128,37 +161,6 @@
             </div>
         </div>
     </div>
-
-    <x-slot name="footer">
-
-        <a name="" id="" class="btn btn-light text-dark" href="{{ route('student.index') }}" role="button">
-            <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-            Voltar
-        </a>
-
-        <div class="dropdown d-inline">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-cogs    "></i>
-                Gerenciar
-            </button>
-            <div class="dropdown-menu" x-placement="bottom-start">
-                <a class="dropdown-item has-icon"
-                    href="{{ route('avatar.index', [$student->user, 'to' => Request::path()]) }}"><i
-                        class="fas fa-image    "></i> Trocar Foto</a>
-                <a class="dropdown-item has-icon" href="{{ route('student.edit', $student) }}"><i
-                        class="fas fa-pencil-alt    "></i> Editar</a>
-                <x-delete-button class="dropdown-item has-icon" route="{{ route('student.destroy', $student) }}"><i
-                        class="fas fa-trash-alt"></i> Excluir
-                </x-delete-button>
-            </div>
-        </div>
-    </x-slot>
-
-</x-card>
-
-<x-card>
-
 </x-card>
 
 

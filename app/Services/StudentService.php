@@ -12,6 +12,10 @@ class StudentService extends Service {
         parent::__construct($student);
     }
 
+    public function findStudent($id) {
+        return Student::find($id);
+    }
+
     public function createStudent(array $request) {
 
         if(!$user = User::create($request)) {
@@ -42,7 +46,7 @@ class StudentService extends Service {
     }
 
     public function listStudents() {
-        return Student::with('user')->latest()->get();
+        return Student::with(['user', 'registration'])->latest()->get();
     }
 
 
@@ -75,7 +79,8 @@ class StudentService extends Service {
                 'id' => $item->id,
                 'name' => image(asset($item->user->image)) . anchor(route('student.show', $item), $item->user->name, 'ml-2'),
                 'phone_wpp' => $item->user->phone_wpp,
-                'created_at' => $item->created_at->format('d/m/Y')
+                'created_at' => $item->created_at->format('d/m/Y'),
+                'has_registration' => ($item->registration->count()) ? 'Sim' : 'Não'
             ];
         }
 

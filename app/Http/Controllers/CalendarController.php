@@ -56,7 +56,15 @@ class CalendarController extends Controller
     }
 
     public function show($id) {
+
         $class = $this->classService->findClass($id);
+
+
+        // dd($class->student->lastEvolutions->count());
+        // foreach($class->student->lastEvolutions as $evol) {
+        //     dd($evol->toArray());
+        // }
+
         return view('calendar.show', compact('class'));
     }
 

@@ -24,17 +24,7 @@
         </div>
 
         <div class="col">
-            <div class="row">
-
-                {{-- <div class="col form-group">
-                    <label>Comentários da Aula</label>
-                    <x-form.textarea  name="comments" rows="2" value=""></x-form.textarea>
-                </div> --}}
-            
-                <div class="col-12">
-                    @include('class.evolution')
-                </div>
-            </div>
+            @include('class.evolution')
         </div>
     </div>
 

@@ -33,6 +33,7 @@
                     <th>Name</th>
                     <th>Telefone</th>
                     <th>Data de Cadastro</th>
+                    <th>Matriculado</th>
                 </tr>
             </thead>
         </table>

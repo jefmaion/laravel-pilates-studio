@@ -40,7 +40,7 @@
 
                     @endif
 
-                    @if(count($class->student->lastEvolutions))
+                    @if($class->student->lastEvolutions->count())
                     <div class="card card-light mb-0">
                         <div class="card-header"><h4>Últimas Evoluções</h4></div>
                         <div class="card-body">

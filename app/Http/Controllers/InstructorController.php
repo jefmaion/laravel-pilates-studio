@@ -71,7 +71,7 @@ class InstructorController extends Controller
      */
     public function show($id)
     {
-        if(!$instructor = $this->instructorService->find($id)) {
+        if(!$instructor = $this->instructorService->findInstructor($id)) {
             return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
         }
 
@@ -86,7 +86,7 @@ class InstructorController extends Controller
      */
     public function edit($id)
     {
-        if(!$instructor = $this->instructorService->find($id)) {
+        if(!$instructor = $this->instructorService->findInstructor($id)) {
             return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
         }
 
@@ -104,7 +104,7 @@ class InstructorController extends Controller
     {
         $data = $request->except(['_token', '_method']);
 
-        if(!$instructor = $this->instructorService->find($id)) {
+        if(!$instructor = $this->instructorService->findInstructor($id)) {
             return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
         }
 
@@ -121,7 +121,7 @@ class InstructorController extends Controller
      */
     public function destroy($id)
     {
-        if(!$instructor = $this->instructorService->find($id)) {
+        if(!$instructor = $this->instructorService->findInstructor($id)) {
             return redirect()->route('instructor.index')->with('warning','Professor não encontrado!');
         }
 

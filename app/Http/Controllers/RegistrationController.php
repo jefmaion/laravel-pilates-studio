@@ -88,7 +88,7 @@ class RegistrationController extends Controller
      */
     public function show($id)
     {
-        if(!$registration = $this->registrationService->find($id)) {
+        if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
 
@@ -111,7 +111,7 @@ class RegistrationController extends Controller
         $view         = 'registration.edit';
 
         if(!is_null($id)) { 
-            if(!$registration = $this->registrationService->find($id)) {
+            if(!$registration = $this->registrationService->findRegistration($id)) {
                 return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
             }
         }
@@ -153,7 +153,7 @@ class RegistrationController extends Controller
 
         $data = $request->all();
 
-        if(!$registration = $this->registrationService->find($id)) {
+        if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
 
@@ -170,7 +170,7 @@ class RegistrationController extends Controller
      */
     public function destroy($id)
     {   
-        if(!$registration = $this->registrationService->find($id)) {
+        if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
 
@@ -181,7 +181,7 @@ class RegistrationController extends Controller
 
     public function cancel($id) {
 
-        if(!$registration = $this->registrationService->find($id)) {
+        if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
 
@@ -190,7 +190,7 @@ class RegistrationController extends Controller
 
     public function abort($id, Request $request) {
 
-        if(!$registration = $this->registrationService->find($id)) {
+        if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
 

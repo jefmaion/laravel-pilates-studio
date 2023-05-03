@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col">
+    <div class="col-12">
         
         
         <div class="col-12 form-group">
@@ -15,12 +15,12 @@
     
 
     </div>
-    <div class="col form-group">
+    <div class="col-12">
         <label>Avaliações Anteriores</label>
         <hr class="mt-0 mb-2">
         
         @if(count($class->student->lastEvolutions))
-        <div style="max-height: 400px; overflow:auto" class="pr-3">
+        <div style="max-height: 200px; overflow:auto" class="pr-3">
 
 
             

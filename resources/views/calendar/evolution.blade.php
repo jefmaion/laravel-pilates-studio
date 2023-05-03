@@ -21,10 +21,8 @@
             @include('calendar.header')
         </div>
 
-        <div class="col">
-            <div class="row">
-                @include('class.evolution')
-            </div>
+        <div class="col-12">
+            @include('class.evolution')
         </div>
     </div>
 

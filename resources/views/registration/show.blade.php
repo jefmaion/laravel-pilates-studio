@@ -126,23 +126,47 @@
                             <table class="table datatable table-striped w-100">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>Dia da Semana</th>
                                         <th>Data</th>
                                         <th>Hora</th>
                                         <th>Professor</th>
                                         <th>Tipo</th>
                                         <th class="text-center">Status</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($registration->classes as $class)
                                     <tr>
+                                        <td class="text-center">
+
+                                            
+                                            <div class="dropdown d-inline">
+                                                <a class="" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    <i class="fas fa-bars    "></i>
+                                                </a>
+                                                <div class="dropdown-menu">
+                                                  <a class="dropdown-item has-icon" href="#"><i class="far fa-heart"></i>
+                                                    Remover Presença/Falta
+                                                    </a>
+                                                  <a class="dropdown-item has-icon" href="#"><i class="far fa-file"></i> Another action</a>
+                                                  <a class="dropdown-item has-icon" href="#"><i class="far fa-clock"></i> Something else here</a>
+                                                </div>
+                                              </div>
+
+                                        </td>
                                         <td scope="row">{{ $class->weekname}}</td>
                                         <td>{{ date('d/m/Y', strtotime($class->date)) }} </td>
                                         <td>{{ $class->time }}</td>
-                                        <td>{{ $class->instructor->user->name }}</td>
+                                        <td>
+                                            <img alt="image" src="{{ asset($class->instructor->user->image) }}" class="rounded-circle" width="35" data-toggle="tooltip" title="" data-original-title="{{ $class->instructor->user->name }}">
+                                            {{ $class->instructor->user->name }}
+                                            
+                                        </td>
                                         <td>{{ $class->classType }}</td>
                                         <td class="text-center">{!! $class->classStatusBadge !!}</td>
+                                        
 
                                     </tr>
                                     @endforeach
@@ -153,34 +177,53 @@
                     </div>
                     <div class="tab-pane fade" id="evolution" role="tabpanel" aria-labelledby="evolution-tab">
 
-                        @foreach($registration->evolutions as $class)
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>{{ date('d/m/Y', strtotime($class->date)) }}</strong> <small> - {{
-                                    $class->instructor->user->name }}</small>
-                            </div>
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="media-body">
-                                        <div class="media-right">
-                                            <div class="text-dark">
 
+                        <div class="table-responsive">
+                            <table class="table datatable table-striped w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Evoluções</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($registration->evolutions as $evol)
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <img alt="image" class="mr-3 rounded-circle" width="40" src="{{ asset($evol->instructor->user->image) }}">
+                                                <div class="media-body">
+                                                    <div class="media-right">
+                                                        <div class="text-primary">Approved</div>
+                                                    </div>
+                                                    <div class="media-title mb-1">
+                                                        <b>Aula: </b>{{ date('d/m/Y', strtotime($evol->date)) }} <div class="bullet"></div> 
+                                                        <b>Professor: </b> {{ $evol->instructor->user->name }}
+                                                    </div>
+                                                    <div class="text-time">
+                                                        @foreach($evol->exercices as $exercice)
+                                                        {{ $exercice->name }} <div class="bullet"></div> 
+                                                        @endforeach
+                                                    </div>
+                                                    <div class="media-description text-muted">{!! $evol->evolution !!}</div>                                        
+                                                </div>
                                             </div>
-                                        </div>
+                                               
 
-                                        <div class="text-time">
-                                            @foreach($class->exercices as $exercice)
-                                            {{ $exercice->name }} |
-                                            @endforeach
-                                        </div>
-                                        <div class="media-description text-muted">
-                                            {!! $class->evolution !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
                         </div>
-                        @endforeach
+
+
+
+                        
 
                     </div>
                     <div class="tab-pane fade" id="installment" role="tabpanel" aria-labelledby="installment-tab">

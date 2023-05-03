@@ -21,15 +21,15 @@ class Student extends BaseModel
     }
 
     public function classes() {
-        return $this->hasMany(Classes::class)->where('finished', 1);
+        return $this->hasMany(Classes::class)->with(['instructor.user', 'registration.modality']);
     }
 
     public function installments() {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(AccountReceivable::class)->with(['registration.modality']);
     }
 
     public function evolutions() {
-        return $this->classes()->orderBy('date','desc')->whereNotNull('evolution');
+        return $this->hasMany(Classes::class)->with(['instructor', 'exercices'])->where('finished', 1)->whereNotNull('evolution')->orderBy('date','desc');
     }
 
     public function lastEvolutions() {

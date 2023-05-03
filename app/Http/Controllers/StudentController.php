@@ -70,7 +70,7 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        if(!$student = $this->studentService->find($id)) {
+        if(!$student = $this->studentService->findStudent($id)) {
             return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
         }
 
@@ -85,7 +85,7 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        if(!$student = $this->studentService->find($id)) {
+        if(!$student = $this->studentService->findStudent($id)) {
             return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
         }
 
@@ -103,7 +103,7 @@ class StudentController extends Controller
     {
         $data = $request->except(['_token', '_method']);
 
-        if(!$student = $this->studentService->find($id)) {
+        if(!$student = $this->studentService->findStudent($id)) {
             return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
         }
 
@@ -120,7 +120,7 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        if(!$student = $this->studentService->find($id)) {
+        if(!$student = $this->studentService->findStudent($id)) {
             return redirect()->route('student.index')->with('warning','Aluno não encontrado!');
         }
 

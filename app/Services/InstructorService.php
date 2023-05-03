@@ -13,6 +13,9 @@ class InstructorService extends Service {
         parent::__construct($instructor);
     }
 
+    public function findInstructor($id) {
+        return Instructor::find($id);
+    }
 
     public function createInstructor(array $request) {
 
@@ -53,7 +56,7 @@ class InstructorService extends Service {
     }
 
     public function listInstructor() {
-        return Instructor::with('user')->latest()->get();
+        return Instructor::latest()->with('user')->get();
     }
 
     public function listCombo() {

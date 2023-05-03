@@ -23,7 +23,7 @@
                     <div class="col">
                         <div class="row">
 
-                            <div class="col-12 form-group">
+                            <div class="col-4 form-group">
                                 <label>Tipo de Falta</label>
                                 <x-form.select name="absense_type" value="{{ $class->status ?? '' }}" :options="[ 3 => 'Falta', 2 => 'Falta COM aviso']" />
                             </div>

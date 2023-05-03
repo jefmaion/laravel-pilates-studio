@@ -28,7 +28,7 @@ class AccountReceivableController extends Controller
      */
     public function index()
     {
-        $transactions = AccountReceivable::latest()->get();
+        $transactions = AccountReceivable::with(['category', 'paymentMethod'])->latest()->get();
 
         if($this->request->ajax()) {
             return $this->listToDataTable($transactions);
@@ -44,10 +44,10 @@ class AccountReceivableController extends Controller
      */
     public function create()
     {
-        $account = new AccountReceivable();
+        $account        = new AccountReceivable();
         $paymentMethods = PaymentMethod::select('id', 'name')->get()->toArray();
-        $categories = Category::select('id', 'name')->get()->toArray();
-        $students = $this->studentService->listCombo();
+        $categories     = Category::select('id', 'name')->get()->toArray();
+        $students       = $this->studentService->listCombo();
 
         return view('account_receive.create', compact('account', 'paymentMethods', 'categories', 'students'));
 
@@ -65,7 +65,7 @@ class AccountReceivableController extends Controller
 
         if($data['status'] == 1) {
             $data['pay_date'] = $data['date'];
-            $data['amount'] = $data['value'];
+            $data['amount']   = $data['value'];
         }
 
         AccountReceivable::create($data);

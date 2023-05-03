@@ -17,7 +17,7 @@ class CalendarService
         $end   = Carbon::parse($params['end']);
 
     
-        $data  = Classes::whereBetween('date', [$start, $end])->orderBy('id', 'desc');
+        $data  = Classes::with(['registration.modality', 'registration.installments', 'student.user'])->whereBetween('date', [$start, $end])->orderBy('id', 'desc');
 
         if(isset($params['_modality_id'])) {
             $data = Classes::whereHas('registration', function($q) use($params) {

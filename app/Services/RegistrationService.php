@@ -18,12 +18,13 @@ class RegistrationService extends Service
         parent::__construct($registration);
     }
 
+    public function findRegistration($id) {
+        return Registration::with(['classes.instructor.user', 'installments'])->find($id);
+    }
 
     public function makeRegistration($data)
     {
-
         $data = $this->prepareData($data);
-
 
         if ($registration = Registration::create($data)) {
             $this->generateClasses($registration, $data['class']);
@@ -36,7 +37,6 @@ class RegistrationService extends Service
     {
 
         $data = $this->prepareData($data);
-
         $registration->fill($data);
         $registration->save();
 
@@ -65,11 +65,15 @@ class RegistrationService extends Service
         return $registration->delete();
     }
 
+    public function listRegistrations() {
+        return Registration::with(['student.user', 'modality', 'classes'])->latest();
+    }
+
     public function listToDataTable($justActive=false) {
 
         $response = [];
 
-        $registrations = Registration::latest();
+        $registrations = $this->listRegistrations();
 
         if($justActive) {
             $registrations->where('status', 1);
@@ -78,11 +82,6 @@ class RegistrationService extends Service
         $data = $registrations->get();
 
         foreach($data as $item) {
-
-
-            
-
-
             $response[] = [
                 'name' => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
                 'start' => $item->start,

@@ -12,7 +12,16 @@ class ClassService
 {
 
     public function findClass($id) {
-        return Classes::find($id);
+        return Classes::with([
+            // 'instructor', 
+          
+            'instructor.user', 
+            'instructor',
+          
+            
+            // 'student.user', 
+            // 'student.classes.instructor'
+        ])->find($id);
     }
 
     public function listClassByDay($date=null, $time=null) {

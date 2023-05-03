@@ -49,19 +49,19 @@ class Registration extends Model
     }
 
     public function installments() {
-        return $this->hasMany(AccountReceivable::class);
+        return $this->hasMany(AccountReceivable::class)->with('paymentMethod');
     }
 
     public function getInstallmentTodayAttribute() {
-        return $this->installments()->where('date', date('Y-m-d'))->where('status', 0)->first();
+        return $this->installments->where('date', date('Y-m-d'))->where('status', 0)->first();
     }
 
     public function getHasInstallmentLateAttribute() {
-        return $this->installments()->where('date', '<', date('Y-m-d'))->where('status', 0)->count();
+        return $this->installments->where('date', '<', date('Y-m-d'))->where('status', 0)->count();
     }
 
     public function getEvolutionsAttribute() {
-        return $this->classes()->whereNotNull('evolution')->orderBy('date', 'desc')->get();
+        return $this->classes()->with(['instructor', 'exercices'])->whereNotNull('evolution')->orderBy('date', 'desc')->get();
     }
 
     public function getDaysToRenewAttribute() {
@@ -70,23 +70,23 @@ class Registration extends Model
 
     public function countClasses($type=null) {
         if(!$type) {
-            return $this->classes()->where('type', 'AN')->count();
+            return $this->classes->where('type', 'AN')->count();
         }
 
         if($type === 'presences') {
-            return $this->classes()->where('status', 1)->count();
+            return $this->classes->where('status', 1)->count();
         }
 
         if($type === 'absenses') {
-            return $this->classes()->whereIn('status', [2,3])->count();
+            return $this->classes->whereIn('status', [2,3])->count();
         }
 
         if($type === 'remarks') {
-            return $this->classes()->where('type', 'RP')->count();
+            return $this->classes->where('type', 'RP')->count();
         }
 
         if($type === 'finished') {
-            return $this->classes()->where('finished', 1)->count();
+            return $this->classes->where('finished', 1)->count();
         }
     }
 
