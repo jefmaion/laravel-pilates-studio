@@ -28,11 +28,9 @@
         <hr>
 
         <div class="table-responsive">
-            <table class="table table-striped datatable table-ssm" id="table-modality" style="width:100%">
+            <x-table id="table-modality" style="width:100%">
                 <thead>
                     <tr>
-                        
-                        
                         <th>Vencimento</th>
                         <th>Descrição</th>
                         <th>Categoria</th>
@@ -43,7 +41,7 @@
                         <th>Data Pagamento</th>
                     </tr>
                 </thead>
-            </table>
+            </x-table>
         </div>
     </x-card>
 

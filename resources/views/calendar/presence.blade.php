@@ -1,61 +1,53 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
 
-    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content">
-
-<div class="modal-header p-3">
-    <h5 class="modal-title">
-        <i class="fas fa-user-check"></i> Registrar Presença de {{ $class->student->user->firstName }}
-    </h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span>&times;</span>
-    </button>
-</div>
-
-
-
-<form id="form-absense" action="{{ route('class.presence', $class) }}" method="post">
-    @csrf
-    @method('put')
-<div class="modal-body">
-
-    <div class="row">
-        <div class="col-12">
-            @include('calendar.header')
+        <div class="modal-header p-3">
+            <h5 class="modal-title">
+                <i class="fas fa-user-check"></i> Registrar Presença de {{ $class->student->user->firstName }}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span>&times;</span>
+            </button>
         </div>
 
-        <div class="col">
-            @include('class.evolution')
-        </div>
+
+
+        <form id="form-absense" action="{{ route('class.presence', $class) }}" method="post">
+            @csrf
+            @method('put')
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        @include('calendar.header')
+                    </div>
+                </div>
+                @include('class.evolution')
+            </div>
+
+            <div class="modal-footer bg-whitesmoke br">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                    Fechar
+                </button>
+
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check-circle    "></i>
+                    Registrar Presença
+                </button>
+
+            </div>
+
+
+        </form>
+
+
     </div>
-
-
-</div>
-
-<div class="modal-footer bg-whitesmoke br">
-
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-        <i class="fa fa-times-circle" aria-hidden="true"></i>
-        Fechar
-    </button>
-
-    <button type="submit" class="btn btn-success">
-        <i class="fas fa-check-circle    "></i>
-        Registrar Presença
-    </button>
-
-</div>
-
-
-</form>
-
-
-</div>
 </div>
 
 
 <script>
-
-$(".select2").select2();
+    $(".select2").select2();
 
 $('#form-absense').submit(function (e) { 
     e.preventDefault();

@@ -11,7 +11,7 @@
 
 
 <div class="row">
-    <div class="col-4">
+    <div class="col-3">
         <form action="{{ route('instructor.modality.store', $instructor) }}" method="post">
             @csrf
             <x-card title="Modalidades Disponíveis">
@@ -58,7 +58,7 @@
         </form>
     </div>
 
-    <div class="col-8 d-flex">
+    <div class="col d-flex">
         <x-card title="Modalidades Permitidas" class="flex-fill">
             <table class="table table-striped w-100" id="table-instructor-modality">
                 <thead>

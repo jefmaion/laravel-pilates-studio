@@ -24,11 +24,12 @@
     </div>
     <hr>
     <div class="table-responsive">
-        <table class="table table-striped  " id="table-registrations" style="width:100%">
+        <table class="table table-striped table-sm " id="table-registrations" style="width:100%">
             <thead>
                 <tr>
                     <th>Aluno</th>
                     <th>Modalidade</th>
+                    <th>Período</th>
                     <th class="text-center">Mensalidade</th>
                     <th class="text-center">Vencimento da Matrícula</th>
                     <th class="text-center">Progresso de Aulas</th>

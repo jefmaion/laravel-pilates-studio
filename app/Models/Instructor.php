@@ -14,7 +14,7 @@ class Instructor extends BaseModel
 
 
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->orderBy('name');
     }
 
     public function modalities() {

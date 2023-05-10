@@ -123,7 +123,7 @@
 
 
                         <div class="table-responsive">
-                            <table class="table datatable table-striped w-100">
+                            <x-table>
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -131,6 +131,7 @@
                                         <th>Data</th>
                                         <th>Hora</th>
                                         <th>Professor</th>
+                                        <th>Evolução</th>
                                         <th>Tipo</th>
                                         <th class="text-center">Status</th>
                                         
@@ -164,6 +165,7 @@
                                             {{ $class->instructor->user->name }}
                                             
                                         </td>
+                                        <td>{{ Str::words($class->evolution, 15) }}</td>
                                         <td>{{ $class->classType }}</td>
                                         <td class="text-center">{!! $class->classStatusBadge !!}</td>
                                         
@@ -172,7 +174,7 @@
                                     @endforeach
 
                                 </tbody>
-                            </table>
+                            </x-table>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="evolution" role="tabpanel" aria-labelledby="evolution-tab">

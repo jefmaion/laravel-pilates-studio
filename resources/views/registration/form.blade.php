@@ -17,7 +17,7 @@
                     value="{{ date('Y-m-d', strtotime(old('start', $registration->start ?? date('Y-m-d')))) }}" />
             </div>
 
-            <div class="col-8 form-group">
+            <div class="col-4 form-group">
                 <label>Modalidade</label>
                 <x-form.select name="modality_id" :options="$modalities"
                     value="{{ old('modality_id', $registration->modality_id ?? '') }}" />
@@ -26,37 +26,37 @@
             
 
 
-            <div class="col-5 form-group">
+            <div class="col-4 form-group">
                 <label>Plano</label>
                 <x-form.select name="duration" :options="[1 => 'Mensal', 2 => 'Bimestral', 3 => 'Trimestral']"
                     value="{{ old('duration', $registration->duration ?? '') }}" />
             </div>
 
-            <div class="col-2 form-group">
+            <div class="col-4 form-group">
                 <label>Aulas p/ semana</label>
                 <x-form.input name="class_per_week"
                     value="{{ old('class_per_week', $registration->class_per_week ?? '') }}" />
             </div>
 
 
-            <div class="col-2 form-group">
+            <div class="col-4 form-group">
                 <label>Dia Vencimento</label>
                 <x-form.input name="due_day" value="{{ old('due_day', $registration->due_day ?? date('d')) }}" />
             </div>
 
-            <div class="col-3 form-group">
+            <div class="col-4 form-group">
                 <label>Valor</label>
                 <x-form.input name="value" class="money" value="{{ old('value', currency($registration->value) ?? '') }}" />
             </div>
 
             <div class="col-6 form-group">
                 <label>Pagamento 1º Mensalidade</label>
-                <x-form.select name="first_payment_method_id" value="{{ old('first_payment_method_id') }}" :options="$paymentMethods" />
+                <x-form.select name="first_payment_method_id" value="{{ old('first_payment_method_id', $registration->first_payment_method_id) }}" :options="$paymentMethods" />
             </div>
 
             <div class="col-6 form-group">
                 <label>Pagamento Demais Mensalidade</label>
-                <x-form.select name="other_payment_method_id" value="{{ old('other_payment_method_id') }}" :options="$paymentMethods" />
+                <x-form.select name="other_payment_method_id" value="{{ old('other_payment_method_id', $registration->other_payment_method_id) }}" :options="$paymentMethods" />
             </div>
 
             <div class="col-12 form-group">

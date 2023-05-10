@@ -46,7 +46,7 @@ class StudentService extends Service {
     }
 
     public function listStudents() {
-        return Student::with(['user', 'registration'])->latest()->get();
+        return Student::with(['user' => function($q) {return $q->orderBy('name', 'asc');}, 'registration'])->get();
     }
 
 

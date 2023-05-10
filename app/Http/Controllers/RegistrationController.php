@@ -73,8 +73,6 @@ class RegistrationController extends Controller
     {
         $data = $request->all();
 
-        // dd($data);
-
         if($registration = $this->registrationService->makeRegistration($data)) {
             return redirect()->route('registration.show', $registration)->with('success', 'Matrícula Realizada com successo!');
         }
@@ -104,12 +102,12 @@ class RegistrationController extends Controller
     public function edit($id=null, $renew=false)
     {
 
+        $view = 'registration.edit';
+
         if(is_null($id)) {
             $registration = new Registration();
         }
         
-        $view         = 'registration.edit';
-
         if(!is_null($id)) { 
             if(!$registration = $this->registrationService->findRegistration($id)) {
                 return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
@@ -136,6 +134,7 @@ class RegistrationController extends Controller
 
             $registration->start = $registration->end;
         }
+
 
         return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass', 'paymentMethods'));
 

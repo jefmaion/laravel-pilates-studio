@@ -26,6 +26,10 @@ class RegistrationService extends Service
     {
         $data = $this->prepareData($data);
 
+        Registration::where('student_id', $data['student_id'])->where('modality_id', $data['modality_id'])->update(['status' => 2]);
+
+
+
         if ($registration = Registration::create($data)) {
             $this->generateClasses($registration, $data['class']);
             $this->generateInstallments($registration, $data);
@@ -71,6 +75,12 @@ class RegistrationService extends Service
 
     public function listToDataTable($justActive=false) {
 
+        $duration = [
+            1 => 'Mensal',
+            2 => 'Bimestral',
+            3 => 'Trimestre'
+        ];
+
         $response = [];
 
         $registrations = $this->listRegistrations();
@@ -89,6 +99,7 @@ class RegistrationService extends Service
                 'status' => $item->statusName,
                 'value' => currency($item->value),
                 'modality' => $item->modality->name,
+                'duration' => $duration[$item->duration],
                 'classes' => ($item->countClasses('presences')+$item->countClasses('absenses')) . ' de ' . $item->countClasses() ,
                 'created_at' => $item->created_at->format('d/m/Y')
             ];
@@ -147,6 +158,7 @@ class RegistrationService extends Service
                 Classes::create([
                     'registration_id'         => $registration->id,
                     'student_id'              => $registration->student_id,
+                    'modality_id'             => $registration->modality_id,
                     'instructor_id'           => $item['instructor_id'],
                     'scheduled_instructor_id' => $item['instructor_id'],
                     'type'                    => 'AN',
@@ -185,7 +197,7 @@ class RegistrationService extends Service
                 'category_id'       => 1,
                 'date'              => $dueDate,
                 'value'             => $data['value'],
-                'description'       => $registration->student->user->firstName .' - ' .$registration->modality->name. ' - '. $i.'/'.$data['duration'],
+                'description'       => $registration->student->user->firstName .  ' - Mensalidade ('.$i.'/'.$data['duration'].') de '. $registration->modality->name,
             ];
 
             

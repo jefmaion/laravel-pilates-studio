@@ -26,7 +26,7 @@
     <hr>
 
     <div class="table-responsive">
-        <table class="table table-striped datatable" id="table-instructor" style="width:100%">
+        <x-table id="table-instructor" style="width:100%">
             <thead>
                 <tr>
                     <th class="text-center">#</th>
@@ -35,7 +35,7 @@
                     <th>Data de Cadastro</th>
                 </tr>
             </thead>
-        </table>
+        </x-table>
     </div>
 </x-card>
 

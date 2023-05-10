@@ -21,7 +21,7 @@ class Registration extends Model
     ];
 
     protected $statusName = [
-        'Cancelado', 'Em Andamento'
+        'Cancelado', 'Em Andamento', 'Finalizada'
     ];
 
     public function getDurationNameAttribute() {
@@ -41,7 +41,7 @@ class Registration extends Model
     }
 
     public function classes() {
-        return $this->hasMany(Classes::class)->orderBy('date', 'asc');
+        return $this->hasMany(Classes::class)->with('modality')->orderBy('date', 'asc');
     }
 
     public function weekClass() {
@@ -50,6 +50,14 @@ class Registration extends Model
 
     public function installments() {
         return $this->hasMany(AccountReceivable::class)->with('paymentMethod');
+    }
+
+    public function firstPaymentMethod() {
+        return $this->belongsTo(PaymentMethod::class, 'first_payment_method_id', 'id');
+    }
+
+    public function otherPaymentMethod() {
+        return $this->belongsTo(PaymentMethod::class, 'other_payment_method_id', 'id');
     }
 
     public function getInstallmentTodayAttribute() {
@@ -113,6 +121,7 @@ class Registration extends Model
             return sprintf($badge, 'success', 'Matrícula ' . $this->statusName[$this->status]);
         }
         
+        return sprintf($badge, 'light',  $this->statusName[$this->status]);
     }
 
     public function getRenewAttribute() {

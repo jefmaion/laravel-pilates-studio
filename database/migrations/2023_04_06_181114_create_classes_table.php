@@ -19,6 +19,7 @@ class CreateClassesTable extends Migration
 
             $table->unsignedBigInteger('classes_id')->nullable();
             $table->unsignedBigInteger('registration_id')->nullable();
+            $table->unsignedBigInteger('modality_id')->nullable();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('instructor_id');
             $table->unsignedBigInteger('scheduled_instructor_id');
@@ -39,6 +40,7 @@ class CreateClassesTable extends Migration
 
             $table->foreign('classes_id')->references('id')->on('classes');
             $table->foreign('registration_id')->references('id')->on('registrations');
+            $table->foreign('modality_id')->references('id')->on('modalities');
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreign('instructor_id')->references('id')->on('instructors');
             $table->foreign('scheduled_instructor_id')->references('id')->on('instructors');

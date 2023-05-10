@@ -13,7 +13,7 @@ class Student extends BaseModel
     
 
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->orderBy('name');
     }
 
     public function registration() {
@@ -21,7 +21,7 @@ class Student extends BaseModel
     }
 
     public function classes() {
-        return $this->hasMany(Classes::class)->with(['instructor.user', 'registration.modality']);
+        return $this->hasMany(Classes::class)->with(['instructor.user', 'registration.modality', 'modality']);
     }
 
     public function installments() {

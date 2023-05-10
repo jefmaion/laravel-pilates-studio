@@ -53,6 +53,10 @@ class Classes extends Model
         return $this->belongsTo(Registration::class);
     }
 
+    public function modality() {
+        return $this->belongsTo(Modality::class);
+    }
+
     public function exercices() {
         return $this->belongsToMany(Exercice::class, 'class_exercices')->using(ClassExercice::class);
     }

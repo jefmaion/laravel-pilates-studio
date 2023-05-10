@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-dialog-centered modal-{{ (count($class->student->lastEvolutions) > 0) ? 'xl' : 'lg' }}" role="document">
+<div class="modal-dialog modal-dialog-centered modal-{{ (count($class->student->lastEvolutions) > 0) ? 'lg' : 'lg' }}" role="document">
     <div class="modal-content">
 
         <div class="modal-header p-3">
@@ -41,39 +41,28 @@
                     @endif
 
                     @if($class->student->lastEvolutions->count())
-                    <div class="card card-light mb-0">
-                        <div class="card-header"><h4>Últimas Evoluções</h4></div>
-                        <div class="card-body">
-                     
-                        <div style="max-height: 500px; overflow:auto">
-                            <ul class="list-unstyled list-unstyled-border list-unstyled-noborder">
-                            @foreach($class->student->lastEvolutions as $evol)
-                            
-                                <li class="media">
-                                    <img alt="image" class="mr-3 rounded-circle" width="40" src="{{ asset($evol->instructor->user->image) }}">
-                                    <div class="media-body">
-                                        <div class="media-right">
-                                            <div class="text-primary">Approved</div>
-                                        </div>
-                                        <div class="media-title mb-1">
-                                            <b>Aula: </b>{{ date('d/m/Y', strtotime($evol->date)) }} <div class="bullet"></div> 
-                                            <b>Professor: </b> {{ $evol->instructor->user->name }}
-                                        </div>
-                                        <div class="text-time">
-                                            @foreach($evol->exercices as $exercice)
-                                            {{ $exercice->name }} <div class="bullet"></div> 
-                                            @endforeach
-                                        </div>
-                                        <div class="media-description text-muted">{!! $evol->evolution !!}</div>                                        
-                                    </div>
-                                </li>
-                                   
 
-                            @endforeach
-                        </ul>
-                        </div>
-                    </div>
-                    </div>
+                    
+                    <ul class="list-unstyled list-unstyled-border user-list" id="message-list">
+                        @foreach($class->student->lastEvolutions as $evol)
+                        <li class="media">
+                          <img alt="image" src="{{ asset($evol->instructor->user->image) }}" class="mr-3 user-img-radious-style user-list-img">
+                          <div class="media-body">
+                            <div class="mt-0 font-weight-bold">{{ $evol->instructor->user->name }} em {{ date('d/m/Y', strtotime($evol->date)) }}:</div>
+                            <div class="text-small">{!! $evol->evolution !!}</div>
+                            <div class="text-small font-weight-bold">
+                                @foreach($evol->exercices as $exercice)
+                                {{ $exercice->name }} <div class="bullet"></div> 
+                                @endforeach
+                            </div>
+
+                          </div>
+                        </li>
+                        @endforeach
+                    </ul>
+
+
+                    
                     @endif
             
        

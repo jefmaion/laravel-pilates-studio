@@ -1,7 +1,7 @@
 "use strict";
 
 $(window).on("load", function () {
-  $(".loader").fadeOut("slow");
+  $(".loader").fadeOut(1);
 });
 
 feather.replace();

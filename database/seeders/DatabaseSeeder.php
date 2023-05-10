@@ -18,15 +18,16 @@ class DatabaseSeeder extends Seeder
         // return $this->runAll();
         // \App\Models\User::factory(10)->create();
         $this->call([
-            StudentSeeder::class,
             ModalitySeeder::class,
             ExerciceSeeder::class,
-            InstructorSeeder::class,
-            InstructorModalitySeeder::class,
             ClassTypeSeeder::class,
-            ClassesSeeder::class,
             PaymentMethodsSeeder::class,
             CategorySeeder::class,
+
+            StudentSeeder::class,
+            InstructorSeeder::class,
+            InstructorModalitySeeder::class,
+            ClassesSeeder::class,
             TransactionSeeder::class,
             AccountReceivableSeeder::class,
         ]);

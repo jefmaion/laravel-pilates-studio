@@ -6,6 +6,7 @@ dataTable('#table-registrations', {
     columns: [
         {data: 'name'},
         {data: 'modality'},
+        {data: 'duration'},
         {data: 'value'},
         {data: 'end'},
         {data: 'classes'},
@@ -17,7 +18,7 @@ dataTable('#table-registrations', {
 })
 
 
-dataTable('.datatable', {pageLength: 5})
+dataTable('.datatable', {pageLength: 10})
 
 
 $('[name="check-list-active"]').change(function (e) { 

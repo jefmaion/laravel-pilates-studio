@@ -32,6 +32,9 @@ class RegistrationSeeder extends Seeder
             $duration = rand(1, 3);
             $start = date('Y-m-d', strtotime(date('Y-m-d') . ' -30 days'));
 
+            $paymentMethod1 = 2;
+            $paymentMethod2 = ($duration > 1) ? 1 : null;
+
             $item = [
                 'student_id' => $student->id,
                 'start' => $start,
@@ -42,6 +45,8 @@ class RegistrationSeeder extends Seeder
                 'due_day' => rand(1, 28),
                 'value' => rand(150, 342),
                 'comments' => null,
+                'first_payment_method_id' => $paymentMethod1,
+                'other_payment_method_id' => $paymentMethod2,
             ];
 
             $registration = Registration::create($item);
@@ -67,6 +72,7 @@ class RegistrationSeeder extends Seeder
                     Classes::create([
                         'registration_id' => $registration->id,
                         'student_id' => $registration->student_id,
+                        'modality_id' => $registration->modality_id,
                         'instructor_id' => $class['instructor_id'],
                         'scheduled_instructor_id' => $class['instructor_id'],
                         'type' => 'AN',
@@ -85,7 +91,13 @@ class RegistrationSeeder extends Seeder
 
             for($i=1; $i<= $item['duration']; $i++) {
 
-                $paymentMethod = ($i==1) ? 1 : 2;
+                $paymentMethod = ($i==1) ? $paymentMethod1 : $paymentMethod2;
+
+                // $paymentMethod = $paymentMethod1;
+
+                // if($item['duration'] > 1) {
+                //     $paymentMethod = $paymentMethod2;
+                // }
 
                 
 
@@ -97,7 +109,7 @@ class RegistrationSeeder extends Seeder
                     'category_id'       => 1,
                     'date'              => $dueDate,
                     'value'             => $item['value'],
-                    'description'       => $registration->student->user->firstName .' - ' .$registration->modality->name. ' - '. $i.'/'.$item['duration'],
+                    'description'       => $registration->student->user->firstName .  ' - Mensalidade ('.$i.'/'.$item['duration'].') de '. $registration->modality->name,
                 ];
     
                 

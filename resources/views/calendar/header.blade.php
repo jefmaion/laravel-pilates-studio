@@ -11,7 +11,7 @@
                     </h4>
                 </a>
             </div>
-            <div class="h6">
+            <div class="">
                 <div class="mb-2">
                     <div class="mb-1">
 

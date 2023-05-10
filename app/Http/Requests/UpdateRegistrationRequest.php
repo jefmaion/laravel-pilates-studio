@@ -33,7 +33,7 @@ class UpdateRegistrationRequest extends FormRequest
             'value' => 'required',
 
             'first_payment_method_id' => 'required',
-            'other_payment_method_id' => 'required',
+            'other_payment_method_id' => 'required_unless:duration,1',
 
             'class' => 'array|min:'.$this->class_per_week.'|max:'.$this->class_per_week,
             'class.*.instructor_id' => 'required_with:class.*.time',

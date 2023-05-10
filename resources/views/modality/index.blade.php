@@ -28,7 +28,7 @@
         <hr>
 
         <div class="table-responsive">
-            <table class="table table-striped datatable" id="table-modality" style="width:100%">
+            <x-table id="table-modality" style="width:100%">
                 <thead>
                     <tr>
                         <th width="5%">#</th>
@@ -37,7 +37,7 @@
                         <th>Data de Cadastro</th>
                     </tr>
                 </thead>
-            </table>
+            </x-table>
         </div>
     </x-card>
 

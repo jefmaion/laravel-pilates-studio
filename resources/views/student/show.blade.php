@@ -59,6 +59,9 @@
                         class="fas fa-image    "></i> Trocar Foto</a>
                 <a class="dropdown-item has-icon" href="{{ route('student.edit', $student) }}"><i
                         class="fas fa-pencil-alt    "></i> Editar</a>
+
+                        <a class="dropdown-item has-icon" href="{{ route('registration.show', $student) }}"><i
+                            class="fas fa-pencil-alt    "></i> Editar</a>                        
                 <x-delete-button class="dropdown-item has-icon" route="{{ route('student.destroy', $student) }}"><i
                         class="fas fa-trash-alt"></i> Excluir
                 </x-delete-button>

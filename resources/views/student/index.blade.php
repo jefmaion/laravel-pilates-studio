@@ -26,17 +26,16 @@
     <hr>
 
     <div class="table-responsive">
-        <table class="table table-striped datatable" style="width:100%">
+        <x-table class="datatable" style="width:100%">
             <thead>
                 <tr>
-                    <th class="text-center">#</th>
                     <th>Name</th>
                     <th>Telefone</th>
                     <th>Data de Cadastro</th>
                     <th>Matriculado</th>
                 </tr>
             </thead>
-        </table>
+        </x-table>
     </div>
 </x-card>
 
