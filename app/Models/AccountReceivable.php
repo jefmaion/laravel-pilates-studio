@@ -23,6 +23,10 @@ class AccountReceivable extends Model
         return $this->belongsTo(PaymentMethod::class);
     }
 
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
 
     public function getStatusLabelAttribute() {
         $badge = '<span class="badge badge-pill w-80 badge-%s"><span></span> %s</span>';

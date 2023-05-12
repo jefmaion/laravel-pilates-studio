@@ -7,7 +7,7 @@
 
             <div class="col-12 form-group">
                 <label>Aluno (<a href="{{ route('student.create') }}">Novo Aluno</a>)</label> 
-                <x-form.select name="student_id" :options="$students"
+                <x-form.select name="student_id" class="select2" :options="$students"
                     value="{{ old('student_id', $registration->student_id ?? '') }}" />
             </div>
 
@@ -23,9 +23,7 @@
                     value="{{ old('modality_id', $registration->modality_id ?? '') }}" />
             </div>
 
-            
-
-
+        
             <div class="col-4 form-group">
                 <label>Plano</label>
                 <x-form.select name="duration" :options="[1 => 'Mensal', 2 => 'Bimestral', 3 => 'Trimestral']"
@@ -128,9 +126,14 @@
     </div>
 </div>
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('template/assets/bundles/select2/dist/css/select2.min.css') }}">
+@endsection
+
 @section('scripts')
 <script src="{{ asset('js/jquery.mask.min.js') }}"></script>
 <script src="{{ asset('js/jquery.mask.config.js') }}"></script>
+<script src="{{ asset('template/assets/bundles/select2/dist/js/select2.full.min.js') }}"></script>
 @endsection
 
 

@@ -46,7 +46,7 @@ class StudentService extends Service {
     }
 
     public function listStudents() {
-        return Student::with(['user' => function($q) {return $q->orderBy('name', 'asc');}, 'registration'])->get();
+        return Student::with(['user','registration'])->get();
     }
 
 
@@ -64,9 +64,20 @@ class StudentService extends Service {
             $data = $this->listEnrolledStudents();
         }
 
-        return array_map(function($student) {
+        $items = array_map(function($student) {
             return [$student['id'], $student['user']['name']];
         }, $data->toArray());
+
+         
+        $sort = [];
+        foreach ($items as $key => $row) {
+            $sort[$key]  = $row[1];
+        }
+
+        // // Sort the data with attack descending
+        array_multisort($sort, SORT_ASC, $items);
+
+        return $items;
     }
 
     public function listToDataTable() {

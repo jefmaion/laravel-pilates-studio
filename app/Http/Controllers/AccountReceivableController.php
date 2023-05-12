@@ -135,14 +135,23 @@ class AccountReceivableController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+      
+
         $data = $request->except(['_method', '_token']);
         
-        $data['status'] = 1;
+        // $data['status'] = 1;
         $data['user_id'] = auth()->user()->id;
 
         $account = AccountReceivable::find($id);
 
+        // dd($data);
+
         $account->fill($data)->update();
+
+        if($url = $request->get('to')) {
+            return redirect($url)->with('success','Conta atualizado com sucesso!');
+        }
 
         return redirect()->route('receive.index')->with('success','Conta atualizado com sucesso!');
     }

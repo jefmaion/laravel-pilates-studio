@@ -16,6 +16,7 @@ class CreateRegistrationsTable extends Migration
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('modality_id');

@@ -66,7 +66,12 @@ class RegistrationService extends Service
         $registration->weekclass()->delete();
         $registration->classes()->where('finished', 0)->delete();
         $registration->installments()->where('status', 0)->delete();
-        return $registration->delete();
+
+        if($registration->installments()->where('status', 1)->count() > 0) {
+            return $registration->delete();
+        }
+
+        return $registration->forceDelete();
     }
 
     public function listRegistrations() {
@@ -197,6 +202,7 @@ class RegistrationService extends Service
                 'category_id'       => 1,
                 'date'              => $dueDate,
                 'value'             => $data['value'],
+                'amount'             => $data['value'],
                 'description'       => $registration->student->user->firstName .  ' - Mensalidade ('.$i.'/'.$data['duration'].') de '. $registration->modality->name,
             ];
 

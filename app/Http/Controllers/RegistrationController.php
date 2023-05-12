@@ -112,13 +112,28 @@ class RegistrationController extends Controller
             if(!$registration = $this->registrationService->findRegistration($id)) {
                 return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
             }
+
+            if($renew) {
+
+                if($registration->countClasses('scheduled') > 0) {
+                    return redirect()->route('registration.show', $registration)->with('info','Não é possivel renovar a matrícula se houverem aulas em aberto!');
+                }
+
+                if($registration->installments()->where('status', 0)->count() > 0) {
+                    return redirect()->route('registration.show', $registration)->with('info','Não é possivel renovar a matrícula se houverem mesalidades em aberto!');
+                }
+                
+            }
         }
+
+        
 
         $modalities     = $this->modalityService->listCombo();
         $instructors    = $this->instructorService->listCombo();
         $paymentMethods = $this->paymentMethodService->listCombo();
         $students       = $this->studentService->listCombo();
         
+
         $weekclass = [];
         foreach($registration->weekclass as $wk) {
             $weekclass['time'][$wk->weekday] = $wk->time;

@@ -13,19 +13,15 @@ class ClassService
 
     public function findClass($id) {
         return Classes::with([
-            // 'instructor', 
-          
             'instructor.user', 
             'instructor',
-          
-            
-            // 'student.user', 
-            // 'student.classes.instructor'
+            'student', 
+            'student.user'
         ])->find($id);
     }
 
     public function listClassByDay($date=null, $time=null) {
-        return  Classes::where('date', $date)->where('time', $time)->get();
+        return  Classes::with(['student', 'registration.modality', 'modality'])->where('date', $date)->where('time', $time)->get();
     }
 
     public function updateClass(Classes $class, $data) {

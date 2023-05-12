@@ -5,10 +5,12 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Registration extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -49,7 +51,7 @@ class Registration extends Model
     }
 
     public function installments() {
-        return $this->hasMany(AccountReceivable::class)->with('paymentMethod');
+        return $this->hasMany(AccountReceivable::class)->with(['paymentMethod', 'user']);
     }
 
     public function firstPaymentMethod() {
@@ -95,6 +97,10 @@ class Registration extends Model
 
         if($type === 'finished') {
             return $this->classes->where('finished', 1)->count();
+        }
+
+        if($type === 'scheduled') {
+            return $this->classes->where('finished', 0)->count();
         }
     }
 

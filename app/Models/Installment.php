@@ -20,6 +20,9 @@ class Installment extends Model
         return $this->belongsTo(PaymentMethod::class);
     }
 
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 
     public function getStatusLabelAttribute() {
         $badge = '<span class="badge badge-pill badge-%s"><span></span> %s</span>';

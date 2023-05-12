@@ -93,26 +93,16 @@ class RegistrationSeeder extends Seeder
 
                 $paymentMethod = ($i==1) ? $paymentMethod1 : $paymentMethod2;
 
-                // $paymentMethod = $paymentMethod1;
-
-                // if($item['duration'] > 1) {
-                //     $paymentMethod = $paymentMethod2;
-                // }
-
-                
-
                 $installment = [
-
                     'registration_id'   => $registration->id,
                     'student_id'        => $registration->student->id,
                     'payment_method_id' => $paymentMethod,
                     'category_id'       => 1,
                     'date'              => $dueDate,
                     'value'             => $item['value'],
+                    'amount'             => $item['value'],
                     'description'       => $registration->student->user->firstName .  ' - Mensalidade ('.$i.'/'.$item['duration'].') de '. $registration->modality->name,
                 ];
-    
-                
     
                 if($i == 1) {
                     $installment = array_merge($installment, [

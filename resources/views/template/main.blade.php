@@ -20,7 +20,7 @@
             <!-- Main Content -->
             <div class="main-content">
 
-                <section class="section">
+                <section class="section-">
                     @yield('title')
                     @include('template.includes.alert')
                     @yield('content')

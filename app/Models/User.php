@@ -52,7 +52,7 @@ class User extends Authenticatable
 
 
     public function student() {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Student::class, 'id', 'user_id');
     }
 
     public function getFirstNameAttribute() {

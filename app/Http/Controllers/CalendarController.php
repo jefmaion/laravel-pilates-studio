@@ -56,24 +56,16 @@ class CalendarController extends Controller
     }
 
     public function show($id) {
-
         $class = $this->classService->findClass($id);
-
-
-        // dd($class->student->lastEvolutions->count());
-        // foreach($class->student->lastEvolutions as $evol) {
-        //     dd($evol->toArray());
-        // }
-
         return view('calendar.show', compact('class'));
     }
 
     public function edit($id) {
-
-        $class     = $this->classService->findClass($id);
         $exercices = [];
+        $class     = $this->classService->findClass($id);
+        
         if($class->status == 1) {
-            $exercices         = $this->exerciceService->listCombo();
+            $exercices = $this->exerciceService->listCombo();
         }
 
         return view('calendar.edit', compact('class', 'exercices'));
@@ -100,9 +92,6 @@ class CalendarController extends Controller
     public function remark($id, $select=false) {
         $class       = $this->classService->findClass($id);
         return view('calendar.remark-calendar', compact('class'));
-
-    
-       
     }
 
     public function select($id, Request $request) {
