@@ -162,46 +162,6 @@
 
     <div class="col-12">
         <x-card>
-            <div>
-                <h4>Aulas</h4>
-                <hr>
-                <div class="table-responsive">
-
-                    <a name="" id="" class="btn btn-primary" href="#" role="button">Plano de Aula</a>
-
-                    <x-table>
-                        <thead>
-                            <tr>
-                                <th wwidth="8%">Data</th>
-                                <th wwidth="8%">Hora</th>
-                                <th wwidth="8%">Tipo</th>
-                                <th wwidth="10%" class="text-center">Status</th>
-                                <th wwidth="15%">Professor</th>
-                                <th width="30%">Evolução</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($registration->classes as $class)
-                            <tr>
-                                <td>{{ formatData($class->date) }} {{ $class->weekname}} </td>
-                                <td>{{ $class->time }}</td>
-                                <td>{{ $class->classType }}</td>
-                                <td class="text-center">{!! $class->classStatusBadge !!}</td>
-                                <td>
-                                    <img alt="image" src="{{ asset($class->instructor->user->image) }}"
-                                        class="rounded-circle" width="35" data-toggle="tooltip" title=""
-                                        data-original-title="{{ $class->instructor->user->name }}">
-                                    {{ $class->instructor->user->name }}
-                                </td>
-                                <td>{{ Str::words($class->evolution, 20) }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </x-table>
-                </div>
-            </div>
-        </x-card>
-        <x-card>
             <h4>Mensalidades</h4>
             <hr>
             <div class="table-responsive">
@@ -246,6 +206,50 @@
                 </x-table>
             </div>
         </x-card>
+
+
+        <x-card>
+            <div>
+                <h4>Aulas</h4>
+                <hr>
+                <div class="table-responsive">
+
+                    <a name="" id="" class="btn btn-primary" href="{{ route('registration.class', $registration) }}" role="button">Plano de Aula</a>
+
+                    <x-table>
+                        <thead>
+                            <tr>
+                                <th wwidth="8%">Data</th>
+                                <th wwidth="8%">Hora</th>
+                                <th wwidth="8%">Tipo</th>
+                                <th wwidth="10%" class="text-center">Status</th>
+                                <th wwidth="15%">Professor</th>
+                                <th width="30%">Evolução</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($registration->classes as $class)
+                            <tr>
+                                <td>{{ formatData($class->date) }} {{ $class->weekname}} </td>
+                                <td>{{ $class->time }}</td>
+                                <td>{{ $class->classType }}</td>
+                                <td class="text-center">{!! $class->classStatusBadge !!}</td>
+                                <td>
+                                    <img alt="image" src="{{ asset($class->instructor->user->image) }}"
+                                        class="rounded-circle" width="35" data-toggle="tooltip" title=""
+                                        data-original-title="{{ $class->instructor->user->name }}">
+                                    {{ $class->instructor->user->name }}
+                                </td>
+                                <td>{{ Str::words($class->evolution, 20) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </x-table>
+                </div>
+            </div>
+        </x-card>
+
+        
     </div>
 </div>
 

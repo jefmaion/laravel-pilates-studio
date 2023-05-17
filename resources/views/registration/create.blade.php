@@ -12,8 +12,11 @@
 
 @section('content')
 <form action="{{ route('registration.store') }}" method="post" >
-    <x-card style="primary">
+    
         @csrf
+        <div class="row">
+            <div class="col-7">
+                <x-card style="primary">
         @include('registration.form')
         <x-slot name="footer">
             <a name="" id="" class="btn btn-light text-dark" href="{{ route('registration.index') }}" role="button">
@@ -26,5 +29,8 @@
             </button>
         </x-slot>
     </x-card>
+    </div>
+    </div>
+    
 </form>
 @endsection

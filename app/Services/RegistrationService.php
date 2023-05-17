@@ -22,17 +22,38 @@ class RegistrationService extends Service
         return Registration::with(['classes.instructor.user', 'installments'])->find($id);
     }
 
+    public function listCalendarClass() {
+        $registrations = Registration::with(['weekClass', 'student.user'])->get();
+
+        $data = [];
+
+        foreach($registrations as $registration) {
+
+            foreach($registration->weekClass as $week) {
+                $data[$week->time][$week->weekday][] = $registration;
+            }
+
+            
+
+        }
+
+        return $data;
+    }
+
     public function makeRegistration($data)
     {
         $data = $this->prepareData($data);
 
         Registration::where('student_id', $data['student_id'])->where('modality_id', $data['modality_id'])->update(['status' => 2]);
 
-
-
         if ($registration = Registration::create($data)) {
-            $this->generateClasses($registration, $data['class']);
             $this->generateInstallments($registration, $data);
+
+            if(isset($data['class'])) {
+                $this->generateClasses($registration, $data['class']);
+            }
+            
+            
             return $registration;
         }
     }
@@ -115,6 +136,8 @@ class RegistrationService extends Service
 
     private function prepareData($data) {
 
+        $data['end'] = date('Y-m-d', strtotime('+' . $data['duration'] . 'months', strtotime($data['start'])));
+
         if(!isset($data['class'])) {
             return $data;
         }
@@ -125,16 +148,16 @@ class RegistrationService extends Service
             }
         }
 
-        $data['end'] = date('Y-m-d', strtotime('+' . $data['duration'] . 'months', strtotime($data['start'])));
+        
 
         return $data;
     }
 
-    private function generateClasses(Registration $registration, $data)
+    public function generateClasses(Registration $registration, $data)
     {
 
-        $registration->classes()->where('finished', 0)->delete();
-        $registration->weekClass()->delete();
+        // $registration->classes()->where('finished', 0)->delete();
+        // $registration->weekClass()->delete();
 
 
         $classes = $registration->classes;
@@ -156,9 +179,9 @@ class RegistrationService extends Service
             $numClasses = 0;
             for ($date = $startDate; $date->lte($endDate); $date->addWeek()) {
 
-                if(isset($exists[$date->format('Y-m-d')][$item['time']])) {
-                    continue;
-                }
+                // if(isset($exists[$date->format('Y-m-d')][$item['time']])) {
+                //     continue;
+                // }
 
                 Classes::create([
                     'registration_id'         => $registration->id,

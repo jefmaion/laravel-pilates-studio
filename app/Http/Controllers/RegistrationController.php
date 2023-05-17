@@ -218,5 +218,29 @@ class RegistrationController extends Controller
         return $this->edit($id, true);
     }
 
+
+    public function class($id) {
+        if(!$registration = $this->registrationService->findRegistration($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
+
+        $instructors    = $this->instructorService->listCombo();
+        $classes = $this->registrationService->listCalendarClass();
+
+        return view('registration.class', compact('registration', 'instructors', 'classes'));
+    }
+
+    public function classStore(Request $request, $id) {
+
+        if(!$registration = $this->registrationService->findRegistration($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
+
+        $data = [$request->except('_token')];
+
+        $this->registrationService->generateClasses($registration, $data);
+
+        return redirect()->route('registration.class', $registration);
+    }
     
 }

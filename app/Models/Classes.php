@@ -12,7 +12,7 @@ class Classes extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
     
     protected $statusClass = ['Agendada', 'Presença', 'Falta com Aviso', 'Falta', 'Cancelada'];
-    protected $statusClassLabel = ['primary', 'success', 'warning', 'danger', 'dark'];
+    protected $statusClassLabel = ['light', 'success', 'warning', 'danger', 'dark'];
     protected $weekname    = ['Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado'];
     protected $classType   = ['AN' => 'Aula Normal', 'RP' => 'Reposição', 'FJ' => 'Falta Com Aviso', 'FF' => 'Falta'];
 
