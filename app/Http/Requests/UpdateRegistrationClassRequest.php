@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRegistrationRequest extends FormRequest
+class UpdateRegistrationClassRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -44,10 +44,6 @@ class UpdateRegistrationRequest extends FormRequest
     protected function prepareForValidation()
     {
 
-   
-        $this->merge([
-            'value' => currency($this->value, true)
-        ]);
 
         $values = [];
         foreach($this->class as $key => $item) {

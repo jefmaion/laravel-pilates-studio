@@ -27,7 +27,7 @@ class Registration extends Model
     ];
 
     public function getDurationNameAttribute() {
-        return $this->durationName[$this->duration];
+        return classMonths($this->duration);
     }
 
     public function getStatusTextAttribute() {

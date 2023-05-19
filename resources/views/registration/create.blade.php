@@ -11,26 +11,12 @@
 @endsection
 
 @section('content')
-<form action="{{ route('registration.store') }}" method="post" >
-    
+    <form action="{{ route('registration.store') }}" method="post" >
         @csrf
         <div class="row">
-            <div class="col-7">
-                <x-card style="primary">
-        @include('registration.form')
-        <x-slot name="footer">
-            <a name="" id="" class="btn btn-light text-dark" href="{{ route('registration.index') }}" role="button">
-                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-                Voltar
-            </a>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-check-circle    "></i>
-                Salvar
-            </button>
-        </x-slot>
-    </x-card>
-    </div>
-    </div>
-    
-</form>
+            <div class="col-12">
+                @include('registration.form')
+            </div>
+        </div>
+    </form>
 @endsection

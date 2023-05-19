@@ -16,7 +16,7 @@
     </a>
     <div class="float-right">
         <label class="custom-switch mt-2">
-            <input type="checkbox" name="check-list-active" value="{{ route('registration.index') }}" class="custom-switch-input">
+            <input type="checkbox" name="check-list-active"  onchange="filterActiveRegistrations(this)" class="custom-switch-input">
             <span class="custom-switch-indicator"></span>
             <span class="custom-switch-description">Listar Matrículas Ativas</span>
           </label>
@@ -24,7 +24,7 @@
     </div>
     <hr>
     <div class="table-responsive">
-        <table class="table table-striped table-sm " id="table-registrations" style="width:100%">
+        <table class="table table-font table-striped table-sm " id="table-registrations" style="width:100%">
             <thead>
                 <tr>
                     <th>Aluno</th>

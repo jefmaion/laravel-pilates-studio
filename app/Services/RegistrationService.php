@@ -4,10 +4,7 @@ namespace App\Services;
 
 use App\Models\AccountReceivable;
 use App\Models\Classes;
-use App\Models\Installment;
 use App\Models\Registration;
-use App\Models\RegistrationInstallment;
-use App\Models\Transaction;
 use Carbon\Carbon;
 
 class RegistrationService extends Service
@@ -22,7 +19,8 @@ class RegistrationService extends Service
         return Registration::with(['classes.instructor.user', 'installments'])->find($id);
     }
 
-    public function listCalendarClass() {
+    public function listCalendarClass($currentRegistration) {
+
         $registrations = Registration::with(['weekClass', 'student.user'])->get();
 
         $data = [];
@@ -30,11 +28,11 @@ class RegistrationService extends Service
         foreach($registrations as $registration) {
 
             foreach($registration->weekClass as $week) {
-                $data[$week->time][$week->weekday][] = $registration;
-            }
-
-            
-
+                $data[$week->time][$week->weekday][] = [
+                    'name' => $registration->student->user->firstAndLast,
+                    'me'   => $registration->id == $currentRegistration->id
+                ];
+            }            
         }
 
         return $data;
@@ -47,12 +45,12 @@ class RegistrationService extends Service
         Registration::where('student_id', $data['student_id'])->where('modality_id', $data['modality_id'])->update(['status' => 2]);
 
         if ($registration = Registration::create($data)) {
+
             $this->generateInstallments($registration, $data);
 
             if(isset($data['class'])) {
                 $this->generateClasses($registration, $data['class']);
             }
-            
             
             return $registration;
         }
@@ -61,26 +59,33 @@ class RegistrationService extends Service
     public function updateRegistration(Registration $registration, $data)
     {
 
-        $data = $this->prepareData($data);
+        $data = array_filter($data);
+
         $registration->fill($data);
         $registration->save();
 
         $this->generateClasses($registration, $data['class']);
-        $this->generateInstallments($registration, $data);
 
         return true;
     }
 
-    public function cancelRegistration(Registration $registration, $comments=null) {
+    public function cancelRegistration(Registration $registration, $removeClass=0,  $comments=null) {
 
         $registration->cancel_comments = $comments;
-        $registration->cancel_date = date('Y-m-d');
-        $registration->status = 0;
+        $registration->cancel_date     = date('Y-m-d');
+        $registration->status          = 0;
+
         $registration->save();
 
+        if($removeClass) {
+            $registration->classes()->where('finished', 0)->delete();
+        }
 
-        $registration->classes()->where('finished', 0)->delete();
+    }
 
+    public function finalizeRegistration(Registration $registration) {
+        $registration->status          = 2;
+        $registration->save();
     }
 
     public function delete($registration) {
@@ -101,14 +106,8 @@ class RegistrationService extends Service
 
     public function listToDataTable($justActive=false) {
 
-        $duration = [
-            1 => 'Mensal',
-            2 => 'Bimestral',
-            3 => 'Trimestre'
-        ];
-
-        $response = [];
-
+        $response      = [];
+        $duration      = classMonths();
         $registrations = $this->listRegistrations();
 
         if($justActive) {
@@ -119,14 +118,14 @@ class RegistrationService extends Service
 
         foreach($data as $item) {
             $response[] = [
-                'name' => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
-                'start' => $item->start,
-                'end' => $item->end->format('d/m/Y'),
-                'status' => $item->statusName,
-                'value' => currency($item->value),
-                'modality' => $item->modality->name,
-                'duration' => $duration[$item->duration],
-                'classes' => ($item->countClasses('presences')+$item->countClasses('absenses')) . ' de ' . $item->countClasses() ,
+                'name'       => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
+                'start'      => $item->start,
+                'end'        => $item->end->format('d/m/Y'),
+                'status'     => $item->statusName,
+                'value'      => currency($item->value),
+                'modality'   => $item->modality->name,
+                'duration'   => $duration[$item->duration],
+                'classes'    => ($item->countClasses('presences')+$item->countClasses('absenses')) . ' de ' . $item->countClasses() ,
                 'created_at' => $item->created_at->format('d/m/Y')
             ];
         }
@@ -148,23 +147,21 @@ class RegistrationService extends Service
             }
         }
 
-        
-
         return $data;
     }
 
     public function generateClasses(Registration $registration, $data)
     {
 
-        // $registration->classes()->where('finished', 0)->delete();
-        // $registration->weekClass()->delete();
+        $registration->classes()->where('finished', 0)->delete();
+        $registration->weekClass()->delete();
 
+        $classes = $registration->classes()->where('finished', 1)->get();
 
-        $classes = $registration->classes;
+        $exists  = [];
 
-        $exists = [];
         foreach($classes as $cl) {
-            $exists[$cl->date][$cl->time] = $cl;
+            $exists[$cl->date][$cl->weekday] = true;
         }
 
         $start = $registration->start;
@@ -179,9 +176,9 @@ class RegistrationService extends Service
             $numClasses = 0;
             for ($date = $startDate; $date->lte($endDate); $date->addWeek()) {
 
-                // if(isset($exists[$date->format('Y-m-d')][$item['time']])) {
-                //     continue;
-                // }
+                if(isset($exists[$date->format('Y-m-d')])) {
+                    continue;
+                }
 
                 Classes::create([
                     'registration_id'         => $registration->id,
@@ -198,11 +195,13 @@ class RegistrationService extends Service
                 $numClasses++;
             }
 
-            $registration->update(['class_value' => $registration->value / $numClasses]);
 
+            $nClasses = $registration->classes()->where('type', 'AN')->count();
+
+            if($nClasses > 0) {
+                $registration->update(['class_value' => $registration->value / $nClasses]);
+            }
         }
-
-        
 
     }
 

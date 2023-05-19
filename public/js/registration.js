@@ -21,19 +21,21 @@ dataTable('#table-registrations', {
 dataTable('.datatable', {pageLength: 10})
 
 
-$('[name="check-list-active"]').change(function (e) { 
-    e.preventDefault();
+// $('[name="check-list-active"]').change(function (e) { 
+//     e.preventDefault();
+//     filterActiveRegistrations($(this).prop('checked'))
+// });
 
-    url = $(this).val()
+
+function filterActiveRegistrations(obj) {
+
+    table = $('#table-registrations').DataTable();
+
+    url = '/registration'
     
-    if($(this).prop('checked')) {
+    if($(obj).prop('checked')) {
         url  = url + '?active=1'
     }
 
-    table = $('#table-registrations').DataTable();
     table.ajax.url(url).load();
-});
-
-function loadDataTable() {
-    
 }

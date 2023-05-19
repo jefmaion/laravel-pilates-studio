@@ -12,12 +12,13 @@
 
 <div class="row">
     <div class="col-6">
+        <form action="{{ route('receive.update', [$account, 'to' => Request::get('to')]) }}" method="post">
+            @csrf
+            @method('put')
+            <input type="hidden" name="status" value="1">
         <x-card style="primary">
 
-            <form action="{{ route('receive.update', [$account, 'to' => Request::get('to')]) }}" method="post">
-                @csrf
-                @method('put')
-                <input type="hidden" name="status" value="1">
+           
             <div class="row">
 
                 <div class="col-4 form-group">
@@ -71,11 +72,12 @@
                 <button type="submit" class="btn btn-success">Receber</button>
 
                 </x-slot>
-            </form>
+            
         
             
         
         </x-card>
+    </form>
     </div>
 </div>
 

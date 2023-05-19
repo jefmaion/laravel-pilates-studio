@@ -11,7 +11,7 @@
 </x-page-title>
 
 <div class="row">
-    <div class="col-6 d-flex">
+    <div class="col-12 d-flex">
         <x-card class="flex-fill">
             <div class="row">
                 <div class="col-8">
@@ -48,7 +48,8 @@
                 </div>
             </div>
 
-            <a name="" id="" class="btn btn-light text-dark" href="{{ route('registration.show', $registration) }}" role="button">
+            <a name="" id="" class="btn btn-light text-dark" href="{{ route('registration.show', $registration) }}"
+                role="button">
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
                 Voltar
             </a>
@@ -58,8 +59,8 @@
 
 
     <div class="col-12">
-        <?php
-            $times = [
+        <?php 
+             $times = [
                             '07:00:00' => '07:00',
                             '08:00:00' => '08:00',
                             '09:00:00' => '09:00',
@@ -75,7 +76,7 @@
                             '19:00:00' => '19:00',
                             '20:00:00' => '20:00',
         ];
-        $_week = [
+            $_week = [
                 1 => 'Segunda-Feira',
                 2 => 'Terça-Feira',
                 3 => 'Quarta-Feira',
@@ -84,73 +85,90 @@
                 6 => 'Sábado'
             ]    
         ?>
-        <x-card>
-            <div>
+        <form action="{{ route('registration.class.store', $registration) }}" method="post">
+            <input type="hidden" name="class_per_week"
+                value="{{ old('class_per_week', $registration->class_per_week ?? '') }}">
+            <x-card style="primary">
+                <x-slot name="title">
+                    Aulas <small>(<a href="#" data-toggle="modal" data-target="#modelId">Agenda</a>)</small>
+                </x-slot>
 
-                <table class="table table-stripesd table-bordered" id="table-class-calendar">
-                    <thead class="thead-inverse">
-                        <tr>
-                            <th></th>
-                            @foreach($_week as $k => $w)
-                            <th>{{ $w }}</th>
-                            @endforeach
-                        </tr>
-                        </thead>
-                        <tbody>
-                                @foreach($times as $x => $time)
-                                <tr>
-                                <th scope="row">{{ $time }}</th>
+                @csrf
+                @include('registration.form-class')
 
-                                    @foreach($_week as $k => $w)
-                                    <td data-weekday="{{ $k }}" data-time="{{  $x }}">
-                                        @if(isset($classes[$x][$k]))
-                                            @foreach($classes[$x][$k] as $reg)
-                                                <div class="{{ ($reg->id == $registration->id) ? 'text-danger' : 'text-muted' }}">{{ $reg->student->user->name }}</div>
-                                            @endforeach
-                                        @endif
-                                    </td>
-                                    @endforeach
-                                </tr>
-                                @endforeach
-                        </tbody>
-                </table>
+                <x-slot name="footer">
+                    <a name="" id="" class="btn btn-light text-dark" href="{{ route('registration.index') }}"
+                        role="button">
+                        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                        Voltar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check-circle    "></i>
+                        Salvar
+                    </button>
+                </x-slot>
 
-            </div>
-        </x-card>
+            </x-card>
+        </form>
     </div>
+
 </div>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modelId">
-  Launch
-</button>
 
 <!-- Modal -->
 <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
-            <form action="{{ route('registration.class.store', $registration) }}" method="post">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body">
-                    <x-form.select name="weekday" :options="$_week" />
-                    <x-form.select name="time" :options="$times" />
-                    <x-form.select name="instructor_id" :options="$instructors" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+            <div class="modal-header">
+
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-striped">
+                    <thead class="theasd-dark">
+                        <tr>
+                            <th></th>
+                            @foreach($_week as $i => $week)
+                            <th class="text-center">{{ $week }}</th>
+                            @endforeach
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach($times as $k => $time)
+                        <tr>
+                            <th class="bg-lisght align-middle">{{ $time }}</th>
+                            @foreach($_week as $i => $week)
+                            <td width="16%" class="p-0 text-center align-middle {{ ($i % 2) ? 'bg-lsight' : '' }}">
+
+                                @if(isset($classes[$k][$i]))
+                                @foreach($classes[$k][$i] as $item)
+                                <div>
+                                    <x-badge theme="{{ ($item['me'])  ? 'primary' : 'light' }}">{{ $item['name'] }}
+                                    </x-badge>
+                                </div>
+                                @endforeach
+                                @endif
+
+                            </td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+
+
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
         </div>
     </div>
 </div>
-
 
 
 @endsection
@@ -160,13 +178,5 @@
 @include('template.includes.datatable')
 <script src="{{ asset('js/config.js') }}"></script>
 <script src="{{ asset('js/registration.js') }}"></script>
-<script>
-    $('#table-class-calendar td').click(function (e) { 
-        e.preventDefault();
-        data = $(this).data();
-        $('[name="time"]').val(data.time).change();
-        $('[name="weekday"]').val(data.weekday).change();
-        $('#modelId').modal('show')
-    });
-</script>
+
 @endsection

@@ -1,4 +1,4 @@
-<table {{ $attributes->merge(['class' => 'table datatable table-sm table-striped w-100']) }} stylse="font-size:15px">
+<table {{ $attributes->merge(['class' => 'table datatable table-ssm table-striped w-100']) }} stwyle="font-size:15px">
     {{$slot}}
 </table>
 

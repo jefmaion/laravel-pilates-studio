@@ -22,3 +22,4 @@ textarea.form-control {
 .text-gray { color: var(--gray) !important; }
 .text-gray-dark { color: var(--gray-dark) !important; }
 
+.table-font {font-size: 15px !important;}

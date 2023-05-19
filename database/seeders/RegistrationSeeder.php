@@ -22,6 +22,7 @@ class RegistrationSeeder extends Seeder
      */
     public function run()
     {
+        $classStatus = [0,1,2,3];
 
         for ($x = 1; $x <= 20; $x++) {
 
@@ -69,7 +70,8 @@ class RegistrationSeeder extends Seeder
 
                 for ($date = $startDate; $date->lte($endDate); $date->addWeek()) {
 
-                    Classes::create([
+
+                    $create = [
                         'registration_id' => $registration->id,
                         'student_id' => $registration->student_id,
                         'modality_id' => $registration->modality_id,
@@ -79,7 +81,14 @@ class RegistrationSeeder extends Seeder
                         'date' => $date->format('Y-m-d'),
                         'time' => $class['time'],
                         'weekday' => $class['weekday'],
-                    ]);
+                        'status' => ($date < date('Y-m-d')) ?  rand(1,3) : 0
+                    ];
+
+                    if($create['status'] > 0) {
+                        $create['finished'] = 1;
+                    }
+
+                    Classes::create($create);
 
                     $numClasses++;
                 }

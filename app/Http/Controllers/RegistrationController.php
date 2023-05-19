@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Registration;
 use App\Http\Requests\StoreRegistrationRequest;
+use App\Http\Requests\UpdateRegistrationClassRequest;
 use App\Http\Requests\UpdateRegistrationRequest;
 use App\Services\InstructorService;
 use App\Services\ModalityService;
@@ -109,6 +110,7 @@ class RegistrationController extends Controller
         }
         
         if(!is_null($id)) { 
+            
             if(!$registration = $this->registrationService->findRegistration($id)) {
                 return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
             }
@@ -126,14 +128,14 @@ class RegistrationController extends Controller
             }
         }
 
-        
+        // dd($registration);
 
         $modalities     = $this->modalityService->listCombo();
         $instructors    = $this->instructorService->listCombo();
         $paymentMethods = $this->paymentMethodService->listCombo();
         $students       = $this->studentService->listCombo();
-        
-
+        $classes        = $this->registrationService->listCalendarClass($registration);
+    
         $weekclass = [];
         foreach($registration->weekclass as $wk) {
             $weekclass['time'][$wk->weekday] = $wk->time;
@@ -146,12 +148,10 @@ class RegistrationController extends Controller
 
         if($renew) {
             $view = 'registration.renew';
-
             $registration->start = $registration->end;
         }
 
-
-        return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass', 'paymentMethods'));
+        return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass', 'paymentMethods', 'classes'));
 
     }
 
@@ -164,8 +164,8 @@ class RegistrationController extends Controller
      */
     public function update(UpdateRegistrationRequest $request, $id)
     {
-
         $data = $request->all();
+
 
         if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
@@ -207,10 +207,22 @@ class RegistrationController extends Controller
         if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
-
-        $this->registrationService->cancelRegistration($registration, $request->input('comments'));
+        
+        $this->registrationService->cancelRegistration($registration, $request->input('remove_class'), $request->input('comments'));
 
         return redirect()->route('registration.index')->with('success', 'Matrícula Cancelada com successo!');
+       
+    }
+
+    public function finish($id) {
+
+        if(!$registration = $this->registrationService->findRegistration($id)) {
+            return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
+        }
+        
+        $this->registrationService->finalizeRegistration($registration);
+
+        return redirect()->route('registration.index')->with('success', 'Matrícula Finalizada com successo!');
        
     }
 
@@ -220,27 +232,34 @@ class RegistrationController extends Controller
 
 
     public function class($id) {
+
         if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
 
         $instructors    = $this->instructorService->listCombo();
-        $classes = $this->registrationService->listCalendarClass();
+        $classes = $this->registrationService->listCalendarClass($registration);
 
-        return view('registration.class', compact('registration', 'instructors', 'classes'));
+        $weekclass = [];
+        foreach($registration->weekclass as $wk) {
+            $weekclass['time'][$wk->weekday] = $wk->time;
+            $weekclass['instructor'][$wk->weekday] = $wk->instructor_id;
+        }
+
+        return view('registration.class', compact('registration', 'instructors', 'classes', 'weekclass'));
     }
 
-    public function classStore(Request $request, $id) {
+    public function classStore(UpdateRegistrationClassRequest $request, $id) {
 
         if(!$registration = $this->registrationService->findRegistration($id)) {
             return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
         }
 
-        $data = [$request->except('_token')];
+        $data = $request->except('_token');
 
-        $this->registrationService->generateClasses($registration, $data);
+        $this->registrationService->generateClasses($registration, $data['class']);
 
-        return redirect()->route('registration.class', $registration);
+        return redirect()->route('registration.show', $registration);
     }
     
 }
