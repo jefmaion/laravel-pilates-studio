@@ -26,9 +26,9 @@
                             <div class="author-box-name">
                                 <h3>
                                     <a href="{{ route('student.show', $registration->student) }}">
-                                        {{ $registration->student->user->name }}
+                                        {{ $registration->student->user->name }} 
                                     </a>
-                                </h3>
+                                </h3> 
                             </div>
                             <div class="author-box-job text-muted">
                                 <h6 class="font-weight-light">
@@ -39,6 +39,8 @@
                                 <h6 class="font-weight-light">
                                     Período: {{ formatData($registration->start) }} até {{ formatData($registration->end) }}
                                 </h6>
+
+                                {!! $registration->statusName !!}
 
                                 @if(!empty($registration->comments))
                                 <h6 class="font-weight-light">
@@ -63,11 +65,11 @@
                     <h6 class="font-weight-light text-muted">
                     Aulas:
                     @foreach($registration->weekClass as $wk)
-                    <div>{{ $wk->weekName }} às {{ $wk->time }}</div>
+                    <div class="mt-2">{{ $wk->weekName }} às {{ $wk->time }}</div>
                     @endforeach
                     </h6>
 
-                    {!! $registration->statusName !!}
+                    
                     
                 </div>
                
@@ -87,21 +89,28 @@
                     </button>
                     <div class="dropdown-menu" x-placement="bottom-start">
                         @if($registration->status > 0)
-                        <a class="dropdown-item has-icon" href="{{ route('registration.renew', $registration) }}">
-                            <i class="fas fa-sync    "></i> Renovar Matrícula
-                        </a>
-    
-                        <a class="dropdown-item has-icon" href="#" data-toggle="modal" data-target="#modelId">
-                            <i class="fas fa-stop-circle    "></i> Cancelar Matrícula
-                        </a>
 
-                        <a class="dropdown-item has-icon" href="#" data-toggle="modal" data-target="#modal-finalize">
-                            <i class="fas fa-stop-circle    "></i> Finalizar Matrícula
-                        </a>
-    
-                        <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}">
-                            <i class="fas fa-pencil-alt"></i> Editar
-                        </a>
+                            <a class="dropdown-item has-icon" href="{{ route('registration.renew', $registration) }}">
+                                <i class="fas fa-sync    "></i> Renovar Matrícula
+                            </a>
+        
+                            @if($registration->daysToRenew > 0)
+                            <a class="dropdown-item has-icon" href="#" data-toggle="modal" data-target="#modelId">
+                                <i class="fas fa-stop-circle    "></i> Cancelar Matrícula
+                            </a>
+
+                            <a class="dropdown-item has-icon" href="{{ route('registration.edit', $registration) }}">
+                                <i class="fas fa-pencil-alt"></i> Editar
+                            </a>
+                            @endif
+
+                            @if($registration->daysToRenew <= 0)
+                            <a class="dropdown-item has-icon" href="#" data-toggle="modal" data-target="#modal-finalize">
+                                <i class="fas fa-stop-circle    "></i> Finalizar Matrícula
+                            </a>
+                            @endif
+        
+                           
                         @endif
                         {{-- <x-delete-button class="dropdown-item has-icon"
                             route="{{ route('registration.destroy', $registration) }}">

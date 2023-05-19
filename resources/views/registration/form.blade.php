@@ -9,49 +9,49 @@
 
                 <div class="col-2 form-group">
                     <label>Data da Matrícula</label>
-                    <x-form.input type="date" :disabled="$registration->id" name="start" value="{{ date('Y-m-d', strtotime(old('start', $registration->start ?? date('Y-m-d')))) }}" />
+                    <x-form.input type="date" :disabled="$disabled" name="start" value="{{ date('Y-m-d', strtotime(old('start', $registration->start ?? date('Y-m-d')))) }}" />
                 </div>
 
                 <div class="col-7 form-group">
                     <label>Aluno (<a href="{{ route('student.create') }}">Novo Aluno</a>)</label>
-                    <x-form.select name="student_id" :disabled="$registration->id" class="select2" :options="$students" value="{{ old('student_id', $registration->student_id ?? '') }}" />
+                    <x-form.select name="student_id" :disabled="$disabled" class="select2" :options="$students" value="{{ old('student_id', $registration->student_id ?? '') }}" />
                 </div>
 
                 <div class="col-3 form-group">
                     <label>Modalidade</label>
-                    <x-form.select name="modality_id" :disabled="$registration->id" :options="$modalities" value="{{ old('modality_id', $registration->modality_id ?? '') }}" />
+                    <x-form.select name="modality_id" :disabled="$disabled" :options="$modalities" value="{{ old('modality_id', $registration->modality_id ?? '') }}" />
                 </div>
 
                 <div class="col-2 form-group">
                     <label>Plano</label>
-                    <x-form.select name="duration" :disabled="$registration->id" :options="classMonths()" value="{{ old('duration', $registration->duration ?? '') }}" />
+                    <x-form.select name="duration" :disabled="$disabled" :options="classMonths()" value="{{ old('duration', $registration->duration ?? '') }}" />
                 </div>
 
                 <div class="col-2 form-group">
                     <label>Aulas p/ semana</label>
-                    <x-form.input name="class_per_week" :disabled="$registration->id" value="{{ old('class_per_week', $registration->class_per_week ?? '') }}" />
+                    <x-form.input name="class_per_week" :disabled="$disabled" value="{{ old('class_per_week', $registration->class_per_week ?? '') }}" />
                 </div>
 
                 <div class="col-2 form-group">
                     <label>Dia Vencimento</label>
-                    <x-form.input name="due_day" :disabled="$registration->id" value="{{ old('due_day', $registration->due_day ?? date('d')) }}" />
+                    <x-form.input name="due_day" :disabled="$disabled" value="{{ old('due_day', $registration->due_day ?? date('d')) }}" />
                 </div>
 
                 
 
                 <div class="col-2 form-group">
                     <label>Valor</label>
-                    <x-form.input name="value" :disabled="$registration->id" class="money" value="{{ old('value', currency($registration->value) ?? '') }}" />
+                    <x-form.input name="value" :disabled="$disabled" class="money" value="{{ old('value', currency($registration->value) ?? '') }}" />
                 </div>
 
                 <div class="col-2 form-group">
                     <label>Pagto. 1º Mensalidade</label>
-                    <x-form.select name="first_payment_method_id" :disabled="$registration->id" value="{{ old('first_payment_method_id', $registration->first_payment_method_id) }}" :options="$paymentMethods" />
+                    <x-form.select name="first_payment_method_id" :disabled="$disabled" value="{{ old('first_payment_method_id', $registration->first_payment_method_id) }}" :options="$paymentMethods" />
                 </div>
 
                 <div class="col-2 form-group">
                     <label>Pagto. Demais Mensalidade</label>
-                    <x-form.select name="other_payment_method_id" :disabled="$registration->id" value="{{ old('other_payment_method_id', $registration->other_payment_method_id) }}" :options="$paymentMethods" />
+                    <x-form.select name="other_payment_method_id" :disabled="$disabled" value="{{ old('other_payment_method_id', $registration->other_payment_method_id) }}" :options="$paymentMethods" />
                 </div>
 
                 <div class="col-12 form-group">
@@ -59,7 +59,7 @@
                     <x-form.textarea name="comments" rows="3">{{ old('comments', $registration->comments ?? '') }}</x-form.textarea>
                 </div>
 
-                @if(empty($registration->id))
+                @if(!$disabled)
                 <div class="col form-group">
                     <x-form.switch-button name="is_paid" value="">Marcar 1º Mensalidade como Pago</x-form.switch-button>
                 </div>

@@ -42,7 +42,7 @@ class AccountReceivable extends Model
         }
 
         if($this->date > date('Y-m-d') && $this->status == 0) {
-            return sprintf($badge, 'light',  'Aberto');
+            return sprintf($badge, 'light',  'Agendada');
         }
 
         if($this->date < date('Y-m-d') && $this->status == 0) {

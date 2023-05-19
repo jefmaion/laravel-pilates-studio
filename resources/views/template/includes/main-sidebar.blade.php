@@ -5,39 +5,54 @@
         </a>
     </div>
     <ul class="sidebar-menu">
-        <li class="menu-header">Main</li>
+        <li class="menu-header">AULAS</li>
 
         <li class="dropdown {{ (\Request::is('calendar*')) ? 'active' : '' }}">
-            <a href="{{ route('calendar.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Agenda</span></a>
+            <a href="{{ route('calendar.index') }}" class="nav-link"><i data-feather="calendar"></i><span>Calendário</span></a>
         </li>
 
         <li class="dropdown {{ (\Request::is('registration*')) ? 'active' : '' }}">
-            <a href="{{ route('registration.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Matrículas</span></a>
+            <a href="{{ route('registration.index') }}" class="nav-link"><i data-feather="bookmark"></i><span>Matrículas</span></a>
         </li>
 
 
+        
+
+        <li class="menu-header">CADASTROS</li>
+
         <li class="dropdown {{ (\Request::is('student*')) ? 'active' : '' }}">
-            <a href="{{ route('student.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Alunos</span></a>
+            <a href="{{ route('student.index') }}" class="nav-link">
+                <i data-feather="users"></i><span>Alunos</span></a>
         </li>
 
         <li class="dropdown {{ (\Request::is('instructor*')) ? 'active' : '' }}">
-            <a href="{{ route('instructor.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Professores</span></a>
+            <a href="{{ route('instructor.index') }}" class="nav-link"><i data-feather="user-plus"></i><span>Professores</span></a>
         </li>
 
         <li class="dropdown {{ (\Request::is('modality*')) ? 'active' : '' }}">
-            <a href="{{ route('modality.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Modalidades</span></a>
+            <a href="{{ route('modality.index') }}" class="nav-link"><i data-feather="list"></i><span>Modalidades</span></a>
         </li>
 
         <li class="dropdown {{ (\Request::is('exercice*')) ? 'active' : '' }}">
-            <a href="{{ route('exercice.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Exercícios</span></a>
+            <a href="{{ route('exercice.index') }}" class="nav-link"><i data-feather="droplet"></i><span>Exercícios</span></a>
         </li>
+
+        {{-- <li class="dropdown">
+            <a href="#" class="menu-toggle nav-link has-dropdown toggled"><span>Cadastros</span></a>
+            <ul class="dropdown-menu" style="">
+              <li><a href="{{ route('modality.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Modalidades</span></a></li>
+              <li><a href="{{ route('exercice.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Exercícios</span></a></li>
+            </ul>
+          </li> --}}
 
         {{-- <li class="dropdown {{ (\Request::is('installment*')) ? 'active' : '' }}">
             <a href="{{ route('installment.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Mensalidades</span></a>
         </li> --}}
 
+        <li class="menu-header">FINANCEIRO</li>
+
         <li class="dropdown {{ (\Request::is('account/receive*')) ? 'active' : '' }}">
-            <a href="{{ route('receive.index') }}" class="nav-link"><i data-feather="monitor"></i><span>Contas a Receber</span></a>
+            <a href="{{ route('receive.index') }}" class="nav-link"><i data-feather="check-circle"></i><span>Contas a Receber</span></a>
         </li>
 
         {{-- <li class="dropdown">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Registration;
 use App\Http\Requests\StoreRegistrationRequest;
+use App\Http\Requests\StoreRenewRequest;
 use App\Http\Requests\UpdateRegistrationClassRequest;
 use App\Http\Requests\UpdateRegistrationRequest;
 use App\Services\InstructorService;
@@ -80,6 +81,21 @@ class RegistrationController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreRegistrationRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeRenew(StoreRenewRequest $request)
+    {
+        $data = $request->all();
+
+        if($registration = $this->registrationService->makeRegistration($data)) {
+            return redirect()->route('registration.show', $registration)->with('success', 'Renovação realizada com successo!');
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Models\Registration  $registration
@@ -104,6 +120,7 @@ class RegistrationController extends Controller
     {
 
         $view = 'registration.edit';
+        $disabled = false;
 
         if(is_null($id)) {
             $registration = new Registration();
@@ -115,6 +132,8 @@ class RegistrationController extends Controller
                 return redirect()->route('registration.index')->with('warning','Matrícula não encontrada!');
             }
 
+            $disabled = true;
+
             if($renew) {
 
                 if($registration->countClasses('scheduled') > 0) {
@@ -124,11 +143,11 @@ class RegistrationController extends Controller
                 if($registration->installments()->where('status', 0)->count() > 0) {
                     return redirect()->route('registration.show', $registration)->with('info','Não é possivel renovar a matrícula se houverem mesalidades em aberto!');
                 }
+
+                $disabled = false;
                 
             }
         }
-
-        // dd($registration);
 
         $modalities     = $this->modalityService->listCombo();
         $instructors    = $this->instructorService->listCombo();
@@ -151,7 +170,7 @@ class RegistrationController extends Controller
             $registration->start = $registration->end;
         }
 
-        return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass', 'paymentMethods', 'classes'));
+        return view($view, compact('registration', 'modalities', 'instructors', 'students', 'weekclass', 'paymentMethods', 'classes', 'disabled'));
 
     }
 

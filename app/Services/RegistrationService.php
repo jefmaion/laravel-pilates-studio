@@ -118,7 +118,7 @@ class RegistrationService extends Service
 
         foreach($data as $item) {
             $response[] = [
-                'name'       => image(asset($item->student->user->image)) . anchor(route('registration.show', $item), $item->student->user->name, 'ml-2'),
+                'name'       => image(asset($item->student->user->image)) . anchor(route('registration.show',  $item), '<b>'.$item->student->user->name.'</b>', 'ml-2'),
                 'start'      => $item->start,
                 'end'        => $item->end->format('d/m/Y'),
                 'status'     => $item->statusName,

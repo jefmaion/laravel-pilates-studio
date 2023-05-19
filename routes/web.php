@@ -51,6 +51,7 @@ Route::get('registration/{registration}/cancel', [RegistrationController::class,
 Route::post('registration/{registration}/abort', [RegistrationController::class, 'abort'])->name('registration.abort');
 Route::post('registration/{registration}/finish', [RegistrationController::class, 'finish'])->name('registration.finish');
 Route::get('registration/{registration}/renew', [RegistrationController::class, 'renew'])->name('registration.renew');
+Route::post('registration/renew', [RegistrationController::class, 'storeRenew'])->name('registration.renew.store');
 Route::get('registration/{registration}/class', [RegistrationController::class, 'class'])->name('registration.class');
 Route::post('registration/{registration}/class/store', [RegistrationController::class, 'classStore'])->name('registration.class.store');
 

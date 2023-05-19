@@ -1,14 +1,13 @@
 @extends('template.main')
 
 @section('content')
-    <x-page-title>
-        <x-slot name="title">Calendário</x-slot>
-        <x-slot name="breadcrumb">
-            <x-breadcrumb-item active>Calendario</x-breadcrumb-item>
-        </x-slot>
-    </x-page-title>
+  
     
     <x-card style="primary" id="card-main" class="">
+
+        <x-slot name="title">Calendário</x-slot>
+
+
         <button type="button" class="btn btn-lg bg-orange remark-alert d-none mb-3" onclick="setRemark(false)"><h5 class="m-0">Cancelar Reagendamento</h5></button>
         <div class="row">
             <div class="col form-group">

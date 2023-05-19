@@ -11,11 +11,10 @@
 @endsection
 
 @section('content')
-<form action="{{ route('registration.store') }}" method="post" >
-    <x-card style="primary">
+<form action="{{ route('registration.renew.store') }}" method="post" >
         @csrf
         @include('registration.form')
-        <x-slot name="footer">
+        {{-- <x-slot name="footer">
             <a name="" id="" class="btn btn-light text-dark" href="{{ route('registration.index') }}" role="button">
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
                 Voltar
@@ -24,7 +23,6 @@
                 <i class="fas fa-check-circle    "></i>
                 Salvar
             </button>
-        </x-slot>
-    </x-card>
+        </x-slot> --}}
 </form>
 @endsection

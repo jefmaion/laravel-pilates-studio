@@ -24,7 +24,7 @@
     </div>
     <hr>
     <div class="table-responsive">
-        <table class="table table-font table-striped table-sm " id="table-registrations" style="width:100%">
+        <table class="table table-font table-striped tablse-sm " id="table-registrations" style="width:100%">
             <thead>
                 <tr>
                     <th>Aluno</th>

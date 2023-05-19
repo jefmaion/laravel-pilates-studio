@@ -11,6 +11,7 @@
 
     <x-card style="primary">
 
+
         
 
         <div class="row align-items-center">
